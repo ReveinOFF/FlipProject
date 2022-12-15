@@ -1,4 +1,10 @@
 using Core.Entity.UserEntitys;
+using Core.Helpers;
+using Core.Interface;
+using Core.Mapper;
+using Core.Service;
+using Core.Validators;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -6,7 +12,6 @@ using UniWoxBack.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
@@ -18,13 +23,27 @@ builder.Services.AddIdentity<User, Role>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 8;
 }).AddEntityFrameworkStores<Infrastructure.Data.DataBase>().AddDefaultTokenProviders();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddAutoMapper(typeof(AppMap));
+
+builder.Services.AddFluentValidation(x => {
+    x.RegisterValidatorsFromAssemblyContaining<RegisterValidator>();
+    x.RegisterValidatorsFromAssemblyContaining<LoginValidator>();
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddCors();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -42,8 +61,7 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/resources"
 });
 
-app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

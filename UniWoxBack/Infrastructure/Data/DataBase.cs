@@ -32,6 +32,15 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            ////Default values for User
+            //modelBuilder.Entity<User>(user =>
+            //{
+            //    user.Property(x => x.UserImage).HasDefaultValue("default.jpg");
+            //    user.Property(x => x.DateCreate).HasDefaultValue(DateOnly.FromDateTime(DateTime.Now.Date));
+            //    user.Property(x => x.IsVerified).HasDefaultValue(false);
+            //    user.Property(x => x.IsPrivateUser).HasDefaultValue(false);
+            //});
+
             /* Array of image for Message */
             modelBuilder.Entity<Message>()
                 .Property(e => e.Images)

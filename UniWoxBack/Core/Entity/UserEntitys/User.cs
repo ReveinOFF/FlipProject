@@ -2,20 +2,19 @@
 using Core.Entity.PostEntitys;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Entity.UserEntitys
 {
-    [Index(nameof(UserGif), IsUnique = true),
-     Index(nameof(UserImage), IsUnique = true),
+    [Index(nameof(UserImage), IsUnique = true),
      Index(nameof(UserName), IsUnique = true),
      Index(nameof(Email), IsUnique = true),
      Index(nameof(PhoneNumber), IsUnique = true)]
     public class User : IdentityUser
     {
         /* Information */
-        public string UserGif { get; set; }
         public string UserImage { get; set; }
         [Required]
         [MaxLength(10)]

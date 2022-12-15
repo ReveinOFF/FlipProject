@@ -2,6 +2,7 @@
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 using UniWoxBack.Constans;
 
 namespace UniWoxBack.Services
@@ -12,11 +13,10 @@ namespace UniWoxBack.Services
         {
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var context = scope.ServiceProvider
-                    .GetRequiredService<DataBase>();
-
+                var context = scope.ServiceProvider.GetRequiredService<DataBase>();
                 //context.Database.Migrate();
 
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
 
                 if (!roleManager.Roles.Any())
@@ -41,6 +41,20 @@ namespace UniWoxBack.Services
                     {
                         Name = Roles.Blocked
                     }).Result;
+                }
+                if (!userManager.Users.Any())
+                {
+                    var user = new User
+                    {
+                        Name = "Roman",
+                        Surname = "Pomianovskiy",
+                        UserName = "RonniePlay",
+                        Email = "ronnieplyyt@gmail.com",
+                        IsVerified= true,
+                    };
+                    var result = userManager.CreateAsync(user).Result;
+                    result = userManager.AddPasswordAsync(user, "romap310103").Result;
+                    result = userManager.AddToRoleAsync(user, Roles.Admin).Result;
                 }
             }
         }
