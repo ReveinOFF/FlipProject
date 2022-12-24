@@ -17,7 +17,7 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "6.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -441,9 +441,6 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("UserGif")
-                        .HasColumnType("text");
-
                     b.Property<string>("UserImage")
                         .HasColumnType("text");
 
@@ -464,9 +461,6 @@ namespace Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.HasIndex("PhoneNumber")
-                        .IsUnique();
-
-                    b.HasIndex("UserGif")
                         .IsUnique();
 
                     b.HasIndex("UserImage")

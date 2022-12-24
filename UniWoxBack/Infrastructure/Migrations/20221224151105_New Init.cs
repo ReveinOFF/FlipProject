@@ -29,7 +29,6 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    UserGif = table.Column<string>(type: "text", nullable: true),
                     UserImage = table.Column<string>(type: "text", nullable: true),
                     Name = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     Surname = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
@@ -518,12 +517,6 @@ namespace Infrastructure.Migrations
                 name: "IX_AspNetUsers_PhoneNumber",
                 table: "AspNetUsers",
                 column: "PhoneNumber",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_UserGif",
-                table: "AspNetUsers",
-                column: "UserGif",
                 unique: true);
 
             migrationBuilder.CreateIndex(

@@ -14,7 +14,6 @@ namespace Core.Entity.UserEntitys
     public class User : IdentityUser
     {
         /* Information */
-        //public string NickName { get; set; }
         public string UserImage { get; set; }
         [Required]
         [MaxLength(10)]

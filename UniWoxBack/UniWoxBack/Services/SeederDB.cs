@@ -12,7 +12,6 @@ namespace UniWoxBack.Services
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<DataBase>();
-                //context.Database.Migrate();
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
@@ -46,9 +45,9 @@ namespace UniWoxBack.Services
                     {
                         Name = "Roman",
                         Surname = "Pomianovskiy",
-                        UserName = "RonniePlay",
+                        UserName = "ronnieplay",
                         Email = "ronnieplayyt@gmail.com",
-                        IsVerified= true,
+                        IsVerified= true
                     };
                     var result = userManager.CreateAsync(user).Result;
                     result = userManager.AddPasswordAsync(user, "romap310103").Result;

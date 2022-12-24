@@ -109,18 +109,6 @@ namespace Infrastructure.Data
                     .HasForeignKey(z => z.PostId);
             });
 
-            /* Post comment settings */
-            //modelBuilder.Entity<PostCommentary>(coment =>
-            //{
-            //    coment.HasOne(x => x.User)
-            //        .WithMany(y => y.PostCommentary)
-            //        .HasForeignKey(z => z.UserId);
-
-            //    coment.HasOne(x => x.Post)
-            //        .WithMany(y => y.Commentary)
-            //        .HasForeignKey(z => z.PostId);
-            //});
-
             /* Image comment settings */
             modelBuilder.Entity<ImageReaction>(reaction =>
             {
