@@ -28,13 +28,10 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
-                    b.Property<string>("Audio")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("DateSender")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Images")
+                    b.Property<string>("FilesId")
                         .HasColumnType("text");
 
                     b.Property<bool>("IsEdited")
@@ -57,13 +54,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Audio")
-                        .IsUnique();
-
                     b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("Images")
                         .IsUnique();
 
                     b.HasIndex("MessageBoxId");
@@ -96,6 +87,48 @@ namespace Infrastructure.Migrations
                     b.ToTable("MessageBox");
                 });
 
+            modelBuilder.Entity("Core.Entity.MessageEntitys.MessageBoxUser", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MessageBoxId")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "MessageBoxId");
+
+                    b.HasIndex("MessageBoxId");
+
+                    b.ToTable("MessageBoxUsers");
+                });
+
+            modelBuilder.Entity("Core.Entity.MessageEntitys.MessageFiles", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<int>("FileType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("MessageId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PathName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("MessageId")
+                        .IsUnique();
+
+                    b.ToTable("MessageFiles");
+                });
+
             modelBuilder.Entity("Core.Entity.PostEntitys.Post", b =>
                 {
                     b.Property<string>("Id")
@@ -110,7 +143,7 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<string>("Images")
+                    b.Property<string>("FilesId")
                         .HasColumnType("text");
 
                     b.Property<bool>("IsBlocked")
@@ -123,9 +156,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Videos")
-                        .HasColumnType("text");
-
                     b.Property<int>("Views")
                         .HasColumnType("integer");
 
@@ -134,13 +164,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("Images")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
-
-                    b.HasIndex("Videos")
-                        .IsUnique();
 
                     b.ToTable("Post");
                 });
@@ -209,6 +233,33 @@ namespace Infrastructure.Migrations
                     b.ToTable("PostCommentary");
                 });
 
+            modelBuilder.Entity("Core.Entity.PostEntitys.PostFiles", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<int>("FileType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PathName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PostId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("PostId")
+                        .IsUnique();
+
+                    b.ToTable("PostFiles");
+                });
+
             modelBuilder.Entity("Core.Entity.PostEntitys.PostReaction", b =>
                 {
                     b.Property<string>("UserId")
@@ -257,91 +308,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Follows");
                 });
 
-            modelBuilder.Entity("Core.Entity.UserEntitys.ImageAnswer", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CommentaryId")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("DateCreate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommentaryId");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ImageAnswer");
-                });
-
-            modelBuilder.Entity("Core.Entity.UserEntitys.ImageCommentary", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("DateCreate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ImageId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImagesId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("ImagesId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ImageCommentary");
-                });
-
-            modelBuilder.Entity("Core.Entity.UserEntitys.ImageReaction", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageId")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsLike")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("UserId", "ImageId");
-
-                    b.HasIndex("ImageId");
-
-                    b.ToTable("ImageReaction");
-                });
-
             modelBuilder.Entity("Core.Entity.UserEntitys.Role", b =>
                 {
                     b.Property<string>("Id")
@@ -380,10 +346,10 @@ namespace Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DateCreate")
+                    b.Property<DateOnly>("DateCreate")
                         .HasColumnType("date");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
@@ -472,39 +438,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Core.Entity.UserEntitys.UserImages", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Views")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("Image")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserImages");
-                });
-
             modelBuilder.Entity("Core.Entity.UserEntitys.UserRole", b =>
                 {
                     b.Property<string>("UserId")
@@ -518,21 +451,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("MessageBoxUser", b =>
-                {
-                    b.Property<string>("MessageBoxsId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UsersId")
-                        .HasColumnType("text");
-
-                    b.HasKey("MessageBoxsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("MessageBoxUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -645,6 +563,34 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Core.Entity.MessageEntitys.MessageBoxUser", b =>
+                {
+                    b.HasOne("Core.Entity.MessageEntitys.MessageBox", "MessageBox")
+                        .WithMany("Users")
+                        .HasForeignKey("MessageBoxId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("MessageBoxs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MessageBox");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entity.MessageEntitys.MessageFiles", b =>
+                {
+                    b.HasOne("Core.Entity.MessageEntitys.Message", "Message")
+                        .WithOne("Files")
+                        .HasForeignKey("Core.Entity.MessageEntitys.MessageFiles", "MessageId");
+
+                    b.Navigation("Message");
+                });
+
             modelBuilder.Entity("Core.Entity.PostEntitys.Post", b =>
                 {
                     b.HasOne("Core.Entity.UserEntitys.User", "User")
@@ -684,6 +630,15 @@ namespace Infrastructure.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entity.PostEntitys.PostFiles", b =>
+                {
+                    b.HasOne("Core.Entity.PostEntitys.Post", "Post")
+                        .WithOne("Files")
+                        .HasForeignKey("Core.Entity.PostEntitys.PostFiles", "PostId");
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("Core.Entity.PostEntitys.PostReaction", b =>
@@ -743,66 +698,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("FollowingUser");
                 });
 
-            modelBuilder.Entity("Core.Entity.UserEntitys.ImageAnswer", b =>
-                {
-                    b.HasOne("Core.Entity.UserEntitys.ImageCommentary", "Commentary")
-                        .WithMany("ImageAnswers")
-                        .HasForeignKey("CommentaryId");
-
-                    b.HasOne("Core.Entity.UserEntitys.User", "User")
-                        .WithMany("ImageAnswer")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Commentary");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Core.Entity.UserEntitys.ImageCommentary", b =>
-                {
-                    b.HasOne("Core.Entity.UserEntitys.UserImages", "Images")
-                        .WithMany("Commentary")
-                        .HasForeignKey("ImagesId");
-
-                    b.HasOne("Core.Entity.UserEntitys.User", "User")
-                        .WithMany("ImageCommentary")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Images");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Core.Entity.UserEntitys.ImageReaction", b =>
-                {
-                    b.HasOne("Core.Entity.UserEntitys.UserImages", "Image")
-                        .WithMany("Reaction")
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Entity.UserEntitys.User", "User")
-                        .WithMany("ImageReaction")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Image");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Core.Entity.UserEntitys.UserImages", b =>
-                {
-                    b.HasOne("Core.Entity.UserEntitys.User", "User")
-                        .WithMany("UserImages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Core.Entity.UserEntitys.UserRole", b =>
                 {
                     b.HasOne("Core.Entity.UserEntitys.Role", "Role")
@@ -820,21 +715,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MessageBoxUser", b =>
-                {
-                    b.HasOne("Core.Entity.MessageEntitys.MessageBox", null)
-                        .WithMany()
-                        .HasForeignKey("MessageBoxsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Entity.UserEntitys.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -873,14 +753,23 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Core.Entity.MessageEntitys.Message", b =>
+                {
+                    b.Navigation("Files");
+                });
+
             modelBuilder.Entity("Core.Entity.MessageEntitys.MessageBox", b =>
                 {
                     b.Navigation("Messages");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Core.Entity.PostEntitys.Post", b =>
                 {
                     b.Navigation("Commentary");
+
+                    b.Navigation("Files");
 
                     b.Navigation("Reactions");
 
@@ -890,11 +779,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entity.PostEntitys.PostCommentary", b =>
                 {
                     b.Navigation("PostAnswers");
-                });
-
-            modelBuilder.Entity("Core.Entity.UserEntitys.ImageCommentary", b =>
-                {
-                    b.Navigation("ImageAnswers");
                 });
 
             modelBuilder.Entity("Core.Entity.UserEntitys.Role", b =>
@@ -910,13 +794,9 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Followings");
 
-                    b.Navigation("ImageAnswer");
-
-                    b.Navigation("ImageCommentary");
-
-                    b.Navigation("ImageReaction");
-
                     b.Navigation("Message");
+
+                    b.Navigation("MessageBoxs");
 
                     b.Navigation("PostAnswer");
 
@@ -926,16 +806,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("SavedPosts");
 
-                    b.Navigation("UserImages");
-
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("Core.Entity.UserEntitys.UserImages", b =>
-                {
-                    b.Navigation("Commentary");
-
-                    b.Navigation("Reaction");
                 });
 #pragma warning restore 612, 618
         }

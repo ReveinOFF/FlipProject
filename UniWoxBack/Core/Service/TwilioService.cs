@@ -1,10 +1,5 @@
 ﻿using Core.DTO.Twilio;
 using Core.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Twilio.Clients;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;

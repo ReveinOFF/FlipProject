@@ -1,9 +1,11 @@
 ﻿using Core.Entity.MessageEntitys;
 using Core.Entity.PostEntitys;
+using Core.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Core.Entity.UserEntitys
 {
@@ -23,7 +25,9 @@ namespace Core.Entity.UserEntitys
         public string Surname { get; set; }
         public string Description { get; set; }
         [Required]
+        [JsonConverter(typeof(DateOnlyConverter))]
         public DateOnly DateCreate { get; set; }
+        [JsonConverter(typeof(DateOnlyConverter))]
         public DateOnly DateOfBirth { get; set; }
         [Required]
         public bool IsVerified { get; set; }
@@ -41,7 +45,7 @@ namespace Core.Entity.UserEntitys
         }
 
         /* Communication Room */
-        public virtual ICollection<MessageBox> MessageBoxs { get; set; }
+        public virtual ICollection<MessageBoxUser> MessageBoxs { get; set; }
 
         /* All user messages */
         public virtual ICollection<Message> Message { get; set; }
@@ -63,18 +67,6 @@ namespace Core.Entity.UserEntitys
 
         /* All created posts */
         public virtual ICollection<UserRole> UserRoles { get; set; }
-
-        /* The list of images in the user */
-        public virtual ICollection<UserImages> UserImages { get; set; }
-
-        /* All image reactions (like/dislike) */
-        public virtual ICollection<ImageReaction> ImageReaction { get; set; }
-
-        /* All image comments */
-        public virtual ICollection<ImageCommentary> ImageCommentary { get; set; }
-
-        /* All image answer */
-        public virtual ICollection<ImageAnswer> ImageAnswer { get; set; }
 
         /* Friends */
         public virtual ICollection<Follow> Followers { get; set; }

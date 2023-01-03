@@ -9,17 +9,22 @@ using Core.Validators;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileProviders;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using Twilio.Clients;
 using UniWoxBack.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddControllers();
-builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
-//builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("localDb")));
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
+//builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
+builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("localDb")));
 builder.Services.AddIdentity<User, Role>(options =>
 {
     // Password settings.
@@ -43,14 +48,23 @@ builder.Services.AddFluentValidation(x => {
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+    options.MapType<DateOnly>(() => new OpenApiSchema
+    {
+        Type = "string",
+        Format = "date",
+        Example = new OpenApiString("2022-01-01")
+    }));
+
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 builder.Services.Configure<MailSettingsDTO>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<TwilioVerifySettings>(builder.Configuration.GetSection("Twilio"));
+
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<ITwilioService, TwilioService>();
 builder.Services.AddHttpClient<ITwilioRestClient, TwilioClient>();
+
 builder.Services.AddCors();
 
 var app = builder.Build();
@@ -66,17 +80,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var dir = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
-if (!Directory.Exists(dir))
-{
-    Directory.CreateDirectory(dir);
-    Directory.CreateDirectory(Path.Combine(dir, "UserImage"));
-}
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(dir),
-    RequestPath = "/resources"
-});
+app.CreatePath();
 
 app.UseAuthentication();
 app.UseAuthorization();

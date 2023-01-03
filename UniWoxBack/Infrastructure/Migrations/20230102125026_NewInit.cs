@@ -33,8 +33,8 @@ namespace Infrastructure.Migrations
                     Name = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     Surname = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    DateCreate = table.Column<DateTime>(type: "date", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: false),
+                    DateCreate = table.Column<DateOnly>(type: "date", nullable: false),
+                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     IsVerified = table.Column<bool>(type: "boolean", nullable: false),
                     IsPrivateUser = table.Column<bool>(type: "boolean", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -206,12 +206,11 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    Images = table.Column<string>(type: "text", nullable: true),
-                    Videos = table.Column<string>(type: "text", nullable: true),
                     DatePosted = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Views = table.Column<int>(type: "integer", nullable: false),
                     IsPremium = table.Column<bool>(type: "boolean", nullable: false),
                     IsBlocked = table.Column<bool>(type: "boolean", nullable: false),
+                    FilesId = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -226,37 +225,15 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserImages",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Image = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Views = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserImages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserImages_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Message",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     SenderName = table.Column<string>(type: "text", nullable: false),
-                    Audio = table.Column<string>(type: "text", nullable: true),
-                    Images = table.Column<string>(type: "text", nullable: true),
                     MessageText = table.Column<string>(type: "text", nullable: true),
                     DateSender = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsEdited = table.Column<bool>(type: "boolean", nullable: false),
+                    FilesId = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     MessageBoxId = table.Column<string>(type: "text", nullable: false)
                 },
@@ -278,24 +255,24 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MessageBoxUser",
+                name: "MessageBoxUsers",
                 columns: table => new
                 {
-                    MessageBoxsId = table.Column<string>(type: "text", nullable: false),
-                    UsersId = table.Column<string>(type: "text", nullable: false)
+                    MessageBoxId = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MessageBoxUser", x => new { x.MessageBoxsId, x.UsersId });
+                    table.PrimaryKey("PK_MessageBoxUsers", x => new { x.UserId, x.MessageBoxId });
                     table.ForeignKey(
-                        name: "FK_MessageBoxUser_AspNetUsers_UsersId",
-                        column: x => x.UsersId,
+                        name: "FK_MessageBoxUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MessageBoxUser_MessageBox_MessageBoxsId",
-                        column: x => x.MessageBoxsId,
+                        name: "FK_MessageBoxUsers_MessageBox_MessageBoxId",
+                        column: x => x.MessageBoxId,
                         principalTable: "MessageBox",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -306,10 +283,10 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    PostId = table.Column<string>(type: "text", nullable: true),
                     Text = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true)
+                    UserId = table.Column<string>(type: "text", nullable: true),
+                    PostId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -321,6 +298,25 @@ namespace Infrastructure.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PostCommentary_Post_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Post",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostFiles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    PostId = table.Column<string>(type: "text", nullable: true),
+                    PathName = table.Column<string>(type: "text", nullable: false),
+                    FileType = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostFiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PostFiles_Post_PostId",
                         column: x => x.PostId,
                         principalTable: "Post",
                         principalColumn: "Id");
@@ -376,54 +372,22 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ImageCommentary",
+                name: "MessageFiles",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    ImageId = table.Column<string>(type: "text", nullable: true),
-                    ImagesId = table.Column<string>(type: "text", nullable: true),
-                    Text = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true)
+                    MessageId = table.Column<string>(type: "text", nullable: true),
+                    PathName = table.Column<string>(type: "text", nullable: false),
+                    FileType = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImageCommentary", x => x.Id);
+                    table.PrimaryKey("PK_MessageFiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ImageCommentary_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_MessageFiles_Message_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "Message",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ImageCommentary_UserImages_ImagesId",
-                        column: x => x.ImagesId,
-                        principalTable: "UserImages",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ImageReaction",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    ImageId = table.Column<string>(type: "text", nullable: false),
-                    IsLike = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ImageReaction", x => new { x.UserId, x.ImageId });
-                    table.ForeignKey(
-                        name: "FK_ImageReaction_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ImageReaction_UserImages_ImageId",
-                        column: x => x.ImageId,
-                        principalTable: "UserImages",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -431,10 +395,10 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    CommentaryId = table.Column<string>(type: "text", nullable: true),
                     Text = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true)
+                    UserId = table.Column<string>(type: "text", nullable: true),
+                    CommentaryId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -448,31 +412,6 @@ namespace Infrastructure.Migrations
                         name: "FK_PostAnswer_PostCommentary_CommentaryId",
                         column: x => x.CommentaryId,
                         principalTable: "PostCommentary",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ImageAnswer",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    CommentaryId = table.Column<string>(type: "text", nullable: true),
-                    Text = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ImageAnswer", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ImageAnswer_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ImageAnswer_ImageCommentary_CommentaryId",
-                        column: x => x.CommentaryId,
-                        principalTable: "ImageCommentary",
                         principalColumn: "Id");
                 });
 
@@ -543,58 +482,9 @@ namespace Infrastructure.Migrations
                 column: "FollowingUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ImageAnswer_CommentaryId",
-                table: "ImageAnswer",
-                column: "CommentaryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ImageAnswer_Id",
-                table: "ImageAnswer",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ImageAnswer_UserId",
-                table: "ImageAnswer",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ImageCommentary_Id",
-                table: "ImageCommentary",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ImageCommentary_ImagesId",
-                table: "ImageCommentary",
-                column: "ImagesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ImageCommentary_UserId",
-                table: "ImageCommentary",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ImageReaction_ImageId",
-                table: "ImageReaction",
-                column: "ImageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Message_Audio",
-                table: "Message",
-                column: "Audio",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Message_Id",
                 table: "Message",
                 column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Message_Images",
-                table: "Message",
-                column: "Images",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -620,9 +510,21 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageBoxUser_UsersId",
-                table: "MessageBoxUser",
-                column: "UsersId");
+                name: "IX_MessageBoxUsers_MessageBoxId",
+                table: "MessageBoxUsers",
+                column: "MessageBoxId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageFiles_Id",
+                table: "MessageFiles",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageFiles_MessageId",
+                table: "MessageFiles",
+                column: "MessageId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Post_Id",
@@ -631,21 +533,9 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_Images",
-                table: "Post",
-                column: "Images",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Post_UserId",
                 table: "Post",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Post_Videos",
-                table: "Post",
-                column: "Videos",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostAnswer_CommentaryId",
@@ -680,26 +570,21 @@ namespace Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostReaction_PostId",
-                table: "PostReaction",
-                column: "PostId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserImages_Id",
-                table: "UserImages",
+                name: "IX_PostFiles_Id",
+                table: "PostFiles",
                 column: "Id",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserImages_Image",
-                table: "UserImages",
-                column: "Image",
+                name: "IX_PostFiles_PostId",
+                table: "PostFiles",
+                column: "PostId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserImages_UserId",
-                table: "UserImages",
-                column: "UserId");
+                name: "IX_PostReaction_PostId",
+                table: "PostReaction",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserPost_PostId",
@@ -728,19 +613,16 @@ namespace Infrastructure.Migrations
                 name: "Follows");
 
             migrationBuilder.DropTable(
-                name: "ImageAnswer");
+                name: "MessageBoxUsers");
 
             migrationBuilder.DropTable(
-                name: "ImageReaction");
-
-            migrationBuilder.DropTable(
-                name: "Message");
-
-            migrationBuilder.DropTable(
-                name: "MessageBoxUser");
+                name: "MessageFiles");
 
             migrationBuilder.DropTable(
                 name: "PostAnswer");
+
+            migrationBuilder.DropTable(
+                name: "PostFiles");
 
             migrationBuilder.DropTable(
                 name: "PostReaction");
@@ -752,16 +634,13 @@ namespace Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "ImageCommentary");
-
-            migrationBuilder.DropTable(
-                name: "MessageBox");
+                name: "Message");
 
             migrationBuilder.DropTable(
                 name: "PostCommentary");
 
             migrationBuilder.DropTable(
-                name: "UserImages");
+                name: "MessageBox");
 
             migrationBuilder.DropTable(
                 name: "Post");

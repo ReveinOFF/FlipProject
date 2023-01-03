@@ -1,13 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Core.Helpers
 {
-    public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
+    // DateOnly conversion.
+    public class DateOnlyConverter : JsonConverter<DateOnly>
     {
-        /// Creates a new instance of this converter.
-        public DateOnlyConverter() : base(
-                d => d.ToDateTime(TimeOnly.MinValue),
-                d => DateOnly.FromDateTime(d))
-        { }
+        private const string Format = "yyyy-MM-dd";
+
+        public override DateOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            return DateOnly.ParseExact(reader.GetString()!, Format, CultureInfo.InvariantCulture);
+        }
+
+        public override void Write(Utf8JsonWriter writer, DateOnly value, JsonSerializerOptions options)
+        {
+            writer.WriteStringValue(value.ToString(Format, CultureInfo.InvariantCulture));
+        }
     }
 }
