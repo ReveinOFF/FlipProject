@@ -210,7 +210,6 @@ namespace Infrastructure.Migrations
                     Views = table.Column<int>(type: "integer", nullable: false),
                     IsPremium = table.Column<bool>(type: "boolean", nullable: false),
                     IsBlocked = table.Column<bool>(type: "boolean", nullable: false),
-                    FilesId = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -233,7 +232,6 @@ namespace Infrastructure.Migrations
                     MessageText = table.Column<string>(type: "text", nullable: true),
                     DateSender = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsEdited = table.Column<bool>(type: "boolean", nullable: false),
-                    FilesId = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     MessageBoxId = table.Column<string>(type: "text", nullable: false)
                 },
@@ -523,8 +521,7 @@ namespace Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_MessageFiles_MessageId",
                 table: "MessageFiles",
-                column: "MessageId",
-                unique: true);
+                column: "MessageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Post_Id",
@@ -578,8 +575,7 @@ namespace Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_PostFiles_PostId",
                 table: "PostFiles",
-                column: "PostId",
-                unique: true);
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostReaction_PostId",

@@ -21,16 +21,14 @@ namespace Core.Entity.PostEntitys
         [Required]
         public bool IsBlocked { get; set; }
 
-        /* Added files */
-        [ForeignKey("PostFiles")]
-        public string FilesId { get; set; }
-        public virtual PostFiles Files { get; set; }
-
         /* Creator */
         [Required]
         [ForeignKey("User")]
         public string UserId { get; set; }
         public virtual User User { get; set; }
+
+        /* Added files */
+        public virtual ICollection<PostFiles> Files { get; set; }
 
         /* All users who saved their post */
         public virtual ICollection<UserPost> Saveds { get; set; }
