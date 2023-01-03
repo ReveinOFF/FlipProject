@@ -46,8 +46,10 @@ namespace UniWoxBack.Services
                         Name = "Roman",
                         Surname = "Pomianovskiy",
                         UserName = "ronnieplay",
+                        DateCreate = DateOnly.FromDateTime(DateTime.Now.Date),
                         Email = "ronnieplayyt@gmail.com",
-                        IsVerified= true
+                        IsVerified = true,
+                        EmailConfirmed= true
                     };
                     var result = userManager.CreateAsync(user).Result;
                     result = userManager.AddPasswordAsync(user, "romap310103").Result;

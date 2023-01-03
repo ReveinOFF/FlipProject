@@ -1,4 +1,4 @@
-﻿namespace Core.DTO.Account
+﻿namespace Core.DTO.User
 {
     public class ChangeUserDTO
     {

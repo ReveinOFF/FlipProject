@@ -1,4 +1,6 @@
-﻿namespace Core.DTO.Account
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Core.DTO.Account
 {
     public class RegisterDTO
     {
@@ -6,7 +8,7 @@
         public string UserName { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string UserImage { get; set; }
+        public IFormFile UserImage { get; set; }
         public string Phone { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }

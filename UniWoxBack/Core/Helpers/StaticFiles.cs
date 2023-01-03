@@ -1,38 +1,57 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Core.Helpers
 {
     public class StaticFiles
     {
-        //public static string CreateImage(IWebHostEnvironment env,
-        //                                 IConfiguration configuration,
-        //                                 string pathFolder,
-        //                                 string fileName, string base64, 
-        //                                 string imageSizes)
-        //{
-        //    string fileDestDir = env.ContentRootPath;
+        public async static Task<string> CreateImageAsync(IWebHostEnvironment env,
+                                         string pathFolder,
+                                         IFormFile file)
+        {
+            try
+            {
+                string uploadFile;
 
-        //    try
-        //    {
-        //        fileDestDir = Path.Combine(fileDestDir, pathFolder);
-        //        if (!Directory.Exists(fileDestDir))
-        //        {
-        //            Directory.CreateDirectory(fileDestDir);
-        //        }
+                if (file != null)
+                {
+                    string fileDestDir = env.ContentRootPath;
+                    Guid fileName = Guid.NewGuid();
+                    string extention = Path.GetExtension(file.FileName);
+                    string newFileName = fileName.ToString() + extention;
 
+                    fileDestDir = Path.Combine(fileDestDir, pathFolder);
+                    if (!Directory.Exists(fileDestDir))
+                    {
+                        Directory.CreateDirectory(fileDestDir);
+                    }
 
-        //    }
-        //    catch (Exception)
-        //    {
+                    uploadFile = Path.Combine(fileDestDir, newFileName);
+                    var stream = new FileStream(uploadFile, FileMode.Create);
+                    await file.CopyToAsync(stream);
+                }
+                else
+                {
+                    uploadFile = null;
+                }
 
-        //        throw;
-        //    }
-        //}
+                return (uploadFile);
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc);
+                return null;
+            }
+        }
+
+        public async static Task<string> EditImageAsync(string oldFilePath, string newPathFolder, IFormFile file, IWebHostEnvironment env)
+        {
+            if (Directory.Exists(oldFilePath))
+                File.Delete(oldFilePath);
+
+            string uploadFile = await CreateImageAsync(env, newPathFolder, file);
+
+            return uploadFile;
+        }
     }
 }

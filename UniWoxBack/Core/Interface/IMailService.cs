@@ -1,10 +1,4 @@
-﻿using AutoMapper.Internal;
-using Core.DTO.Mail;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core.DTO.Mail;
 
 namespace Core.Interface
 {
