@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataBase))]
-    [Migration("20230102125026_NewInit")]
+    [Migration("20230103113202_NewInit")]
     partial class NewInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,9 +32,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("DateSender")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("FilesId")
-                        .HasColumnType("text");
 
                     b.Property<bool>("IsEdited")
                         .HasColumnType("boolean");
@@ -125,8 +122,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("MessageId")
-                        .IsUnique();
+                    b.HasIndex("MessageId");
 
                     b.ToTable("MessageFiles");
                 });
@@ -144,9 +140,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
-
-                    b.Property<string>("FilesId")
-                        .HasColumnType("text");
 
                     b.Property<bool>("IsBlocked")
                         .HasColumnType("boolean");
@@ -256,8 +249,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("PostId")
-                        .IsUnique();
+                    b.HasIndex("PostId");
 
                     b.ToTable("PostFiles");
                 });
@@ -587,8 +579,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entity.MessageEntitys.MessageFiles", b =>
                 {
                     b.HasOne("Core.Entity.MessageEntitys.Message", "Message")
-                        .WithOne("Files")
-                        .HasForeignKey("Core.Entity.MessageEntitys.MessageFiles", "MessageId");
+                        .WithMany("Files")
+                        .HasForeignKey("MessageId");
 
                     b.Navigation("Message");
                 });
@@ -637,8 +629,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entity.PostEntitys.PostFiles", b =>
                 {
                     b.HasOne("Core.Entity.PostEntitys.Post", "Post")
-                        .WithOne("Files")
-                        .HasForeignKey("Core.Entity.PostEntitys.PostFiles", "PostId");
+                        .WithMany("Files")
+                        .HasForeignKey("PostId");
 
                     b.Navigation("Post");
                 });

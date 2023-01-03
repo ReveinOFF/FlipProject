@@ -16,11 +16,6 @@ namespace Core.Entity.MessageEntitys
         [Required]
         public bool IsEdited { get; set; }
 
-        /* Sent file */
-        [ForeignKey("MessageFiles")]
-        public string FilesId { get; set; }
-        public virtual MessageFiles Files { get; set; }
-
         /* Sender */
         [Required]
         [ForeignKey("User")]
@@ -32,5 +27,8 @@ namespace Core.Entity.MessageEntitys
         [ForeignKey("MessageBox")]
         public string MessageBoxId { get; set; }
         public virtual MessageBox MessageBox { get; set; }
+
+        /* Sent file */
+        public virtual ICollection<MessageFiles> Files { get; set; }
     }
 }

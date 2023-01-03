@@ -23,8 +23,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
 });
-//builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
-builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("localDb")));
+builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
+//builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("localDb")));
 builder.Services.AddIdentity<User, Role>(options =>
 {
     // Password settings.
