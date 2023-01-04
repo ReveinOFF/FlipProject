@@ -2,11 +2,11 @@
 using FluentValidation;
 using System.Text.RegularExpressions;
 
-namespace Core.Validators
+namespace Core.Validators.Account
 {
     public class RegisterValidator : AbstractValidator<RegisterDTO>
-    {  
-        public RegisterValidator() 
+    {
+        public RegisterValidator()
         {
             RuleFor(x => x.Email)
                .NotEmpty().WithMessage("Email is required.")
@@ -32,6 +32,7 @@ namespace Core.Validators
                     .MinimumLength(8).WithMessage("Password must be at least 8 characters long!");
             RuleFor(x => x.ConfirmPassword)
                     .NotEmpty().WithMessage("The сonfirm password field is required!")
+                    .MinimumLength(8).WithMessage("Password must be at least 8 characters long!")
                     .Equal(x => x.Password).WithMessage("Password does not match!");
         }
     }
