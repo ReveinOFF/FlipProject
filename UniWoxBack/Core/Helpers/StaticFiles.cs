@@ -44,14 +44,15 @@ namespace Core.Helpers
             }
         }
 
-        public async static Task<string> EditImageAsync(string oldFilePath, string newPathFolder, IFormFile file, IWebHostEnvironment env)
+        public static bool DeleteImageAsync(string oldFilePath)
         {
-            if (Directory.Exists(oldFilePath))
+            if (File.Exists(oldFilePath))
+            {
                 File.Delete(oldFilePath);
-
-            string uploadFile = await CreateImageAsync(env, newPathFolder, file);
-
-            return uploadFile;
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

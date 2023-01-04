@@ -50,7 +50,7 @@ namespace UniWoxBack.Controllers
                 user.IsVerified = false;
                 user.IsPrivateUser = false;
 
-                string fileDestDir = Path.Combine(_env.ContentRootPath, "Resources", "UserImage", user.Id);
+                string fileDestDir = Path.Combine("Resources", "UserImage", user.Id);
                 string createImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, register.UserImage);
                 user.UserImage = createImage;
 
@@ -85,7 +85,7 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpGet("EmailConfirm")]
+        [HttpPost("EmailConfirm")]
         public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDTO confirmEmail)
         {
             var user = await _userManager.FindByEmailAsync(confirmEmail.Email);
