@@ -2,11 +2,11 @@
 using FluentValidation;
 using System.Text.RegularExpressions;
 
-namespace Core.Validators
+namespace Core.Validators.Account
 {
     public class LoginValidator : AbstractValidator<LoginDTO>
     {
-        public LoginValidator() 
+        public LoginValidator()
         {
             RuleFor(x => x.UserName)
                     .NotEmpty().WithMessage("Login cannot be empty")

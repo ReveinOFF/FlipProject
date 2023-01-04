@@ -5,7 +5,8 @@ using Core.Helpers;
 using Core.Interface;
 using Core.Mapper;
 using Core.Service;
-using Core.Validators;
+using Core.Validators.Account;
+using Core.Validators.User;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,11 @@ builder.Services.AddAutoMapper(typeof(AppMap));
 builder.Services.AddFluentValidation(x => {
     x.RegisterValidatorsFromAssemblyContaining<RegisterValidator>();
     x.RegisterValidatorsFromAssemblyContaining<LoginValidator>();
+    x.RegisterValidatorsFromAssemblyContaining<ConfirmPasswordValidator>();
+    x.RegisterValidatorsFromAssemblyContaining<ConfirmEmailValidator>();
+
+    x.RegisterValidatorsFromAssemblyContaining<ChangePasswordValidator>();
+    x.RegisterValidatorsFromAssemblyContaining<ChangeUserValidator>();
 });
 
 builder.Services.AddEndpointsApiExplorer();

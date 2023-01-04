@@ -46,19 +46,22 @@ namespace UniWoxBack.Controllers
             return Ok(getUser);
         }
 
-        [HttpPut("EditImageUser")]
-        public async Task<IActionResult> EditImageUser(string userId, IFormFile file)
+        [HttpPost("AddImageUser")]
+        public async Task<IActionResult> AddImageUser(string userId, IFormFile file)
         {
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
                 return BadRequest("User not found!");
 
-            string fileDestDir = Path.Combine("Resources", "UserImage", user.Id);
+            if (user.UserImage != null)
+            {
+                bool deleteFile = StaticFiles.DeleteImageAsync(user.UserImage);
+                if (!deleteFile)
+                    return BadRequest("Image not found!");
+            }
 
-            bool deleteFile = StaticFiles.DeleteImageAsync(user.UserImage);
-            if (!deleteFile)
-                return BadRequest("Image not found!");
+            string fileDestDir = Path.Combine("Resources", "UserImage", user.Id);
 
             var newImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, file);
 

@@ -9,7 +9,6 @@ namespace Core.Mapper
     {
         public AppMap() 
         {
-            //Registraation
             CreateMap<RegisterDTO, User>()
                 .ForMember(x => x.UserImage, opt => opt.Ignore());
 
