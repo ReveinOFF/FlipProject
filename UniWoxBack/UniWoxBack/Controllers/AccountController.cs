@@ -1,11 +1,17 @@
 ﻿using AutoMapper;
 using Core.DTO.Account;
 using Core.DTO.Mail;
+using Core.DTO.User;
 using Core.Entity.UserEntitys;
 using Core.Helpers;
 using Core.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using Twilio.Http;
+using UniWoxBack.Constans;
 using UniWoxBack.Helpers;
 
 namespace UniWoxBack.Controllers
@@ -51,8 +57,9 @@ namespace UniWoxBack.Controllers
                 user.IsPrivateUser = false;
 
                 string fileDestDir = Path.Combine("Resources", "UserImage", user.Id);
-                string createImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, register.UserImage);
-                user.UserImage = createImage;
+                var createImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, register.UserImage);
+                user.UserImage = createImage.FileName;
+                user.UserImagePath = createImage.FileName;
 
                 var result = await _userManager.CreateAsync(user, register.Password);
                 if (!result.Succeeded)
@@ -115,25 +122,32 @@ namespace UniWoxBack.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> LogIn([FromBody] LoginDTO login)
         {
-            string token;
             try
             {
-                var user = await _userManager.FindByNameAsync(login.UserName);
-                if (user == null)
+                var findUser = await _userManager.FindByNameAsync(login.UserName);
+                if (findUser == null)
                     return BadRequest(new { error = "Error when searching for an account!" });
-                if (!await _userManager.CheckPasswordAsync(user, login.Password))
+                if (!await _userManager.CheckPasswordAsync(findUser, login.Password))
                     return BadRequest(new { error = "Error in password verification!" });
-                if (!await _userManager.IsEmailConfirmedAsync(user))
+                if (!await _userManager.IsEmailConfirmedAsync(findUser))
                     return BadRequest(new { error = "Email is not confirmed!" });
 
-                token = _jwtService.CreateToken(user);
+                var user = _mapper.Map<GetUserDTO>(findUser);
+
+                var token = _jwtService.CreateToken(findUser);
+                var refreshToken = _jwtService.GenerateRefreshToken();
+                await InsertRefreshToken(findUser, refreshToken);
+
+                return Ok(new TokenDTO
+                {
+                    Token = token,
+                    RefreshToken = refreshToken
+                });
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
-            return Ok(new TokenDTO { Token = token});
         }
 
         [HttpPost("RecoverPassword")]
@@ -194,6 +208,32 @@ namespace UniWoxBack.Controllers
                 return BadRequest("Error in sending the message!");
 
             return Ok();
+        }
+
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RenewTokens(string refreshToken)
+        {
+            var tokens = await _jwtService.RenewTokens(refreshToken);
+
+            Response.Cookies.Delete("RefreshToken");
+            Response.Cookies.Append("RefreshToken", refreshToken);
+
+            if (tokens == null)
+            {
+                return ValidationProblem("Invalid Refresh Token");
+            }
+
+            return Ok(tokens);
+        }
+
+        [NonAction]
+        private async Task InsertRefreshToken(User user, string refreshtoken)
+        {
+            user.RefreshToken = refreshtoken;
+
+            await _userManager.UpdateAsync(user);
+
+            Response.Cookies.Append("RefreshToken", refreshtoken);
         }
     }
 }

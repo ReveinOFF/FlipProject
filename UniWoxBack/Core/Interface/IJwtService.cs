@@ -1,9 +1,13 @@
-﻿using Core.Entity.UserEntitys;
+﻿using Core.DTO.Account;
+using Core.Entity.UserEntitys;
+using System.Security.Claims;
 
 namespace Core.Interface
 {
     public interface IJwtService
     {
-        public string CreateToken(User user);
+        string CreateToken(User user);
+        Task<TokenDTO> RenewTokens(string refreshToken);
+        string GenerateRefreshToken();
     }
 }

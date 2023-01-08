@@ -17,6 +17,7 @@ namespace Core.Entity.UserEntitys
     {
         /* Information */
         public string UserImage { get; set; }
+        public string UserImagePath { get; set; }
         [Required]
         [MaxLength(10)]
         public string Name { get; set; }
@@ -33,6 +34,7 @@ namespace Core.Entity.UserEntitys
         public bool IsVerified { get; set; }
         [Required]
         public bool IsPrivateUser { get; set; }
+        public string RefreshToken { get; set; }
 
         /* NotMapped */
         [NotMapped]

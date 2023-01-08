@@ -30,6 +30,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     UserImage = table.Column<string>(type: "text", nullable: true),
+                    UserImagePath = table.Column<string>(type: "text", nullable: true),
                     Name = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     Surname = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
@@ -37,6 +38,7 @@ namespace Infrastructure.Migrations
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     IsVerified = table.Column<bool>(type: "boolean", nullable: false),
                     IsPrivateUser = table.Column<bool>(type: "boolean", nullable: false),
+                    RefreshToken = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -306,9 +308,10 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    FileType = table.Column<int>(type: "integer", nullable: false),
                     PostId = table.Column<string>(type: "text", nullable: true),
                     PathName = table.Column<string>(type: "text", nullable: false),
-                    FileType = table.Column<int>(type: "integer", nullable: false)
+                    FileName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -376,7 +379,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     MessageId = table.Column<string>(type: "text", nullable: true),
                     PathName = table.Column<string>(type: "text", nullable: false),
-                    FileType = table.Column<int>(type: "integer", nullable: false)
+                    FileName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

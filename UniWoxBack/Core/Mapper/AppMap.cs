@@ -9,8 +9,7 @@ namespace Core.Mapper
     {
         public AppMap() 
         {
-            CreateMap<RegisterDTO, User>()
-                .ForMember(x => x.UserImage, opt => opt.Ignore());
+            CreateMap<RegisterDTO, User>();
 
             CreateMap<User, GetUserDTO>()
                 .ForMember(x => x.Followers, y => y.MapFrom(x => x.Followers.Count))

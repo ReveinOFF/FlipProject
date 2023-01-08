@@ -4,12 +4,14 @@ using Core.Entity.PostEntitys;
 using Core.Entity.UserEntitys;
 using Core.Helpers;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace UniWoxBack.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -54,9 +56,9 @@ namespace UniWoxBack.Controllers
             if (user == null)
                 return BadRequest("User not found!");
 
-            if (user.UserImage != null)
+            if (user.UserImagePath != null)
             {
-                bool deleteFile = StaticFiles.DeleteImageAsync(user.UserImage);
+                bool deleteFile = StaticFiles.DeleteImageAsync(user.UserImagePath);
                 if (!deleteFile)
                     return BadRequest("Image not found!");
             }
@@ -65,10 +67,14 @@ namespace UniWoxBack.Controllers
 
             var newImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, file);
 
-            if (newImage == null)
+            if (newImage.FilePath == null)
                 return BadRequest("The link to the file was not created!");
 
-            user.UserImage = newImage;
+            if (newImage.FileName == null)
+                return BadRequest("The name to the file was not created!");
+
+            user.UserImage = newImage.FileName;
+            user.UserImagePath = newImage.FilePath;
 
             var result = await _userManager.UpdateAsync(user);
 
@@ -91,6 +97,7 @@ namespace UniWoxBack.Controllers
                 return BadRequest("Image not found!");
 
             user.UserImage = null;
+            user.UserImagePath = null;
 
             var result = await _userManager.UpdateAsync(user);
 
