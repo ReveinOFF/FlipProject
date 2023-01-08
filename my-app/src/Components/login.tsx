@@ -1,8 +1,11 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { useDispatch } from 'react-redux';
+import { AuthActionTypes } from './Auth/store/types';
+import { useNavigate } from "react-router-dom";
 
 interface UserLogin {
     UserName: string;
@@ -71,14 +74,17 @@ function Login() {
     const login = useInput('', {isEmpty: true, minLenght: 5});
     const password = useInput('', {isEmpty: true, minLenght: 8});
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     function postLogin(userName: string, password: string) {
         const user: UserLogin = {UserName: userName, Password: password};
         setIsLoading(true);
         axios.post("http://localhost:5170/api/account/login", JSON.stringify(user), {headers: {'Content-Type': 'application/json'}}).then(res => {
-            const { token } = res.data;
-            localStorage.setItem('token', token);
-            window.location.reload();
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+            dispatch({type: AuthActionTypes.LOGIN, payload: {token: res.data.token, user: res.data.user}});
+            navigate("/");
         }).catch(err => {
             console.log(err);
             alert("Error login");

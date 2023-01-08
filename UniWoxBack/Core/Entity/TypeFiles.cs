@@ -2,7 +2,6 @@
 {
     public enum TypeFiles
     {
-        MP3,
         MP4,
         JPEG
     }

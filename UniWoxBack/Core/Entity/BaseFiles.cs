@@ -7,6 +7,6 @@ namespace Core.Entity
         [Required]
         public string PathName { get; set; }
         [Required]
-        public TypeFiles FileType { get; set; }
+        public string FileName { get; set; }
     }
 }

@@ -1,30 +1,17 @@
 import { Link } from 'react-router-dom';
 import { Button, Nav, Navbar } from 'react-bootstrap'
-import { useEffect, useState } from 'react';
+import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useDispatch } from 'react-redux';
+import { AuthActionTypes } from './Auth/store/types';
 
 function Home() {
-    const [isAuth, setIsAuth] = useState<boolean>();
-
-    useEffect(() => {
-        checkAuth();
-    });
-
-    const checkAuth = () => {
-        var storage = localStorage.getItem('token');
-
-        if(storage != null) {
-            setIsAuth(true);
-            return true;
-        } else {
-            setIsAuth(false);
-            return false;
-        }
-    }
+    const getUser = useTypedSelector((state) => state.auth);
+    const dispatch = useDispatch();
 
     const logout = () => {
         localStorage.removeItem('token');
-        checkAuth();
-        window.location.reload();
+        localStorage.removeItem('user');
+        dispatch({type: AuthActionTypes.LOGOUT})
     }
 
     return (
@@ -36,10 +23,15 @@ function Home() {
                     </Button>
                 </Nav>
                 <Nav className='ms-auto p-2'>
-                    {isAuth ? (
-                        <Button className='text-light' style={{textDecoration: "none"}} onClick={logout}>
-                            Logout
-                        </Button>
+                    {getUser.isAuth ? (
+                        <div>
+                            <Button>
+                                <Link className='text-light' style={{textDecoration: "none"}} to="/profile">Profile</Link>
+                            </Button>
+                            <Button className='text-light' style={{textDecoration: "none"}} onClick={logout}>
+                                Logout
+                            </Button>
+                        </div>
                     ) : (
                         <Button>
                             <Link className='text-light' style={{textDecoration: "none"}} to="/login">Login</Link>

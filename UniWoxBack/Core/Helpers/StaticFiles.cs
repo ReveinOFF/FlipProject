@@ -5,14 +5,12 @@ namespace Core.Helpers
 {
     public class StaticFiles
     {
-        public async static Task<string> CreateImageAsync(IWebHostEnvironment env,
+        public async static Task<(string FilePath, string FileName)> CreateImageAsync(IWebHostEnvironment env,
                                          string pathFolder,
                                          IFormFile file)
         {
             try
             {
-                string uploadFile;
-
                 if (file != null)
                 {
                     string fileDestDir = env.ContentRootPath;
@@ -26,21 +24,21 @@ namespace Core.Helpers
                         Directory.CreateDirectory(fileDestDir);
                     }
 
-                    uploadFile = Path.Combine(fileDestDir, newFileName);
+                    string uploadFile = Path.Combine(fileDestDir, newFileName);
                     var stream = new FileStream(uploadFile, FileMode.Create);
                     await file.CopyToAsync(stream);
+
+                    return (FilePath: uploadFile, FileName: newFileName);
                 }
                 else
                 {
-                    uploadFile = null;
+                    return (null, null);
                 }
-
-                return (uploadFile);
             }
             catch (Exception exc)
             {
                 Console.WriteLine(exc);
-                return null;
+                return (null, null);
             }
         }
 
