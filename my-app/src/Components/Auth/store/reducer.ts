@@ -9,6 +9,8 @@ const initialState: AuthState = {
     isAuth: false
 }
 
+export type AuthAction = UserAction;
+
 export const authReducer = (state = initialState, action: UserAction) : AuthState => {
     switch (action.type) {
         case AuthActionTypes.LOGIN:

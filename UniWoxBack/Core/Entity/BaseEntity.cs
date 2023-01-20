@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Entity
 {
-    [Index(nameof(Id), IsUnique = true)]
     public abstract class BaseEntity
     {
         /*Constructor*/

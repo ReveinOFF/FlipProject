@@ -8,10 +8,10 @@ namespace Core.Validators.Account
         public ConfirmEmailValidator()
         {
             RuleFor(x => x.Email)
-                .EmailAddress().WithMessage("")
-                .NotEmpty().WithMessage("");
+                .EmailAddress().WithMessage("The mail is not entered correctly!")
+                .NotEmpty().WithMessage("The mail shouldn't be empty!");
             RuleFor(x => x.Token)
-                .NotEmpty().WithMessage("");
+                .NotEmpty().WithMessage("The token must not be empty!");
         }
     }
 }

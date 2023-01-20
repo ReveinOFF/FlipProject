@@ -39,15 +39,17 @@ namespace Infrastructure.Data
             /* Friend settings */
             modelBuilder.Entity<Follow>(user =>
             {
-                user.HasKey(x => new { x.FollowerUserId, x.FollowingUserId });
+                user.HasKey(x => new { x.FollowingId, x.FollowerId });
 
-                user.HasOne(x => x.FollowerUser)
-                    .WithMany(y => y.Followers)
-                    .HasForeignKey(z => z.FollowerUserId);
+                user.HasOne(x => x.Following)
+                    .WithMany(x => x.Followers)
+                    .HasForeignKey(x => x.FollowerId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
-                user.HasOne(x => x.FollowingUser)
-                    .WithMany(y => y.Followings)
-                    .HasForeignKey(z => z.FollowingUserId);
+                user.HasOne(x => x.Follower)
+                    .WithMany(x => x.Followings)
+                    .HasForeignKey(x => x.FollowingId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             /* Save post settings */
@@ -94,6 +96,7 @@ namespace Infrastructure.Data
 
         /* User */
         public virtual DbSet<Follow> Follows { get; set; }
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
         /* Message */
         public virtual DbSet<Message> Message { get; set; }

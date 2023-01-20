@@ -1,89 +1,45 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useDispatch } from 'react-redux';
 import { AuthActionTypes } from './Auth/store/types';
 import { useNavigate } from "react-router-dom";
+import jwtDecode from 'jwt-decode';
+import { useInput } from '../hooks/useInput';
 
 interface UserLogin {
     UserName: string;
     Password: string;
 }
 
-const useValidation = (value, validation) => {
-    const [isEmpty, setIsEmpty] = useState(true);
-    const [minLenghtError, setMinLenghtError] = useState(false);
-    const [inputValid, setInputValid] = useState(false);
-
-    useEffect(() => {
-        for(const valid in validation) {
-            switch(valid) {
-                case 'minLenght':
-                    value.length < validation[valid] ? setMinLenghtError(true) : setMinLenghtError(false);
-                    break;
-                case 'isEmpty':
-                    value ? setIsEmpty(false) : setIsEmpty(true);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }, [value, validation]);
-
-    useEffect(() => {
-        if(isEmpty || minLenghtError) {
-            setInputValid(false);
-        }
-        else {
-            setInputValid(true);
-        }
-    }, [isEmpty, minLenghtError]);
-
-    return {
-        isEmpty,
-        minLenghtError,
-        inputValid
-    }
-}
-
-const useInput = (initialValue, validation) => {
-    const [value, setValue] = useState(initialValue);
-    const [isDirty, setIsDirty] = useState(false);
-    const valid = useValidation(value, validation);
-
-    const onChange = (e) => {
-        setValue(e.target.value);
-    }
-
-    const onBlur = (e) => {
-        setIsDirty(true);
-    }
-
-    return {
-        value,
-        onChange,
-        onBlur,
-        isDirty,
-        ...valid
-    }
+interface JwtDecoder {
+    Role: string[],
+    UserId: string,
+    iss: string
 }
 
 function Login() {
     const login = useInput('', {isEmpty: true, minLenght: 5});
     const password = useInput('', {isEmpty: true, minLenght: 8});
     const [isLoading, setIsLoading] = useState(false);
+    
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     function postLogin(userName: string, password: string) {
         const user: UserLogin = {UserName: userName, Password: password};
         setIsLoading(true);
-        axios.post("http://localhost:5170/api/account/login", JSON.stringify(user), {headers: {'Content-Type': 'application/json'}}).then(res => {
+        axios.post("account/login", user).then(res => {
+            console.log(res.data);
             localStorage.setItem('token', res.data.token);
-            localStorage.setItem('user', JSON.stringify(res.data.user));
-            dispatch({type: AuthActionTypes.LOGIN, payload: {token: res.data.token, user: res.data.user}});
+            localStorage.setItem("refreshToken", res.data.refreshToken);
+
+            const decode: JwtDecoder = jwtDecode(res.data.token);
+            axios.get(`user/get-user-by-id/${decode.UserId}`).then(res => {
+                dispatch({type: AuthActionTypes.LOGIN, payload: {token: res.data.token, user: res.data}});
+            });
             navigate("/");
         }).catch(err => {
             console.log(err);
@@ -116,6 +72,7 @@ function Login() {
                 <Form.Control
                     placeholder="Password"
                     aria-label="Password"
+                    type='password'
                     aria-describedby="basic-addon1"
                     value={password.value}
                     onChange={e => password.onChange(e)}

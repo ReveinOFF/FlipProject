@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Core.Helpers;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
 
 namespace Core.DTO.Account
 {
@@ -7,10 +9,10 @@ namespace Core.DTO.Account
         public string Email { get; set; }
         public string UserName { get; set; }
         public string Name { get; set; }
-        public string Surname { get; set; }
         public IFormFile UserImage { get; set; }
         public string Phone { get; set; }
+        [JsonConverter(typeof(DateOnlyConverter))]
+        public DateOnly DateOfBirth { get; set; }
         public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using Core.Service;
 using Core.Validators.Account;
 using Core.Validators.User;
 using FluentValidation.AspNetCore;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,8 +28,10 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
 });
-builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
-//builder.Services.AddDbContext<Infrastructure.Data.DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("localDb")));
+//builder.Services.AddTransient<DataBase>()
+//    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
+builder.Services.AddTransient<DataBase>()
+    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("localDb")));
 builder.Services.AddIdentity<User, Role>(options =>
 {
     // Password settings.
@@ -42,7 +45,7 @@ builder.Services.AddIdentity<User, Role>(options =>
     options.User.AllowedUserNameCharacters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._!";
     options.User.RequireUniqueEmail = true;
-}).AddEntityFrameworkStores<Infrastructure.Data.DataBase>().AddDefaultTokenProviders();
+}).AddEntityFrameworkStores<DataBase>().AddDefaultTokenProviders();
 
 builder.Services.AddAutoMapper(typeof(AppMap));
 
@@ -95,6 +98,7 @@ builder.Services.Configure<MailSettingsDTO>(builder.Configuration.GetSection("Ma
 builder.Services.Configure<TwilioVerifySettings>(builder.Configuration.GetSection("Twilio"));
 
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IValidatorRepository, ValidatorRepository>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<ITwilioService, TwilioService>();
 builder.Services.AddHttpClient<ITwilioRestClient, TwilioClient>();
@@ -116,8 +120,9 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = signingKey,
         ValidateAudience = false,
         ValidateIssuer = false,
-        ValidateLifetime = false,
-        ValidateIssuerSigningKey = true
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero
     };
 });
 

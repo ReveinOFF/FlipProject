@@ -13,7 +13,5 @@ namespace Core.Entity.PostEntitys
         [ForeignKey("Post")]
         public string PostId { get; set; }
         public virtual Post Post { get; set; }
-
-        public bool IsLike { get; set; }
     }
 }

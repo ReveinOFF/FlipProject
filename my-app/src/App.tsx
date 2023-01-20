@@ -3,28 +3,44 @@ import { Routes, Route } from 'react-router-dom';
 import Login from './Components/login';
 import Home from './Components/home';
 import Profile from './Components/profile';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { AuthActionTypes } from './Components/Auth/store/types';
+import { FindUser } from './Components/finduser';
+import { Following } from './Components/following';
+import { Follower } from './Components/follower';
+import { NotRequireAuth, RequireAuth } from './Components/Service/Auth';
 
-function App() {
-  const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
-  const user = localStorage.getItem("user");
-  
-  useEffect(() => {
-    const userGet = JSON.parse(user);
-    if(token !== null)
-      dispatch({type: AuthActionTypes.LOGIN, payload: {token: token, user: userGet}});
-    else
-      dispatch({type: AuthActionTypes.LOGOUT})
-  }, [dispatch]);
-
+const App =() => {
   return (
     <Routes>
-      <Route path='/' element={<Home />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/profile' element={<Profile />} />
+      <Route path='/' element={
+        <RequireAuth redirectTo="/login">
+          <Home/>
+        </RequireAuth>
+      } />
+      <Route path='/login' element={
+        <NotRequireAuth redirectTo="/">
+            <Login/>
+        </NotRequireAuth>
+      } />
+      <Route path='/:profile' element={
+        <RequireAuth redirectTo="/login">
+          <Profile/>
+        </RequireAuth>
+      } />
+      <Route path='/searchprofile' element={
+      <RequireAuth redirectTo="/login">
+        <FindUser/>
+      </RequireAuth>
+      } />
+      <Route path='/:profile/follower' element={
+        <RequireAuth redirectTo="/login">
+          <Follower/>
+        </RequireAuth>
+      } />
+      <Route path='/:profile/following' element={
+        <RequireAuth redirectTo="/login">
+          <Following/>
+        </RequireAuth>
+      } />
       {/* <Route path="*" element={<NoMatch />} /> */}
     </Routes>
   );

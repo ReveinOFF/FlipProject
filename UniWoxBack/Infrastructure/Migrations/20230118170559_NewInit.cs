@@ -31,14 +31,12 @@ namespace Infrastructure.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     UserImage = table.Column<string>(type: "text", nullable: true),
                     UserImagePath = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    Surname = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    Name = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     DateCreate = table.Column<DateOnly>(type: "date", nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     IsVerified = table.Column<bool>(type: "boolean", nullable: false),
                     IsPrivateUser = table.Column<bool>(type: "boolean", nullable: false),
-                    RefreshToken = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -182,24 +180,24 @@ namespace Infrastructure.Migrations
                 name: "Follows",
                 columns: table => new
                 {
-                    FollowerUserId = table.Column<string>(type: "text", nullable: false),
-                    FollowingUserId = table.Column<string>(type: "text", nullable: false)
+                    FollowerId = table.Column<string>(type: "text", nullable: false),
+                    FollowingId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Follows", x => new { x.FollowerUserId, x.FollowingUserId });
+                    table.PrimaryKey("PK_Follows", x => new { x.FollowingId, x.FollowerId });
                     table.ForeignKey(
-                        name: "FK_Follows_AspNetUsers_FollowerUserId",
-                        column: x => x.FollowerUserId,
+                        name: "FK_Follows_AspNetUsers_FollowerId",
+                        column: x => x.FollowerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Follows_AspNetUsers_FollowingUserId",
-                        column: x => x.FollowingUserId,
+                        name: "FK_Follows_AspNetUsers_FollowingId",
+                        column: x => x.FollowingId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,6 +221,25 @@ namespace Infrastructure.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Token = table.Column<string>(type: "text", nullable: true),
+                    Expires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -328,8 +345,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "text", nullable: false),
-                    PostId = table.Column<string>(type: "text", nullable: false),
-                    IsLike = table.Column<bool>(type: "boolean", nullable: false)
+                    PostId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -454,6 +470,12 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Name",
+                table: "AspNetUsers",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_PhoneNumber",
                 table: "AspNetUsers",
                 column: "PhoneNumber",
@@ -478,15 +500,9 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Follows_FollowingUserId",
+                name: "IX_Follows_FollowerId",
                 table: "Follows",
-                column: "FollowingUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Message_Id",
-                table: "Message",
-                column: "Id",
-                unique: true);
+                column: "FollowerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Message_MessageBoxId",
@@ -497,12 +513,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Message_UserId",
                 table: "Message",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MessageBox_Id",
-                table: "MessageBox",
-                column: "Id",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MessageBox_Image",
@@ -516,21 +526,9 @@ namespace Infrastructure.Migrations
                 column: "MessageBoxId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageFiles_Id",
-                table: "MessageFiles",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MessageFiles_MessageId",
                 table: "MessageFiles",
                 column: "MessageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Post_Id",
-                table: "Post",
-                column: "Id",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Post_UserId",
@@ -543,21 +541,9 @@ namespace Infrastructure.Migrations
                 column: "CommentaryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostAnswer_Id",
-                table: "PostAnswer",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PostAnswer_UserId",
                 table: "PostAnswer",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostCommentary_Id",
-                table: "PostCommentary",
-                column: "Id",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostCommentary_PostId",
@@ -570,12 +556,6 @@ namespace Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostFiles_Id",
-                table: "PostFiles",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PostFiles_PostId",
                 table: "PostFiles",
                 column: "PostId");
@@ -584,6 +564,11 @@ namespace Infrastructure.Migrations
                 name: "IX_PostReaction_PostId",
                 table: "PostReaction",
                 column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserPost_PostId",
@@ -625,6 +610,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "PostReaction");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "UserPost");

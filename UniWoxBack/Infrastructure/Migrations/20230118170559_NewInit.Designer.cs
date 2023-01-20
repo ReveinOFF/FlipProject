@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataBase))]
-    [Migration("20230108133738_NewInit")]
+    [Migration("20230118170559_NewInit")]
     partial class NewInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,9 +53,6 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("MessageBoxId");
 
                     b.HasIndex("UserId");
@@ -76,9 +73,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
 
                     b.HasIndex("Image")
                         .IsUnique();
@@ -120,9 +114,6 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("MessageId");
 
                     b.ToTable("MessageFiles");
@@ -157,9 +148,6 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Post");
@@ -189,9 +177,6 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CommentaryId");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
                     b.ToTable("PostAnswer");
@@ -218,9 +203,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
 
                     b.HasIndex("PostId");
 
@@ -251,9 +233,6 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("PostId");
 
                     b.ToTable("PostFiles");
@@ -266,9 +245,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("PostId")
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsLike")
-                        .HasColumnType("boolean");
 
                     b.HasKey("UserId", "PostId");
 
@@ -294,17 +270,39 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Entity.UserEntitys.Follow", b =>
                 {
-                    b.Property<string>("FollowerUserId")
+                    b.Property<string>("FollowingId")
                         .HasColumnType("text");
 
-                    b.Property<string>("FollowingUserId")
+                    b.Property<string>("FollowerId")
                         .HasColumnType("text");
 
-                    b.HasKey("FollowerUserId", "FollowingUserId");
+                    b.HasKey("FollowingId", "FollowerId");
 
-                    b.HasIndex("FollowingUserId");
+                    b.HasIndex("FollowerId");
 
                     b.ToTable("Follows");
+                });
+
+            modelBuilder.Entity("Core.Entity.UserEntitys.RefreshToken", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Core.Entity.UserEntitys.Role", b =>
@@ -375,8 +373,8 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -395,16 +393,8 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("text");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
@@ -422,6 +412,9 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
@@ -686,21 +679,30 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Entity.UserEntitys.Follow", b =>
                 {
-                    b.HasOne("Core.Entity.UserEntitys.User", "FollowerUser")
+                    b.HasOne("Core.Entity.UserEntitys.User", "Following")
                         .WithMany("Followers")
-                        .HasForeignKey("FollowerUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FollowerId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Core.Entity.UserEntitys.User", "FollowingUser")
+                    b.HasOne("Core.Entity.UserEntitys.User", "Follower")
                         .WithMany("Followings")
-                        .HasForeignKey("FollowingUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FollowingId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("FollowerUser");
+                    b.Navigation("Follower");
 
-                    b.Navigation("FollowingUser");
+                    b.Navigation("Following");
+                });
+
+            modelBuilder.Entity("Core.Entity.UserEntitys.RefreshToken", b =>
+                {
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Core.Entity.UserEntitys.UserRole", b =>
@@ -808,6 +810,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("PostCommentary");
 
                     b.Navigation("PostReaction");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("SavedPosts");
 

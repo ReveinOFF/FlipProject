@@ -14,7 +14,10 @@ namespace Core.Mapper
             CreateMap<User, GetUserDTO>()
                 .ForMember(x => x.Followers, y => y.MapFrom(x => x.Followers.Count))
                 .ForMember(x => x.Followings, y => y.MapFrom(x => x.Followings.Count))
+                .ForMember(x => x.CreatedPostCount, y => y.MapFrom(x => x.CreatedPosts.Count))
                 .ForMember(x => x.CreatedPost, y => y.MapFrom(x => x.CreatedPosts.Select(x => x.Files.Select(y => y.PathName)).ToList()));
+
+            CreateMap<User, GetUsersDTO>();
         }
     }
 }

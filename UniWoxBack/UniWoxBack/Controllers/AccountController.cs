@@ -5,13 +5,11 @@ using Core.DTO.User;
 using Core.Entity.UserEntitys;
 using Core.Helpers;
 using Core.Interface;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using Twilio.Http;
-using UniWoxBack.Constans;
+using Microsoft.EntityFrameworkCore;
 using UniWoxBack.Helpers;
 
 namespace UniWoxBack.Controllers
@@ -25,17 +23,19 @@ namespace UniWoxBack.Controllers
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
         private readonly IWebHostEnvironment _env;
+        private readonly DataBase _context;
 
-        public AccountController(UserManager<User> userManager, IJwtService jwtService, IMapper mapper, IMailService mailService, IWebHostEnvironment env)
+        public AccountController(UserManager<User> userManager, IJwtService jwtService, IMapper mapper, IMailService mailService, IWebHostEnvironment env, DataBase context)
         {
             _userManager = userManager;
             _jwtService = jwtService;
             _mapper = mapper;
             _mailService = mailService;
             _env = env;
+            _context = context;
         }
 
-        [HttpPost("Registration")]
+        [HttpPost("registration")]
         public async Task<IActionResult> Register([FromForm] RegisterDTO register)
         {
             var user = _mapper.Map<User>(register);
@@ -43,14 +43,16 @@ namespace UniWoxBack.Controllers
             {
                 var findEmail = await _userManager.FindByEmailAsync(register.Email);
                 if (findEmail != null)
-                    return BadRequest(new { error = "Email already exists!" });
+                {
+                    if (findEmail.EmailConfirmed)
+                        return BadRequest("Email already exists!");
+                    else
+                        await _userManager.DeleteAsync(findEmail);
+                }
 
                 var findLogin = await _userManager.FindByNameAsync(register.UserName);
                 if (findLogin != null)
-                    return BadRequest(new { error = "Login already exists!" });
-
-                if (register.Password != register.ConfirmPassword)
-                    return BadRequest(new { error = "Password does not match the confirm password!" });
+                    return BadRequest("Login already exists!");
 
                 user.DateCreate = DateOnly.FromDateTime(DateTime.Now.Date);
                 user.IsVerified = false;
@@ -63,14 +65,14 @@ namespace UniWoxBack.Controllers
 
                 var result = await _userManager.CreateAsync(user, register.Password);
                 if (!result.Succeeded)
-                    return BadRequest(new { error = ExceptionBuild.BuilderException(result) });
+                    return BadRequest(ExceptionBuild.BuilderException(result));
 
                 var role = await _userManager.AddToRoleAsync(user, "User");
                 if (!role.Succeeded)
-                    return BadRequest(new { error = ExceptionBuild.BuilderException(result) });
+                    return BadRequest(ExceptionBuild.BuilderException(role));
 
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var confirmationLink = $"http://uniwox.com/emailconfirm?email={register.Email}&token={token}";
+                var confirmationLink = $"http://uniwox.com/emailconfirm?token={token}";
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
@@ -92,17 +94,17 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpPost("EmailConfirm")]
+        [HttpPost("email-confirm")]
         public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDTO confirmEmail)
         {
             var user = await _userManager.FindByEmailAsync(confirmEmail.Email);
             if (user == null)
-                return BadRequest(new { error = "Email not found!" });
+                return BadRequest("Email not found!");
 
             var result = await _userManager.ConfirmEmailAsync(user, confirmEmail.Token);
 
             if (!result.Succeeded)
-                return BadRequest(new { error = "There is a problem with password confirmation!" });
+                return BadRequest("There is a problem with password confirmation!");
 
             MailDataDTO mailData = new MailDataDTO()
             {
@@ -119,29 +121,36 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> LogIn([FromBody] LoginDTO login)
         {
             try
             {
-                var findUser = await _userManager.FindByNameAsync(login.UserName);
+                //var findUser = await _userManager.FindByNameAsync(login.UserName);
+                var findUser = await _userManager.Users.Include(u => u.RefreshTokens).SingleAsync(u => u.UserName == login.UserName);
                 if (findUser == null)
-                    return BadRequest(new { error = "Error when searching for an account!" });
+                    return BadRequest("Error when searching for an account!");
                 if (!await _userManager.CheckPasswordAsync(findUser, login.Password))
-                    return BadRequest(new { error = "Error in password verification!" });
+                    return BadRequest("Error in password verification!");
                 if (!await _userManager.IsEmailConfirmedAsync(findUser))
-                    return BadRequest(new { error = "Email is not confirmed!" });
+                    return BadRequest("Email is not confirmed!");
 
                 var user = _mapper.Map<GetUserDTO>(findUser);
 
                 var token = _jwtService.CreateToken(findUser);
                 var refreshToken = _jwtService.GenerateRefreshToken();
-                await InsertRefreshToken(findUser, refreshToken);
+
+                refreshToken.UserId = user.Id;
+                await _context.RefreshTokens.AddAsync(refreshToken);
+                await _context.SaveChangesAsync();
+
+                //findUser.RefreshTokens.Add(refreshToken);
+                //await _userManager.UpdateAsync(findUser);
 
                 return Ok(new TokenDTO
                 {
                     Token = token,
-                    RefreshToken = refreshToken
+                    RefreshToken = refreshToken.Token
                 });
             }
             catch (Exception ex)
@@ -150,7 +159,7 @@ namespace UniWoxBack.Controllers
             }
         }
 
-        [HttpPost("RecoverPassword")]
+        [HttpPost("recover-password")]
         public async Task<IActionResult> RecoverPassword(string email)
         {
             try
@@ -161,7 +170,7 @@ namespace UniWoxBack.Controllers
                     return BadRequest("Email not found!");
 
                 var token = _userManager.GeneratePasswordResetTokenAsync(user);
-                var confirmationLink = $"http://uniwox.com/recoverpassword?email={email}&token={token}";
+                var confirmationLink = $"http://uniwox.com/recoverpassword?token={token}";
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
@@ -183,17 +192,17 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpPost("PasswordConfirm")]
+        [HttpPost("password-confirm")]
         public async Task<IActionResult> ConfirmPassword([FromBody] ConfirmPasswordDTO confirmPass)
         {
             var user = await _userManager.FindByEmailAsync(confirmPass.Email);
             if (user == null)
-                return BadRequest(new { error = "Email not found!" });
+                return BadRequest("Email not found!");
 
             var result = await _userManager.ResetPasswordAsync(user, confirmPass.Token, confirmPass.NewPassword);
 
             if (!result.Succeeded)
-                return BadRequest(new { error = "There is a problem resetting the password!" });
+                return BadRequest("There is a problem resetting the password!");
 
             MailDataDTO mailData = new MailDataDTO()
             {
@@ -210,30 +219,94 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpPost("RefreshToken")]
-        public async Task<IActionResult> RenewTokens(string refreshToken)
+        [HttpPost("change-email")]
+        public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDTO emailDTO)
         {
-            var tokens = await _jwtService.RenewTokens(refreshToken);
+            var user = await _userManager.FindByEmailAsync(emailDTO.OldEmail);
+            if (user == null)
+                return BadRequest("Email not found!");
 
-            Response.Cookies.Delete("RefreshToken");
-            Response.Cookies.Append("RefreshToken", refreshToken);
+            var findUser = await _userManager.FindByEmailAsync(emailDTO.NewEmail);
+            if (findUser != null)
+                return BadRequest("Email already exists!");
+
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailDTO.NewEmail);
+            var confirmationLink = $"http://uniwox.com/changemail?token={token}";
+
+            MailDataDTO mailData = new MailDataDTO()
+            {
+                Body = $"Hello {emailDTO.OldEmail}. If you have change your email, follow this link {confirmationLink}",
+                To = emailDTO.OldEmail,
+                Subject = "Change Email"
+            };
+
+            var resultSend = await _mailService.SendEmailAsync(mailData);
+
+            if (!resultSend)
+                return BadRequest("Error in sending the message!");
+
+            return Ok();
+        }
+
+        [HttpPost("confirm-change-email")]
+        public async Task<IActionResult> ConfirmChangeEmail([FromBody] ConfChangeEmailDTO emailDTO)
+        {
+            var user = await _userManager.FindByEmailAsync(emailDTO.OldEmail);
+            if (user == null)
+                return BadRequest("Email not found!");
+
+            var changeEmail = await _userManager.ChangeEmailAsync(user, emailDTO.NewEmail, emailDTO.Token);
+
+            if (!changeEmail.Succeeded)
+                return BadRequest("Error in changing the email!");
+
+            return Ok();
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshTokens(string refreshToken)
+        {
+            var tokens = await _jwtService.RefreshTokens(refreshToken);
 
             if (tokens == null)
-            {
-                return ValidationProblem("Invalid Refresh Token");
-            }
+                return Unauthorized("Invalid Refresh Token!");
+
+            await RevokeToken(refreshToken);
 
             return Ok(tokens);
         }
 
-        [NonAction]
-        private async Task InsertRefreshToken(User user, string refreshtoken)
+        [HttpPost("renew-token")]
+        public async Task<IActionResult> RenewTokens(string refreshToken)
         {
-            user.RefreshToken = refreshtoken;
+            var tokens = await _jwtService.RenewTokens(refreshToken);
 
-            await _userManager.UpdateAsync(user);
+            if (tokens == null)
+                return ValidationProblem("Invalid Renew Token!");
 
-            Response.Cookies.Append("RefreshToken", refreshtoken);
+            await RevokeToken(refreshToken);
+
+            return Ok(tokens);
+        }
+
+        [Authorize]
+        [HttpPost("revoke-token")]
+        public async Task<IActionResult> RevokeToken(string refreshToken)
+        {
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
+
+            if (user == null)
+                return BadRequest("Token is required!");
+
+            var refToken = user.RefreshTokens.Single(x => x.Token == refreshToken);
+
+            if (DateTime.UtcNow > refToken.Expires)
+                return BadRequest("The Refresh Token has expired!");
+
+            _context.RefreshTokens.Remove(refToken);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

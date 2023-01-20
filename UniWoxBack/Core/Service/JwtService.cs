@@ -2,8 +2,8 @@
 using Core.Entity.UserEntitys;
 using Core.Helpers;
 using Core.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -30,7 +30,7 @@ namespace Core.Service
 
             List<Claim> claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim("UserId", user.Id)
             };
 
             foreach (var role in roles)
@@ -42,6 +42,7 @@ namespace Core.Service
             var signinCredentials = new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256);
             var jwt = new JwtSecurityToken(
                 signingCredentials: signinCredentials,
+                expires: DateTime.UtcNow.AddDays(_jwtOptions.Value.LifeTime),
                 issuer: _jwtOptions.Value.Issuer,
                 claims: claims
             );
@@ -49,37 +50,69 @@ namespace Core.Service
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        public async Task<TokenDTO> RenewTokens(string refreshToken)
+        public async Task<TokenDTO> RefreshTokens(string refreshToken)
         {
-            var userRefreshToken = _userManager.Users.Where(x => x.RefreshToken == refreshToken).FirstOrDefault();
+            var userRefreshToken = _userManager.Users.SingleOrDefaultAsync(x => x.RefreshTokens.Any(t => t.Token == refreshToken)).Result;
 
             if (userRefreshToken == null)
             {
                 return null;
             }
 
+            var refToken = userRefreshToken.RefreshTokens.Single(x => x.Token == refreshToken);
+
+            if (DateTime.UtcNow > refToken.Expires)
+                return null;
+
             var newJwtToken = CreateToken(userRefreshToken);
             var newRefreshToken = GenerateRefreshToken();
 
-            userRefreshToken.RefreshToken = newRefreshToken;
+            userRefreshToken.RefreshTokens.Add(newRefreshToken);
             await _userManager.UpdateAsync(userRefreshToken);
 
             return new TokenDTO
             {
                 Token = newJwtToken,
-                RefreshToken = newRefreshToken
+                RefreshToken = newRefreshToken.Token
             };
         }
 
+        public async Task<TokenDTO> RenewTokens(string refreshToken)
+        {
+            var userRefreshToken = _userManager.Users.SingleOrDefaultAsync(x => x.RefreshTokens.Any(t => t.Token == refreshToken)).Result;
 
-        public string GenerateRefreshToken()
+            if (userRefreshToken == null)
+            {
+                return null;
+            }
+
+            var refToken = userRefreshToken.RefreshTokens.Single(x => x.Token == refreshToken);
+
+            var newJwtToken = CreateToken(userRefreshToken);
+            var newRefreshToken = GenerateRefreshToken();
+
+            userRefreshToken.RefreshTokens.Add(newRefreshToken);
+            await _userManager.UpdateAsync(userRefreshToken);
+
+            return new TokenDTO
+            {
+                Token = newJwtToken,
+                RefreshToken = newRefreshToken.Token
+            };
+        }
+
+        public RefreshToken GenerateRefreshToken()
         {
             var refToken = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(refToken);
 
-                return Convert.ToBase64String(refToken);
+                return new RefreshToken 
+                { 
+                    Token = Convert.ToBase64String(refToken),
+                    Expires = DateTime.UtcNow.AddDays(7)
+                };
             }
         }
     }

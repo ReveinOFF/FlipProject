@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Cms;
 
 namespace UniWoxBack.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -29,16 +30,16 @@ namespace UniWoxBack.Controllers
             _env = env;
         }
 
-        [HttpGet("GetUser/{id}")]
-        public async Task<IActionResult> GetUser(string id)
+        [HttpGet("get-user-by-id/{id}")]
+        public async Task<IActionResult> GetUserById(string id)
         {
             var user = await _userManager.Users
-                .Where(x => x.Id == id)
-                .Include(x => x.Followers)
-                .Include(x => x.Followings)
-                .Include(x => x.CreatedPosts)
-                .ThenInclude(x => x.Files)
-                .FirstOrDefaultAsync();
+                    .Where(x => x.Id == id)
+                    .Include(x => x.Followers)
+                    .Include(x => x.Followings)
+                    .Include(x => x.CreatedPosts)
+                    .ThenInclude(x => x.Files)
+                    .FirstOrDefaultAsync();
 
             if (user == null)
                 return BadRequest("User not found!");
@@ -48,7 +49,121 @@ namespace UniWoxBack.Controllers
             return Ok(getUser);
         }
 
-        [HttpPost("AddImageUser")]
+        [HttpGet("get-user-by-name/{name}")]
+        public async Task<IActionResult> GetUserByName(string name)
+        {
+            var user = await _userManager.Users
+                    .Where(x => x.Name == name)
+                    .Include(x => x.Followers)
+                    .Include(x => x.Followings)
+                    .Include(x => x.CreatedPosts)
+                    .ThenInclude(x => x.Files)
+                    .FirstOrDefaultAsync();
+
+            if (user == null)
+                return BadRequest("User not found!");
+
+            var getUser = _mapper.Map<GetUserDTO>(user);
+
+            return Ok(getUser);
+        }
+
+        [HttpGet("get-users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var user = await _userManager.Users
+                .Include(x => x.Followers)
+                .ThenInclude(x => x.Follower)
+                .OrderByDescending(x => x.Followers.Count)
+                .ToListAsync();
+
+            if (user == null)
+                return BadRequest("User not found!");
+
+            var getUser = _mapper.Map<List<GetUsersDTO>>(user);
+
+            return Ok(getUser);
+        }
+
+        [HttpPost("{userid}/follow/{followId}")]
+        public async Task<IActionResult> FollowUser(string userid, string followId)
+        {
+            var follow = await _context.Follows
+                    .FirstOrDefaultAsync(u => u.FollowerId == userid &&
+                                              u.FollowingId == followId);
+
+            if (follow != null)
+                return BadRequest("You already followed this user!");
+
+            if (await GetUserById(followId) == null)
+                return NotFound("The user with this id was not found!");
+
+            follow = new Follow
+            {
+                FollowerId = followId,
+                FollowingId = userid
+            };
+
+            await _context.Follows.AddAsync(follow);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("{userid}/unfollow/{followId}")]
+        public async Task<IActionResult> UnFollowUser(string userid, string followId)
+        {
+            var follow = await _context.Follows
+                    .FirstOrDefaultAsync(u => u.FollowerId == userid &&
+                                              u.FollowingId == followId);
+
+            if (follow == null)
+                return BadRequest("Follower not found!");
+
+            _context.Follows.Remove(follow);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpGet("get-followers/{id}")]
+        public async Task<IActionResult> GetFollowers(string id)
+        {
+            var user = await _context.Users
+                .Include(x => x.Followers)
+                .ThenInclude(y => y.Follower)
+                .OrderByDescending(o => o.Followers.Count)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+                return BadRequest("The user was not found!");
+
+            var userFollowers = user.Followers.Where(u => u.FollowerId == id).Select(x => x.Follower);
+
+            var follow = _mapper.Map<List<GetUsersDTO>>(userFollowers);
+
+            return Ok(follow);
+        }
+
+        [HttpGet("get-following/{id}")]
+        public async Task<IActionResult> GetFollowing(string id)
+        {
+            var user = await _context.Users
+                .Include(x => x.Followings)
+                .ThenInclude(y => y.Following)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+                return BadRequest("The user was not found!");
+
+            var userFollowers = user.Followings.Where(u => u.FollowingId == id).Select(x => x.Following);
+
+            var follow = _mapper.Map<List<GetUsersDTO>>(userFollowers);
+
+            return Ok(follow);
+        }
+
+        [HttpPost("add-image-user/{userId}")]
         public async Task<IActionResult> AddImageUser(string userId, IFormFile file)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -84,7 +199,7 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpDelete("DeleteImageUser")]
+        [HttpDelete("delete-image-user/{userId}")]
         public async Task<IActionResult> DeleteImageUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -92,7 +207,7 @@ namespace UniWoxBack.Controllers
             if (user == null)
                 return BadRequest("User not found!");
 
-            bool deleteFile = StaticFiles.DeleteImageAsync(user.UserImage);
+            bool deleteFile = StaticFiles.DeleteImageAsync(user.UserImagePath);
             if (!deleteFile)
                 return BadRequest("Image not found!");
 
@@ -107,7 +222,7 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpPut("ChangeUser")]
+        [HttpPut("change-user")]
         public async Task<IActionResult> ChangeUser([FromBody] ChangeUserDTO changeUser)
         {
             var user = await _userManager.FindByIdAsync(changeUser.Id);
@@ -116,7 +231,6 @@ namespace UniWoxBack.Controllers
                 return BadRequest("User not found!");
 
             user.Name = changeUser.Name;
-            user.Surname = changeUser.Surname;
             user.Description = changeUser.Description;
             user.DateOfBirth = changeUser.DateOfBirth;
             user.IsPrivateUser = changeUser.IsPrivateUser;
@@ -129,7 +243,7 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpPut("ChangePassword")]
+        [HttpPut("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePassword)
         {
             var user = await _userManager.FindByIdAsync(changePassword.Id);
@@ -145,7 +259,7 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpGet("GetSavedPosts")]
+        [HttpGet("get-saved-posts")]
         public async Task<IActionResult> GetSavedPosts(string userId)
         {
             var user = await _userManager.Users.Where(x => x.Id == userId)
@@ -160,7 +274,7 @@ namespace UniWoxBack.Controllers
             return Ok(user.SavedPosts.Select(x => x.Post).ToList());
         }
 
-        [HttpPost("SavePost")]
+        [HttpPost("save-post")]
         public async Task<IActionResult> SavePost(string userId, string postId)
         {
             var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
@@ -173,9 +287,7 @@ namespace UniWoxBack.Controllers
                 await _context.SaveChangesAsync();
             }
             else
-            {
                 _context.UserPost.Remove(savedPost);
-            }
             
             return Ok();
         }

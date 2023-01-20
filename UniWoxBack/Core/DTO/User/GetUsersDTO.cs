@@ -1,11 +1,11 @@
 ﻿namespace Core.DTO.User
 {
-    public class ChangeUserDTO
+    public class GetUsersDTO
     {
         public string Id { get; set; }
+        public string UserImage { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateOnly DateOfBirth { get; set; }
-        public bool IsPrivateUser { get; set; }
+        public bool IsVerified { get; set; }
     }
 }

@@ -6,11 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Twilio.Types;
 
 namespace Core.Entity.UserEntitys
 {
     [Index(nameof(UserImage), IsUnique = true),
      Index(nameof(UserName), IsUnique = true),
+     Index(nameof(Name), IsUnique = true),
      Index(nameof(Email), IsUnique = true),
      Index(nameof(PhoneNumber), IsUnique = true)]
     public class User : IdentityUser
@@ -19,32 +21,19 @@ namespace Core.Entity.UserEntitys
         public string UserImage { get; set; }
         public string UserImagePath { get; set; }
         [Required]
-        [MaxLength(10)]
+        [MinLength(5), MaxLength(15)]
         public string Name { get; set; }
-        [Required]
-        [MaxLength(15)]
-        public string Surname { get; set; }
         public string Description { get; set; }
         [Required]
         [JsonConverter(typeof(DateOnlyConverter))]
         public DateOnly DateCreate { get; set; }
+        [Required]
         [JsonConverter(typeof(DateOnlyConverter))]
         public DateOnly DateOfBirth { get; set; }
-        [Required]
         public bool IsVerified { get; set; }
-        [Required]
         public bool IsPrivateUser { get; set; }
-        public string RefreshToken { get; set; }
 
-        /* NotMapped */
-        [NotMapped]
-        public string FullName
-        {
-            get
-            {
-                return Surname + " " + Name;
-            }
-        }
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
 
         /* Communication Room */
         public virtual ICollection<MessageBoxUser> MessageBoxs { get; set; }
