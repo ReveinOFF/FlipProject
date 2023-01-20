@@ -40,20 +40,18 @@ builder.Services.AddIdentity<User, Role>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
 
     // User settings.
     options.User.AllowedUserNameCharacters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._!";
-    options.User.RequireUniqueEmail = true;
-}).AddEntityFrameworkStores<DataBase>().AddDefaultTokenProviders();
+}).AddEntityFrameworkStores<DataBase>().AddDefaultTokenProviders().AddPasswordValidator<CustomValidator>();
 
 builder.Services.AddAutoMapper(typeof(AppMap));
 
 builder.Services.AddFluentValidation(x => {
     x.RegisterValidatorsFromAssemblyContaining<RegisterValidator>();
     x.RegisterValidatorsFromAssemblyContaining<LoginValidator>();
-    x.RegisterValidatorsFromAssemblyContaining<ConfirmPasswordValidator>();
-    x.RegisterValidatorsFromAssemblyContaining<ConfirmEmailValidator>();
 
     x.RegisterValidatorsFromAssemblyContaining<ChangePasswordValidator>();
     x.RegisterValidatorsFromAssemblyContaining<ChangeUserValidator>();
