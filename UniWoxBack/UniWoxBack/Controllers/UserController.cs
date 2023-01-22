@@ -8,11 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Cms;
 
 namespace UniWoxBack.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -28,6 +27,26 @@ namespace UniWoxBack.Controllers
             _userManager = userManager;
             _mapper = mapper;
             _env = env;
+        }
+
+        [HttpGet("get-user-auth")]
+        public async Task<IActionResult> GetUserAuth()
+        {
+            string username = User.FindFirst("UserName")?.Value;
+            var user = await _userManager.Users
+                    .Where(x => x.UserName == username)
+                    .Include(x => x.Followers)
+                    .Include(x => x.Followings)
+                    .Include(x => x.CreatedPosts)
+                    .ThenInclude(x => x.Files)
+                    .FirstOrDefaultAsync();
+
+            if (user == null)
+                return BadRequest("User not found!");
+
+            var getUser = _mapper.Map<GetUserDTO>(user);
+
+            return Ok(getUser);
         }
 
         [HttpGet("get-user-by-id/{id}")]
@@ -49,11 +68,11 @@ namespace UniWoxBack.Controllers
             return Ok(getUser);
         }
 
-        [HttpGet("get-user-by-name/{name}")]
-        public async Task<IActionResult> GetUserByName(string name)
+        [HttpGet("get-user-by-name/{username}")]
+        public async Task<IActionResult> GetUserByName(string username)
         {
             var user = await _userManager.Users
-                    .Where(x => x.Name == name)
+                    .Where(x => x.UserName == username)
                     .Include(x => x.Followers)
                     .Include(x => x.Followings)
                     .Include(x => x.CreatedPosts)
@@ -118,7 +137,7 @@ namespace UniWoxBack.Controllers
                                               u.FollowingId == followId);
 
             if (follow == null)
-                return BadRequest("Follower not found!");
+                return BadRequest("User not found!");
 
             _context.Follows.Remove(follow);
             await _context.SaveChangesAsync();
@@ -279,16 +298,28 @@ namespace UniWoxBack.Controllers
         {
             var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
 
-            if (savedPost == null)
-            {
-                UserPost userPost = new UserPost { PostId = postId, UserId = userId };
+            if (savedPost != null)
+                return BadRequest("A user has already saved this post!");
 
-                await _context.UserPost.AddAsync(userPost);
-                await _context.SaveChangesAsync();
-            }
-            else
-                _context.UserPost.Remove(savedPost);
-            
+            UserPost userPost = new UserPost { PostId = postId, UserId = userId };
+
+            await _context.UserPost.AddAsync(userPost);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("remove-save-post")]
+        public async Task<IActionResult> RemoveSavePost(string userId, string postId)
+        {
+            var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
+
+            if (savedPost == null)
+                return BadRequest("The user did not save this post!");
+
+            _context.UserPost.Remove(savedPost);
+            await _context.SaveChangesAsync();
+
             return Ok();
         }
     }

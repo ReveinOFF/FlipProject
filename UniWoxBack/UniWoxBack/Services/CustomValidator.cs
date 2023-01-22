@@ -18,6 +18,14 @@ namespace UniWoxBack.Services
                     Description = "You cannot use your username as your password!"
                 });
             }
+            if (string.Equals(user.UserName, user.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                errors.Add(new IdentityError
+                {
+                    Code = "NameAsUsername",
+                    Description = "You cannot use your name as your username!"
+                });
+            }
             if (password.Length > 15)
             {
                 errors.Add(new IdentityError

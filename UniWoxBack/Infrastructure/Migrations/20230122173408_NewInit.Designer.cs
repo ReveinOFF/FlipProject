@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataBase))]
-    [Migration("20230118170559_NewInit")]
+    [Migration("20230122173408_NewInit")]
     partial class NewInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -221,9 +221,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("FileType")
-                        .HasColumnType("integer");
-
                     b.Property<string>("PathName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -266,6 +263,152 @@ namespace Infrastructure.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("UserPost");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.Reels", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DatePosted")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<bool>("IsBlocked")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPremium")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Views")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reels");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsAnswer", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CommentaryId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentaryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ReelsAnswer");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsCommentary", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ReelsId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReelsId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ReelsCommentary");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsFiles", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PathName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReelsId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReelsId");
+
+                    b.ToTable("ReelsFiles");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsReaction", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReelsId")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "ReelsId");
+
+                    b.HasIndex("ReelsId");
+
+                    b.ToTable("ReelsReaction");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.UserReels", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReelsId")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "ReelsId");
+
+                    b.HasIndex("ReelsId");
+
+                    b.ToTable("ReelsPost");
                 });
 
             modelBuilder.Entity("Core.Entity.UserEntitys.Follow", b =>
@@ -677,6 +820,94 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Core.Entity.ReelsEntity.Reels", b =>
+                {
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("CreatedReels")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsAnswer", b =>
+                {
+                    b.HasOne("Core.Entity.ReelsEntity.ReelsCommentary", "Commentary")
+                        .WithMany("ReelsAnswers")
+                        .HasForeignKey("CommentaryId");
+
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("ReelsAnswer")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Commentary");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsCommentary", b =>
+                {
+                    b.HasOne("Core.Entity.ReelsEntity.Reels", "Reels")
+                        .WithMany("Commentary")
+                        .HasForeignKey("ReelsId");
+
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("ReelsCommentary")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Reels");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsFiles", b =>
+                {
+                    b.HasOne("Core.Entity.ReelsEntity.Reels", "Reels")
+                        .WithMany("Files")
+                        .HasForeignKey("ReelsId");
+
+                    b.Navigation("Reels");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsReaction", b =>
+                {
+                    b.HasOne("Core.Entity.ReelsEntity.Reels", "Reels")
+                        .WithMany("Reactions")
+                        .HasForeignKey("ReelsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("ReelsReaction")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reels");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.UserReels", b =>
+                {
+                    b.HasOne("Core.Entity.ReelsEntity.Reels", "Reels")
+                        .WithMany("Saveds")
+                        .HasForeignKey("ReelsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("SavedReels")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reels");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Core.Entity.UserEntitys.Follow", b =>
                 {
                     b.HasOne("Core.Entity.UserEntitys.User", "Following")
@@ -788,6 +1019,22 @@ namespace Infrastructure.Migrations
                     b.Navigation("PostAnswers");
                 });
 
+            modelBuilder.Entity("Core.Entity.ReelsEntity.Reels", b =>
+                {
+                    b.Navigation("Commentary");
+
+                    b.Navigation("Files");
+
+                    b.Navigation("Reactions");
+
+                    b.Navigation("Saveds");
+                });
+
+            modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsCommentary", b =>
+                {
+                    b.Navigation("ReelsAnswers");
+                });
+
             modelBuilder.Entity("Core.Entity.UserEntitys.Role", b =>
                 {
                     b.Navigation("UserRoles");
@@ -796,6 +1043,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entity.UserEntitys.User", b =>
                 {
                     b.Navigation("CreatedPosts");
+
+                    b.Navigation("CreatedReels");
 
                     b.Navigation("Followers");
 
@@ -811,9 +1060,17 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("PostReaction");
 
+                    b.Navigation("ReelsAnswer");
+
+                    b.Navigation("ReelsCommentary");
+
+                    b.Navigation("ReelsReaction");
+
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("SavedPosts");
+
+                    b.Navigation("SavedReels");
 
                     b.Navigation("UserRoles");
                 });

@@ -44,7 +44,7 @@ namespace UniWoxBack.Controllers
                 var findEmail = await _userManager.FindByEmailAsync(register.Email);
                 if (findEmail != null)
                 {
-                    if (findEmail.EmailConfirmed)
+                    if (await _userManager.IsEmailConfirmedAsync(findEmail))
                         return BadRequest("Email already exists!");
                     else
                         await _userManager.DeleteAsync(findEmail);
@@ -126,8 +126,7 @@ namespace UniWoxBack.Controllers
         {
             try
             {
-                //var findUser = await _userManager.FindByNameAsync(login.UserName);
-                var findUser = await _userManager.Users.Include(u => u.RefreshTokens).SingleAsync(u => u.UserName == login.UserName);
+                var findUser = await _userManager.Users.Include(u => u.RefreshTokens).SingleAsync(u => u.UserName == login.UserName || u.Email == login.UserName);
                 if (findUser == null)
                     return BadRequest("Error when searching for an account!");
                 if (!await _userManager.CheckPasswordAsync(findUser, login.Password))

@@ -1,4 +1,5 @@
-﻿using Core.Entity.UserEntitys;
+﻿using Core.Entity.PostEntitys;
+using Core.Entity.UserEntitys;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
@@ -88,6 +89,54 @@ namespace UniWoxBack.Services
                     var result3 = userManager.CreateAsync(user3).Result;
                     result3 = userManager.AddPasswordAsync(user3, "romap310103").Result;
                     result3 = userManager.AddToRolesAsync(user3, role).Result;
+                }
+                if (!context.Post.Any())
+                {
+                    var post = new Post
+                    {
+                        DatePosted = DateTime.UtcNow,
+                        Description = "Hello guys!",
+                        Views = 5,
+                        UserId = userManager.Users.First().Id,
+                        Files = new List<PostFiles> {
+                            new PostFiles
+                            {
+                                PathName = "C:\\Users\\ronni\\OneDrive\\Рабочий стол\\UniWoxProject\\UniWoxBack\\UniWoxBack\\Resources\\PostFiles\\Default\\326220733_101528259503704_5705990945816496097_n.jpg",
+                                FileName = "326220733_101528259503704_5705990945816496097_n.jpg"
+                            }
+                        }
+                    };
+                    var post2 = new Post
+                    {
+                        DatePosted = DateTime.UtcNow,
+                        Description = "Hello people!",
+                        Views = 64,
+                        UserId = userManager.Users.First().Id,
+                        Files = new List<PostFiles> {
+                            new PostFiles
+                            {
+                                PathName = "C:\\Users\\ronni\\OneDrive\\Рабочий стол\\UniWoxProject\\UniWoxBack\\UniWoxBack\\Resources\\PostFiles\\Default\\326220733_101528259503704_5705990945816496097_n.jpg",
+                                FileName = "326220733_101528259503704_5705990945816496097_n.jpg"
+                            }
+                        }
+                    };
+                    var post3 = new Post
+                    {
+                        DatePosted = DateTime.UtcNow,
+                        Description = "My new post!",
+                        Views = 1,
+                        UserId = userManager.Users.First().Id,
+                        Files = new List<PostFiles> {
+                            new PostFiles
+                            {
+                                PathName = "C:\\Users\\ronni\\OneDrive\\Рабочий стол\\UniWoxProject\\UniWoxBack\\UniWoxBack\\Resources\\PostFiles\\Default\\326220733_101528259503704_5705990945816496097_n.jpg",
+                                FileName = "326220733_101528259503704_5705990945816496097_n.jpg"
+                            }
+                        }
+                    };
+
+                    context.Post.AddRangeAsync(post, post2, post3);
+                    context.SaveChangesAsync();
                 }
             }
         }

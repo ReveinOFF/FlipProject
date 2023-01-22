@@ -224,6 +224,29 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reels",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    DatePosted = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Views = table.Column<int>(type: "integer", nullable: false),
+                    IsPremium = table.Column<bool>(type: "boolean", nullable: false),
+                    IsBlocked = table.Column<bool>(type: "boolean", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reels", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reels_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RefreshTokens",
                 columns: table => new
                 {
@@ -300,10 +323,10 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    PostId = table.Column<string>(type: "text", nullable: true),
                     Text = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    PostId = table.Column<string>(type: "text", nullable: true)
+                    UserId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -325,7 +348,6 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    FileType = table.Column<int>(type: "integer", nullable: false),
                     PostId = table.Column<string>(type: "text", nullable: true),
                     PathName = table.Column<string>(type: "text", nullable: false),
                     FileName = table.Column<string>(type: "text", nullable: false)
@@ -389,6 +411,98 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ReelsCommentary",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    ReelsId = table.Column<string>(type: "text", nullable: true),
+                    Text = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReelsCommentary", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReelsCommentary_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ReelsCommentary_Reels_ReelsId",
+                        column: x => x.ReelsId,
+                        principalTable: "Reels",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReelsFiles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    ReelsId = table.Column<string>(type: "text", nullable: true),
+                    PathName = table.Column<string>(type: "text", nullable: false),
+                    FileName = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReelsFiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReelsFiles_Reels_ReelsId",
+                        column: x => x.ReelsId,
+                        principalTable: "Reels",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReelsPost",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    ReelsId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReelsPost", x => new { x.UserId, x.ReelsId });
+                    table.ForeignKey(
+                        name: "FK_ReelsPost_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReelsPost_Reels_ReelsId",
+                        column: x => x.ReelsId,
+                        principalTable: "Reels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReelsReaction",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    ReelsId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReelsReaction", x => new { x.UserId, x.ReelsId });
+                    table.ForeignKey(
+                        name: "FK_ReelsReaction_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReelsReaction_Reels_ReelsId",
+                        column: x => x.ReelsId,
+                        principalTable: "Reels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MessageFiles",
                 columns: table => new
                 {
@@ -412,10 +526,10 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    CommentaryId = table.Column<string>(type: "text", nullable: true),
                     Text = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    CommentaryId = table.Column<string>(type: "text", nullable: true)
+                    UserId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -429,6 +543,31 @@ namespace Infrastructure.Migrations
                         name: "FK_PostAnswer_PostCommentary_CommentaryId",
                         column: x => x.CommentaryId,
                         principalTable: "PostCommentary",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReelsAnswer",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    CommentaryId = table.Column<string>(type: "text", nullable: true),
+                    Text = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReelsAnswer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReelsAnswer_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ReelsAnswer_ReelsCommentary_CommentaryId",
+                        column: x => x.CommentaryId,
+                        principalTable: "ReelsCommentary",
                         principalColumn: "Id");
                 });
 
@@ -566,6 +705,46 @@ namespace Infrastructure.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reels_UserId",
+                table: "Reels",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelsAnswer_CommentaryId",
+                table: "ReelsAnswer",
+                column: "CommentaryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelsAnswer_UserId",
+                table: "ReelsAnswer",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelsCommentary_ReelsId",
+                table: "ReelsCommentary",
+                column: "ReelsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelsCommentary_UserId",
+                table: "ReelsCommentary",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelsFiles_ReelsId",
+                table: "ReelsFiles",
+                column: "ReelsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelsPost_ReelsId",
+                table: "ReelsPost",
+                column: "ReelsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelsReaction_ReelsId",
+                table: "ReelsReaction",
+                column: "ReelsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_UserId",
                 table: "RefreshTokens",
                 column: "UserId");
@@ -612,6 +791,18 @@ namespace Infrastructure.Migrations
                 name: "PostReaction");
 
             migrationBuilder.DropTable(
+                name: "ReelsAnswer");
+
+            migrationBuilder.DropTable(
+                name: "ReelsFiles");
+
+            migrationBuilder.DropTable(
+                name: "ReelsPost");
+
+            migrationBuilder.DropTable(
+                name: "ReelsReaction");
+
+            migrationBuilder.DropTable(
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
@@ -627,10 +818,16 @@ namespace Infrastructure.Migrations
                 name: "PostCommentary");
 
             migrationBuilder.DropTable(
+                name: "ReelsCommentary");
+
+            migrationBuilder.DropTable(
                 name: "MessageBox");
 
             migrationBuilder.DropTable(
                 name: "Post");
+
+            migrationBuilder.DropTable(
+                name: "Reels");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

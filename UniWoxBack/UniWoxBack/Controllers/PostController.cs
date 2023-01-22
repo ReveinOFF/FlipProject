@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
 using Core.DTO.Post;
+using Core.DTO.Reels;
 using Core.DTO.User;
 using Core.Entity.PostEntitys;
-using Core.Entity.UserEntitys;
 using Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace UniWoxBack.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : ControllerBase
@@ -20,6 +21,57 @@ namespace UniWoxBack.Controllers
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        [HttpGet("get-posts")]
+        public async Task<IActionResult> GetPosts()
+        {
+            var posts = await _context.Post
+                .Include(i => i.Files)
+
+                .Include(i => i.Commentary)
+                .ThenInclude(t => t.User)
+
+                .Include(i => i.Commentary)
+                .ThenInclude(t => t.PostAnswers)
+                .ThenInclude(t => t.User)
+
+                .Include(i => i.Reactions)
+                .ThenInclude(t => t.User)
+
+                .ToListAsync();
+            if (posts == null)
+                BadRequest("The posts was not found!");
+
+            var mappost = _mapper.Map<List<GetPostDTO>>(posts);
+
+            return Ok(mappost);
+        }
+
+        [HttpGet("get-post/{id}")]
+        public async Task<IActionResult> GetPost(string id)
+        {
+            var posts = await _context.Post
+                .Where(i => i.Id == id)
+                .Include(i => i.Files)
+
+                .Include(i => i.Commentary)
+                .ThenInclude(t => t.User)
+
+                .Include(i => i.Commentary)
+                .ThenInclude(t => t.PostAnswers)
+                .ThenInclude(t => t.User)
+
+                .Include(i => i.Reactions)
+                .ThenInclude(t => t.User)
+
+                .FirstOrDefaultAsync();
+            if (posts == null)
+                BadRequest("The post was not found!");
+
+            var mappost = _mapper.Map<GetPostDTO>(posts);
+
+            return Ok(mappost);
         }
 
         [HttpPost("add-reaction")]
@@ -35,7 +87,7 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpPost("remove-reaction")]
+        [HttpDelete("remove-reaction")]
         public async Task<IActionResult> RemoveReaction([FromBody] PostReactionDTO reactionDTO)
         {
             var postreaction = _context.PostReaction.Where(x => x.UserId.Equals(reactionDTO.UserId) && x.PostId.Equals(reactionDTO.PostId)).FirstOrDefault();
@@ -48,15 +100,14 @@ namespace UniWoxBack.Controllers
             return Ok();
         }
 
-        [HttpPost("get-reaction")]
+        [HttpGet("get-reaction/{postid}")]
         public async Task<IActionResult> GetUserReaction(string postid)
         {
             var reactionusers = await _context.Post
                 .Where(x => x.Id == postid)
                 .Include(i => i.Reactions)
                 .ThenInclude(t => t.User)
-                .Select(s => s.Reactions.Select(e => e.User))
-                .ToListAsync();
+                .SelectMany(x => x.Reactions.Select(x => x.User)).ToListAsync();
             if (reactionusers == null)
                 BadRequest("There are no reactions in this post!");
 

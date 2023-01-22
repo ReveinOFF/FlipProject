@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using MimeTypes;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace Core.Helpers
 {
@@ -15,7 +18,8 @@ namespace Core.Helpers
                 {
                     string fileDestDir = env.ContentRootPath;
                     Guid fileName = Guid.NewGuid();
-                    string extention = Path.GetExtension(file.FileName);
+                    string extention = MimeTypeMap.GetExtension(file.ContentType);
+
                     string newFileName = fileName.ToString() + extention;
 
                     fileDestDir = Path.Combine(fileDestDir, pathFolder);
@@ -25,15 +29,15 @@ namespace Core.Helpers
                     }
 
                     string uploadFile = Path.Combine(fileDestDir, newFileName);
-                    var stream = new FileStream(uploadFile, FileMode.Create);
-                    await file.CopyToAsync(stream);
+
+                    using var image = Image.Load(file.OpenReadStream());
+                    image.Mutate(x => x.Resize(100, 100));
+                    image.Save(uploadFile);
 
                     return (FilePath: uploadFile, FileName: newFileName);
                 }
                 else
-                {
                     return (null, null);
-                }
             }
             catch (Exception exc)
             {

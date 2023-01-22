@@ -6,6 +6,7 @@ import { Button } from "react-bootstrap";
 import axios from "axios";
 import { getBase64FromUrl } from "./Service/convertURL";
 import { ProfileActionTypes } from "./Profile/store/types";
+import { resizeFile } from "./Service/resizeFile";
 
 interface IFollower {
     id: string
@@ -21,7 +22,6 @@ const Profile = () => {
     const [isMyProfile, setIsMyProfile] = useState<boolean>(false);
     const [followers, setFollowers] = useState<IFollower[]>();
     const [isFollowed, setIsFollowed] = useState<boolean>(false);
-    const [image, setImage] = useState<string>();
     const [imageURL, setImageURL] = useState<any>();
 
     const navigate = useNavigate();
@@ -40,12 +40,11 @@ const Profile = () => {
             setIsMyProfile(false);
             setIsFollowed(isFollow);
         }
-        setImage(`http://localhost:5170/resources/userimage/${user.id}/${user.userImage}`);
     }, []);
 
-    useEffect(() => {
-        getBase64FromUrl(image).then(res => setImageURL(res));
-    });
+    // useEffect(() => {
+    //     getBase64FromUrl(`http://localhost:5170/resources/userimage/${user.id}/${user.userImage}`).then(res => setImageURL(res));
+    // },[]);
 
     const isFollow = () : boolean => {
         axios.get(`user/get-followers/${myuser.id}`).then(res => {
@@ -64,13 +63,15 @@ const Profile = () => {
 
     const AddImage = e => {
         let formData = new FormData;
+        resizeFile(e.target.files[0], 700, 700, 100, 0).then(file => {
+            formData.append("file", file as Blob)
 
-        formData.append("file", e.target.files[0])
-
-        axios.post(`user/add-image-user/${user.id}`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            }})
+            axios.post(`user/add-image-user/${user.id}`, formData, {
+                headers: {
+                "Content-Type": "multipart/form-data",
+                }})
+        });
+        
     };
 
     const GetFollowers = () => {
@@ -94,7 +95,7 @@ const Profile = () => {
             {user && 
             <>
                 <div style={{width: "150px", height: "150px", backgroundColor: "grey"}}>
-                    <img width={"150px"} src={imageURL} alt="" />
+                    <img width={"150px"} src={`http://localhost:5170/resources/userimage/${user.id}/${user.userImage}`} alt="" />
                 </div>
                 {isMyProfile ?
                     <div>

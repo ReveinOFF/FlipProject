@@ -1,5 +1,6 @@
 ﻿using Core.Entity.MessageEntitys;
 using Core.Entity.PostEntitys;
+using Core.Entity.ReelsEntity;
 using Core.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -33,33 +34,28 @@ namespace Core.Entity.UserEntitys
         public bool IsVerified { get; set; }
         public bool IsPrivateUser { get; set; }
 
-        public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
 
-        /* Communication Room */
+        /* Messages */
         public virtual ICollection<MessageBoxUser> MessageBoxs { get; set; }
-
-        /* All user messages */
         public virtual ICollection<Message> Message { get; set; }
 
-        /* All created posts */
+        /* Post */
         public virtual ICollection<Post> CreatedPosts { get; set; }
-
-        /* All user roles */
         public virtual ICollection<UserPost> SavedPosts { get; set; }
-
-        /* All post reactions (like/dislike) */
         public virtual ICollection<PostReaction> PostReaction { get; set; }
-
-        /* All post comments */
         public virtual ICollection<PostCommentary> PostCommentary { get; set; }
-
-        /* All post answer */
         public virtual ICollection<PostAnswer> PostAnswer { get; set; }
 
-        /* All created posts */
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        /* Reels */
+        public virtual ICollection<Reels> CreatedReels { get; set; }
+        public virtual ICollection<UserReels> SavedReels { get; set; }
+        public virtual ICollection<ReelsReaction> ReelsReaction { get; set; }
+        public virtual ICollection<ReelsCommentary> ReelsCommentary { get; set; }
+        public virtual ICollection<ReelsAnswer> ReelsAnswer { get; set; }
 
-        /* Friends */
+        /* User */
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
         public virtual ICollection<Follow> Followers { get; set; }
         public virtual ICollection<Follow> Followings { get; set; }
     }
