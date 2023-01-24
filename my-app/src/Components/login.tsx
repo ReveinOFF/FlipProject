@@ -8,9 +8,11 @@ import { AuthActionTypes } from './Auth/store/types';
 import { useNavigate } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
 import { useInput } from '../hooks/useInput';
+import * as yup from "yup";
+import { FormikProvider, useFormik } from 'formik';
 
 interface UserLogin {
-    UserName: string;
+    Name: string;
     Password: string;
 }
 
@@ -20,6 +22,15 @@ interface JwtDecoder {
     iss: string
 }
 
+const LoginSchema = yup.object({
+    Name: yup
+      .string()
+      .required("Логін є обов'язкови полем"),
+    Password: yup
+        .string()
+        .required("Логін є обов'язкови полем")
+});
+
 function Login() {
     const login = useInput('', {isEmpty: true, minLenght: 5});
     const password = useInput('', {isEmpty: true, minLenght: 8});
@@ -28,8 +39,14 @@ function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    function postLogin(userName: string, password: string) {
-        const user: UserLogin = {UserName: userName, Password: password};
+    const initialValues: UserLogin = {
+        Name: "",
+        Password: ""
+    };
+
+
+    const postLogin = (value: UserLogin) => {
+        const user: UserLogin = {Name: value.Name, Password: value.Password};
         setIsLoading(true);
         axios.post("account/login", user).then(res => {
             console.log(res.data);
@@ -49,10 +66,18 @@ function Login() {
         });
     }
 
+    const formik = useFormik({
+        initialValues: initialValues,
+        validationSchema: LoginSchema,
+        onSubmit: postLogin
+    });
+
+    const { errors, touched, handleSubmit, handleChange, setFieldValue } = formik;
+
     return (
         <div style={{height: '100vh'}} className='d-flex flex-column align-middle justify-content-center'>
             {isLoading && <div>Loading...</div>}
-
+            
             {(login.isDirty && login.isEmpty) && <div style={{color: "red"}}>Поле не может быть пустым!</div>}
             {(login.isDirty && login.minLenghtError) && <div style={{color: "red"}}>Некоректная длина!</div>}
             <InputGroup style={{width: '300px', height: '40px'}} className="mb-3 ms-auto me-auto">
@@ -80,7 +105,7 @@ function Login() {
                 />
             </InputGroup>
 
-            <Button disabled={!login.inputValid || !password.inputValid} style={{width: '300px'}} className="ms-auto me-auto" onClick={() => postLogin(login.value, password.value)}>Login</Button>
+            <Button disabled={!login.inputValid || !password.inputValid} style={{width: '300px'}} className="ms-auto me-auto" type='submit'>Login</Button>
         </div>
     );
 }

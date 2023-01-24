@@ -6,7 +6,6 @@ import { Button } from "react-bootstrap";
 import axios from "axios";
 import { getBase64FromUrl } from "./Service/convertURL";
 import { ProfileActionTypes } from "./Profile/store/types";
-import { resizeFile } from "./Service/resizeFile";
 
 interface IFollower {
     id: string
@@ -63,15 +62,13 @@ const Profile = () => {
 
     const AddImage = e => {
         let formData = new FormData;
-        resizeFile(e.target.files[0], 700, 700, 100, 0).then(file => {
-            formData.append("file", file as Blob)
-
-            axios.post(`user/add-image-user/${user.id}`, formData, {
-                headers: {
-                "Content-Type": "multipart/form-data",
-                }})
-        });
         
+        formData.append("file", e.target.files[0])
+
+        axios.post(`user/add-image-user/${user.id}`, formData, {
+            headers: {
+            "Content-Type": "multipart/form-data",
+        }})
     };
 
     const GetFollowers = () => {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Text;
 
-namespace UniWoxBack.Helpers
+namespace FlipBack.Helpers
 {
     public class ExceptionBuild
     {

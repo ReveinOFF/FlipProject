@@ -1,16 +1,15 @@
 ﻿using AutoMapper;
 using Core.DTO.Reels;
 using Core.DTO.User;
-using Core.Entity.PostEntitys;
 using Core.Entity.ReelsEntity;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace UniWoxBack.Controllers
+namespace FlipBack.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReelsController : ControllerBase
@@ -26,6 +25,8 @@ namespace UniWoxBack.Controllers
         [HttpGet("get-reels")]
         public async Task<IActionResult> GetReels()
         {
+            string id = User.FindFirst("UserId")?.Value;
+
             var reels = await _context.Reels
                 .Include(i => i.Files)
 
@@ -39,13 +40,48 @@ namespace UniWoxBack.Controllers
                 .Include(i => i.Reactions)
                 .ThenInclude(t => t.User)
 
+                .OrderByDescending(o => o.DatePosted)
+
                 .ToListAsync();
+
+            var reelsFollowing = await _context.Users
+                .Include(i => i.Followings)
+                .ThenInclude(i => i.Following)
+                .ThenInclude(t => t.CreatedReels)
+                .ThenInclude(t => t.Commentary)
+                .ThenInclude(t => t.User)
+
+                .Include(i => i.Followings)
+                .ThenInclude(i => i.Following)
+                .ThenInclude(t => t.CreatedReels)
+                .ThenInclude(t => t.Commentary)
+                .ThenInclude(t => t.ReelsAnswers)
+                .ThenInclude(t => t.User)
+
+                .Include(i => i.Followings)
+                .ThenInclude(i => i.Following)
+                .ThenInclude(t => t.CreatedReels)
+                .ThenInclude(t => t.Reactions)
+                .ThenInclude(t => t.User)
+
+                .Where(w => w.Id == id)
+                .SelectMany(i => i.Followings.SelectMany(x => x.Following.CreatedReels))
+                .Where(w => w.DatePosted.Day.Equals(DateTime.UtcNow.Day))
+                .OrderByDescending(o => o.DatePosted)
+
+                .ToListAsync();
+
             if (reels == null)
                 BadRequest("The reels was not found!");
 
-            var mapreels = _mapper.Map<List<GetReelsDTO>>(reels);
+            if (reelsFollowing != null)
+                reelsFollowing.ForEach(item => reels.Remove(item));
 
-            return Ok(mapreels);
+            var list = reelsFollowing.Concat(reels).ToList();
+
+            var mappost = _mapper.Map<List<GetReelsDTO>>(list);
+
+            return Ok(mappost);
         }
 
         [HttpGet("get-reels/{id}")]

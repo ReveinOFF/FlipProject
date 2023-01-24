@@ -1,7 +1,7 @@
 ﻿using Core.Entity.UserEntitys;
 using Microsoft.AspNetCore.Identity;
 
-namespace UniWoxBack.Services
+namespace FlipBack.Services
 {
     public class CustomValidator : PasswordValidator<User>
     {

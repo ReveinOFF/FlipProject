@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using UniWoxBack.Helpers;
+using FlipBack.Helpers;
 
-namespace UniWoxBack.Controllers
+namespace FlipBack.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -126,7 +126,7 @@ namespace UniWoxBack.Controllers
         {
             try
             {
-                var findUser = await _userManager.Users.Include(u => u.RefreshTokens).SingleAsync(u => u.UserName == login.UserName || u.Email == login.UserName);
+                var findUser = await _userManager.Users.Include(u => u.RefreshTokens).SingleAsync(u => u.UserName == login.Name || u.Email == login.Name);
                 if (findUser == null)
                     return BadRequest("Error when searching for an account!");
                 if (!await _userManager.CheckPasswordAsync(findUser, login.Password))

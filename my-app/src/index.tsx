@@ -12,20 +12,33 @@ import './Components/Service/axios';
 
 const token = localStorage.getItem("token");
 
-if(token) {
-  AuthUser(token, store.dispatch);
-}
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-root.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <Header/>
-      <App />
-    </BrowserRouter>
-  </Provider>
-);
+
+if(token) {
+  AuthUser(token, store.dispatch);
+
+  setTimeout(() => {
+    root.render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Header/>
+          <App />
+        </BrowserRouter>
+      </Provider>
+    );
+  }, 400);
+}
+else {
+  root.render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <Header/>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  );
+}
 
 reportWebVitals();

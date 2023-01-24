@@ -7,7 +7,7 @@ namespace Core.Validators.Account
     {
         public LoginValidator()
         {
-            RuleFor(x => x.UserName)
+            RuleFor(x => x.Name)
                     .NotEmpty().WithMessage("Login cannot be empty");
             RuleFor(x => x.Password)
                     .NotEmpty().WithMessage("The password field is required!");

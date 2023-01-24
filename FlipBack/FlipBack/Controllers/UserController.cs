@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace UniWoxBack.Controllers
+namespace FlipBack.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
@@ -32,7 +32,7 @@ namespace UniWoxBack.Controllers
         [HttpGet("get-user-auth")]
         public async Task<IActionResult> GetUserAuth()
         {
-            string username = User.FindFirst("UserName")?.Value;
+            string username = User.FindFirst("Name")?.Value;
             var user = await _userManager.Users
                     .Where(x => x.UserName == username)
                     .Include(x => x.Followers)
@@ -69,10 +69,10 @@ namespace UniWoxBack.Controllers
         }
 
         [HttpGet("get-user-by-name/{username}")]
-        public async Task<IActionResult> GetUserByName(string username)
+        public async Task<IActionResult> GetUserByName(string name)
         {
             var user = await _userManager.Users
-                    .Where(x => x.UserName == username)
+                    .Where(x => x.Name == name)
                     .Include(x => x.Followers)
                     .Include(x => x.Followings)
                     .Include(x => x.CreatedPosts)

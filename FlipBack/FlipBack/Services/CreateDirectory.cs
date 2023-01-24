@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.FileProviders;
 
-namespace UniWoxBack.Services
+namespace FlipBack.Services
 {
     public static class CreateDirectory
     {
