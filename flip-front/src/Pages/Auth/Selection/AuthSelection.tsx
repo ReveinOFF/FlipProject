@@ -1,7 +1,7 @@
+import { AuthBg } from "../../../Components/Auth/AuthBg";
+
 export const AuthSelection = () => {
     return (
-        <div>
-            
-        </div>
+        <AuthBg></AuthBg>
     );
 }

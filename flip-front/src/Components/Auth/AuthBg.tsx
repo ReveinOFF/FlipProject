@@ -1,7 +1,18 @@
 import './AuthBgStyle.css'
+
 export const AuthBg = () => {
     return (
         <div>
+            <div className='block-img bi1'></div>
+            <div className='block-img bi2'></div>
+            <div className='block-img bi3'></div>
+            <div className='block-img bi4'></div>
+            <div className='block-img bi5'></div>
+            <div className='block-img bi6'></div>
+            <div className='block-img bi7'></div>
+            <div className='block-img bi8'></div>
+            <div className='block-img bi9'></div>
+
             <div className='super-small-ball'/>
 
             <div className='heart heart-gray h1'/>
