@@ -1,0 +1,36 @@
+body,
+.btn {
+    color: #FFFFFF;
+}
+
+.btn {
+    box-sizing: border-box;
+
+    width: 445px;
+    height: 80px;
+
+    font-size: 25px;
+
+    box-shadow: 0px -1px 15px -2px rgba(255, 46, 0, 0.25);
+    background: linear-gradient(#2F2F2F, #2F2F2F) padding-box,
+        linear-gradient(90deg, #3ED647 0%, #10CFE7 100%) border-box;
+    border: 1px solid transparent;
+    border-radius: 15px;
+
+    margin-bottom: 15px;
+}
+
+.btn:last-child {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.btn:hover {
+    background: linear-gradient(90deg, #3ED647 0%, #10CFE7 100%);
+}
+
+.description {
+    margin-top: 50.97px;
+    margin-bottom: 80px;
+    font-size: 24px;
+}
