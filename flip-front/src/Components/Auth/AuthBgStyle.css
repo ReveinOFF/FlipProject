@@ -3,6 +3,80 @@
     overflow: hidden;
 }
 
+.bg-setting {
+    display: flex;
+    position: absolute;
+    justify-content: end;
+    width: 100%
+}
+
+.language {
+    cursor: pointer;
+
+    width: 74.65px;
+    height: 30.3px;
+
+    margin-top: 27px;
+    margin-right: 15.35px;
+
+    background: #000000;
+    border-radius: 15.1522px;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.language>svg {
+    background: #000000;
+    border-radius: 50%;
+}
+
+.lan-svg {
+    margin: 3px;
+}
+
+.lan-type {
+    margin: 9px 11.7px 7.3px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000000;
+}
+
+.lan-name {
+    font-size: 11.83px;
+    background: #000000;
+}
+
+.lan-arrow {
+    margin-left: 3.04px;
+    background-color: #000000;
+}
+
+.l_d-mode {
+    cursor: pointer;
+
+    width: 31px;
+    height: 31px;
+
+    margin-top: 27px;
+    margin-right: 27px;
+
+    justify-content: end;
+
+    background: #000000;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.l_d-mode>svg {
+    background: #000000;
+    border-radius: 50%;
+}
+
 .block-img {
     position: absolute;
 

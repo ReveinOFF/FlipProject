@@ -26,8 +26,7 @@ namespace Core.Validators.Account
                     .NotEmpty().WithMessage("Name is required.")
                     .Must(_validatorRepository.UniqueName).WithMessage("This name is already taken!")
                     .MinimumLength(5).WithMessage("The name must contain at least 5 characters")
-                    .MaximumLength(15).WithMessage("The name must be no more than 10 characters!")
-                    .Matches(new Regex("^[a-zA-Z0-9-._!]{5,15}$")).WithMessage("Name not valid");
+                    .MaximumLength(15).WithMessage("The name must be no more than 10 characters!");
             RuleFor(x => x.Phone)
                     .NotEmpty().WithMessage("Phone Number is required.")
                     .Must(_validatorRepository.UniquePhone).WithMessage("This phone is already taken!")

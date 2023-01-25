@@ -279,18 +279,19 @@ namespace FlipBack.Controllers
         }
 
         [HttpGet("get-saved-posts")]
-        public async Task<IActionResult> GetSavedPosts(string userId)
+        public async Task<IActionResult> GetSavedPosts()
         {
-            var user = await _userManager.Users.Where(x => x.Id == userId)
-                .Include(x => x.SavedPosts).FirstOrDefaultAsync();
+            string userId = User.FindFirst("UserId")?.Value;
 
-            if (user == null)
-                return BadRequest("User not found!");
+            var post = await _userManager.Users.Where(x => x.Id == userId)
+                .Include(x => x.SavedPosts).ThenInclude(t => t.Post)
+                .SelectMany(s => s.SavedPosts.Select(ss => ss.Post))
+                .Reverse().ToListAsync();
 
-            if (!user.SavedPosts.Any())
+            if (post == null)
                 return BadRequest("Saved post not found!");
 
-            return Ok(user.SavedPosts.Select(x => x.Post).ToList());
+            return Ok(post);
         }
 
         [HttpPost("save-post")]
