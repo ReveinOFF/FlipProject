@@ -2,11 +2,15 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { NotRequireAuth, RequireAuth } from './Services/Auth';
 import { AuthSelection } from './Pages/Auth/Selection/AuthSelection';
+import { SignIn } from './Pages/Auth/SignIn/SignIn';
 
 const App = () => {
   return (
     <Routes>
-      <Route path='/' element={<AuthSelection/>}></Route>
+      <Route path='/' element={<AuthSelection/>}>
+        
+      </Route>
+      <Route path='/signin' element={<SignIn/>}></Route>
       {/* <Route path="/" element={<HomeLayout/>}>
         <Route index element={
           <RequireAuth redirectTo="/login">
