@@ -1,0 +1,218 @@
+.header {
+    width: 86px;
+    height: 48px;
+
+    font-style: normal;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 48px;
+
+    margin-bottom: 60px;
+
+    color: #2F2F2F;
+}
+
+.form,
+.other,
+.other-btn {
+    display: flex;
+    flex-direction: column;
+}
+
+.form input {
+    width: 455px;
+    height: 55px;
+
+    box-shadow: 0px 2px 29px rgba(0, 0, 0, 0.05);
+    border-radius: 15px;
+    border: 0;
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+
+    padding-left: 22px;
+}
+
+.form input:focus {
+    outline: none;
+}
+
+.input-pasw {
+    margin-top: 26px;
+}
+
+.form button {
+    width: 445px;
+    height: 58px;
+
+    margin-top: 44px;
+    margin-bottom: 30px;
+
+    box-shadow: 0px -1px 15px -2px rgba(0, 255, 56, 0.25);
+    border-radius: 15px;
+    border: 0;
+
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 30px;
+
+    align-self: center;
+
+    color: #FFFFFF;
+}
+
+.other {
+    width: 479px;
+}
+
+.data {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 20px;
+}
+
+.fake-btn {
+    cursor: pointer;
+}
+
+.other {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #575757;
+}
+
+.other-btn,
+.or,
+.cancel {
+    align-self: center;
+}
+
+.or {
+    margin-top: 37px;
+    margin-bottom: 35px;
+    margin-left: 27px;
+    margin-right: 27px;
+
+    display: flex;
+    align-items: center;
+}
+
+.other-btn button {
+    box-sizing: border-box;
+
+    width: 445px;
+    height: 58px;
+
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 30px;
+
+    color: #2F2F2F;
+
+    background: linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+        linear-gradient(90deg, #3ED647 0%, #10CFE7 100%) border-box;
+    border: 1px solid transparent;
+    box-shadow: 0px -1px 15px -2px rgba(255, 46, 0, 0.25);
+    border-radius: 15px;
+}
+
+.btn-log:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(88.74deg, #48D824 -18.76%, #10D0EA 99.82%);
+}
+
+.btn-reg:hover {
+    background: linear-gradient(88.74deg, rgba(72, 216, 36, 0.5) -18.76%, rgba(16, 208, 234, 0.5) 99.82%);
+    color: #FFFFFF;
+}
+
+.cancel {
+    margin-top: 30px;
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #575757;
+}
+
+.password-show {
+    position: absolute;
+    top: 45px;
+    left: 440px;
+    cursor: pointer;
+}
+
+.form-pass {
+    position: relative;
+}
+
+.input-name,
+.input-pasw {
+    background: #FFFFFF;
+    color: #939292;
+}
+
+.btn-log {
+    background: linear-gradient(88.74deg, #48D824 -18.76%, #10D0EA 99.82%);
+}
+
+.btn-log-error {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(88.74deg, #48D824 -18.76%, #10D0EA 99.82%);
+    cursor: not-allowed;
+}
+
+.error {
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #9D3535;
+
+    margin-top: 10px;
+    margin-left: 22px;
+}
+
+.error-input {
+    border: 1px solid #9D3535;
+    color: #9D3535;
+}
+
+.fake-btn .loader {
+    position: relative;
+
+    width: 100%;
+    height: 2px;
+
+    border-radius: 1px;
+    background: radial-gradient(40.14% 40.14% at 50% 50%, #F8F8F8 0%, rgba(248, 248, 248, 0.11) 100%);
+
+    transition: 2s ease-in-out;
+}
+
+.fake-btn .loader::before {
+    content: "";
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: #575757;
+
+    transform-origin: left;
+    transform: scaleX(0);
+
+    transition: transform-origin 1s ease-in-out, transform 1s ease-in-out;
+}
+
+.fake-btn:hover .loader::before {
+    transform: scaleX(1);
+}
