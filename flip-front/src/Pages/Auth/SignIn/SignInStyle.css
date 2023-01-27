@@ -12,6 +12,10 @@
     color: #2F2F2F;
 }
 
+form {
+    position: relative;
+}
+
 form,
 .other,
 .other-btn {
@@ -127,8 +131,13 @@ form button {
     border-radius: 15px;
 }
 
-button:hover {
+.btn-log:hover {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(88.74deg, #48D824 -18.76%, #10D0EA 99.82%);
+}
+
+.btn-reg:hover {
+    background: linear-gradient(88.74deg, rgba(72, 216, 36, 0.5) -18.76%, rgba(16, 208, 234, 0.5) 99.82%);
+    color: #FFFFFF;
 }
 
 .cancel {
@@ -140,4 +149,11 @@ button:hover {
     line-height: 19px;
 
     color: #575757;
+}
+
+.password-show {
+    position: absolute;
+    top: 100px;
+    left: 440px;
+    cursor: pointer;
 }

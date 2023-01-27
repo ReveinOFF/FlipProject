@@ -7,6 +7,7 @@ import { store } from './Store/store';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeActions } from './Components/Theme/themeActions';
+import './Components/Axios/axios'
 
 const token = localStorage.getItem("token");
 const ldMode = localStorage.getItem("LightDarkMode");

@@ -1,5 +1,5 @@
 import {Navigate} from "react-router-dom";
-import { useTypedSelector } from "../Hooks/useTypedSelector";
+import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 
 export const RequireAuth = ({ children, redirectTo }) => {
     let isAuthenticated = useTypedSelector((state) => state.auth.user);
