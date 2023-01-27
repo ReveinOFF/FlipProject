@@ -12,22 +12,17 @@
     color: #2F2F2F;
 }
 
-form {
-    position: relative;
-}
-
-form,
+.form,
 .other,
 .other-btn {
     display: flex;
     flex-direction: column;
 }
 
-form input {
+.form input {
     width: 455px;
     height: 55px;
 
-    background: #FFFFFF;
     box-shadow: 0px 2px 29px rgba(0, 0, 0, 0.05);
     border-radius: 15px;
     border: 0;
@@ -37,27 +32,24 @@ form input {
     font-size: 16px;
     line-height: 19px;
 
-    color: #939292;
-
     padding-left: 22px;
 }
 
-form input:focus {
+.form input:focus {
     outline: none;
 }
 
-form input:first-child {
-    margin-bottom: 26px;
+.input-pasw {
+    margin-top: 26px;
 }
 
-form button {
+.form button {
     width: 445px;
     height: 58px;
 
     margin-top: 44px;
     margin-bottom: 30px;
 
-    background: linear-gradient(88.74deg, #48D824 -18.76%, #10D0EA 99.82%);
     box-shadow: 0px -1px 15px -2px rgba(0, 255, 56, 0.25);
     border-radius: 15px;
     border: 0;
@@ -78,7 +70,7 @@ form button {
 
 .data {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin: 0 20px;
 }
 
@@ -153,7 +145,74 @@ form button {
 
 .password-show {
     position: absolute;
-    top: 100px;
+    top: 45px;
     left: 440px;
     cursor: pointer;
+}
+
+.form-pass {
+    position: relative;
+}
+
+.input-name,
+.input-pasw {
+    background: #FFFFFF;
+    color: #939292;
+}
+
+.btn-log {
+    background: linear-gradient(88.74deg, #48D824 -18.76%, #10D0EA 99.82%);
+}
+
+.btn-log-error {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(88.74deg, #48D824 -18.76%, #10D0EA 99.82%);
+    cursor: not-allowed;
+}
+
+.error {
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #9D3535;
+
+    margin-top: 10px;
+    margin-left: 22px;
+}
+
+.error-input {
+    border: 1px solid #9D3535;
+    color: #9D3535;
+}
+
+.fake-btn .loader {
+    position: relative;
+
+    width: 100%;
+    height: 2px;
+
+    border-radius: 1px;
+    background: radial-gradient(40.14% 40.14% at 50% 50%, #F8F8F8 0%, rgba(248, 248, 248, 0.11) 100%);
+
+    transition: 2s ease-in-out;
+}
+
+.fake-btn .loader::before {
+    content: "";
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: #575757;
+
+    transform-origin: left;
+    transform: scaleX(0);
+
+    transition: transform-origin 1s ease-in-out, transform 1s ease-in-out;
+}
+
+.fake-btn:hover .loader::before {
+    transform: scaleX(1);
 }
