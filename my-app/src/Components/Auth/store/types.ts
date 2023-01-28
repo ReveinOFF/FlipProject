@@ -7,14 +7,13 @@ export interface IUser {
     id: string
     userImage: string
     name: string
-    description: string
+    surname: string
     dateOfBirth: Date
     isVerified: boolean
     isPrivateUser: boolean
 
     followers: number
     followings: number
-    createdPostCount: number
 
     createdPost: string[]
 }

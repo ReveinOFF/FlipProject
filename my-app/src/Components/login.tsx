@@ -1,62 +1,89 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useDispatch } from 'react-redux';
 import { AuthActionTypes } from './Auth/store/types';
-import { useNavigate } from "react-router-dom";
-import jwtDecode from 'jwt-decode';
-import { useInput } from '../hooks/useInput';
-import * as yup from "yup";
-import { FormikProvider, useFormik } from 'formik';
+import { Link, useNavigate } from "react-router-dom";
 
 interface UserLogin {
-    Name: string;
+    UserName: string;
     Password: string;
 }
 
-interface JwtDecoder {
-    Role: string[],
-    UserId: string,
-    iss: string
+const useValidation = (value, validation) => {
+    const [isEmpty, setIsEmpty] = useState(true);
+    const [minLenghtError, setMinLenghtError] = useState(false);
+    const [inputValid, setInputValid] = useState(false);
+
+    useEffect(() => {
+        for(const valid in validation) {
+            switch(valid) {
+                case 'minLenght':
+                    value.length < validation[valid] ? setMinLenghtError(true) : setMinLenghtError(false);
+                    break;
+                case 'isEmpty':
+                    value ? setIsEmpty(false) : setIsEmpty(true);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, [value, validation]);
+
+    useEffect(() => {
+        if(isEmpty || minLenghtError) {
+            setInputValid(false);
+        }
+        else {
+            setInputValid(true);
+        }
+    }, [isEmpty, minLenghtError]);
+
+    return {
+        isEmpty,
+        minLenghtError,
+        inputValid
+    }
 }
 
-const LoginSchema = yup.object({
-    Name: yup
-      .string()
-      .required("Логін є обов'язкови полем"),
-    Password: yup
-        .string()
-        .required("Логін є обов'язкови полем")
-});
+const useInput = (initialValue, validation) => {
+    const [value, setValue] = useState(initialValue);
+    const [isDirty, setIsDirty] = useState(false);
+    const valid = useValidation(value, validation);
+
+    const onChange = (e) => {
+        setValue(e.target.value);
+    }
+
+    const onBlur = (e) => {
+        setIsDirty(true);
+    }
+
+    return {
+        value,
+        onChange,
+        onBlur,
+        isDirty,
+        ...valid
+    }
+}
 
 function Login() {
     const login = useInput('', {isEmpty: true, minLenght: 5});
     const password = useInput('', {isEmpty: true, minLenght: 8});
     const [isLoading, setIsLoading] = useState(false);
-    
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const initialValues: UserLogin = {
-        Name: "",
-        Password: ""
-    };
-
-
-    const postLogin = (value: UserLogin) => {
-        const user: UserLogin = {Name: value.Name, Password: value.Password};
+    function postLogin(userName: string, password: string) {
+        const user: UserLogin = {UserName: userName, Password: password};
         setIsLoading(true);
-        axios.post("account/login", user).then(res => {
-            console.log(res.data);
+        axios.post("http://localhost:5170/api/account/login", JSON.stringify(user), {headers: {'Content-Type': 'application/json'}}).then(res => {
             localStorage.setItem('token', res.data.token);
-            localStorage.setItem("refreshToken", res.data.refreshToken);
-
-            const decode: JwtDecoder = jwtDecode(res.data.token);
-            axios.get(`user/get-user-by-id/${decode.UserId}`).then(res => {
-                dispatch({type: AuthActionTypes.LOGIN, payload: {token: res.data.token, user: res.data}});
-            });
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+            dispatch({type: AuthActionTypes.LOGIN, payload: {token: res.data.token, user: res.data.user}});
             navigate("/");
         }).catch(err => {
             console.log(err);
@@ -66,18 +93,10 @@ function Login() {
         });
     }
 
-    const formik = useFormik({
-        initialValues: initialValues,
-        validationSchema: LoginSchema,
-        onSubmit: postLogin
-    });
-
-    const { errors, touched, handleSubmit, handleChange, setFieldValue } = formik;
-
     return (
         <div style={{height: '100vh'}} className='d-flex flex-column align-middle justify-content-center'>
             {isLoading && <div>Loading...</div>}
-            
+
             {(login.isDirty && login.isEmpty) && <div style={{color: "red"}}>Поле не может быть пустым!</div>}
             {(login.isDirty && login.minLenghtError) && <div style={{color: "red"}}>Некоректная длина!</div>}
             <InputGroup style={{width: '300px', height: '40px'}} className="mb-3 ms-auto me-auto">
@@ -97,7 +116,6 @@ function Login() {
                 <Form.Control
                     placeholder="Password"
                     aria-label="Password"
-                    type='password'
                     aria-describedby="basic-addon1"
                     value={password.value}
                     onChange={e => password.onChange(e)}
@@ -105,7 +123,8 @@ function Login() {
                 />
             </InputGroup>
 
-            <Button disabled={!login.inputValid || !password.inputValid} style={{width: '300px'}} className="ms-auto me-auto" type='submit'>Login</Button>
+            <Button disabled={!login.inputValid || !password.inputValid} style={{width: '300px'}} className="ms-auto me-auto" onClick={() => postLogin(login.value, password.value)}>Login</Button>
+            <Link className="w-300 text-center" style={{textAlign: "left"}} to="/recover-password">Forgot password?</Link>
         </div>
     );
 }
