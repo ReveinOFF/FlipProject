@@ -1,5 +1,4 @@
-﻿using Core.Entity.PostEntitys;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Entity.ReelsEntity
 {

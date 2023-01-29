@@ -21,12 +21,6 @@ namespace Core.Mapper
                 .ForMember(x => x.CreatedPost, y => y.MapFrom(x => x.CreatedPosts.Select(x => x.Files.Select(y => y.FileName)).ToList()));
             CreateMap<User, GetUsersDTO>();
 
-            CreateMap<Post, GetPostDTO>()
-                .ForMember(x => x.CommentaryCount, y => y.MapFrom(x => x.Commentary.Count))
-                .ForMember(x => x.AnswerCount, y => y.MapFrom(x => x.Commentary.Select(s => s.PostAnswers).Count()))
-                .ForMember(x => x.ReactionCount, y => y.MapFrom(x => x.Reactions.Count))
-                .ForMember(x => x.Files, y => y.MapFrom(x => x.Files.Select(y => y.FileName).ToList()));
-
             CreateMap<Reels, GetReelsDTO>()
                 .ForMember(x => x.CommentaryCount, y => y.MapFrom(x => x.Commentary.Count))
                 .ForMember(x => x.AnswerCount, y => y.MapFrom(x => x.Commentary.Select(s => s.ReelsAnswers).Count()))

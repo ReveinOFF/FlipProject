@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Core.DTO.Files;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using MimeTypes;
 using SixLabors.ImageSharp;
@@ -43,6 +44,54 @@ namespace Core.Helpers
             {
                 Console.WriteLine(exc);
                 return (null, null);
+            }
+        }
+
+        public static List<FilesDTO> CreateReelsAsync(IWebHostEnvironment env,
+                                         string pathFolder,
+                                         IFormFileCollection files)
+        {
+            try
+            {
+                if (files != null)
+                {
+                    string fileDestDir = env.ContentRootPath;
+                    Guid fileName = Guid.NewGuid();
+
+                    List<FilesDTO> filesDTOs = new List<FilesDTO>();
+
+                    foreach (var item in files)
+                    {
+                        string extention = MimeTypeMap.GetExtension(item.ContentType);
+
+                        string name = fileName.ToString() + extention;
+                        
+                        fileDestDir = Path.Combine(fileDestDir, pathFolder);
+                        if (!Directory.Exists(fileDestDir))
+                        {
+                            Directory.CreateDirectory(fileDestDir);
+                        }
+
+                        filesDTOs.Add(new FilesDTO
+                        {
+                            FileName = name,
+                            FilePath = Path.Combine(fileDestDir, name)
+                        });
+
+                        using var image = Image.Load(item.OpenReadStream());
+                        image.Mutate(x => x.Resize(100, 100));
+                        image.Save(Path.Combine(fileDestDir, name));
+                    }
+
+                    return filesDTOs;
+                }
+                else
+                    return null;
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc);
+                return null;
             }
         }
 

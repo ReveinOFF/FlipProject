@@ -14,5 +14,7 @@ namespace Core.DTO.Account
         [JsonConverter(typeof(DateOnlyConverter))]
         public DateOnly DateOfBirth { get; set; }
         public string Password { get; set; }
+
+        public string RecaptchaToken { get; set; }
     }
 }

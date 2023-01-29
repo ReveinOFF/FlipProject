@@ -10,8 +10,9 @@ namespace FlipBack.Services
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
-                Directory.CreateDirectory(Path.Combine(dir, "UserFiles"));
+                Directory.CreateDirectory(Path.Combine(dir, "UserImage"));
                 Directory.CreateDirectory(Path.Combine(dir, "PostFiles"));
+                Directory.CreateDirectory(Path.Combine(dir, "ReelsFiles"));
                 Directory.CreateDirectory(Path.Combine(dir, "MessageFiles"));
             }
             app.UseStaticFiles(new StaticFileOptions

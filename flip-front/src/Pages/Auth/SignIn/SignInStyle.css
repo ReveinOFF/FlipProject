@@ -216,3 +216,8 @@
 .fake-btn:hover .loader::before {
     transform: scaleX(1);
 }
+
+.link {
+    text-decoration: none;
+    color: #575757;
+}

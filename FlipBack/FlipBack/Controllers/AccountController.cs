@@ -24,8 +24,9 @@ namespace FlipBack.Controllers
         private readonly IMailService _mailService;
         private readonly IWebHostEnvironment _env;
         private readonly DataBase _context;
+        private readonly ICaptchaValidator _captchaValidator;
 
-        public AccountController(UserManager<User> userManager, IJwtService jwtService, IMapper mapper, IMailService mailService, IWebHostEnvironment env, DataBase context)
+        public AccountController(UserManager<User> userManager, IJwtService jwtService, IMapper mapper, IMailService mailService, IWebHostEnvironment env, DataBase context, ICaptchaValidator captchaValidator)
         {
             _userManager = userManager;
             _jwtService = jwtService;
@@ -33,11 +34,17 @@ namespace FlipBack.Controllers
             _mailService = mailService;
             _env = env;
             _context = context;
+            _captchaValidator = captchaValidator;
         }
 
         [HttpPost("registration")]
         public async Task<IActionResult> Register([FromForm] RegisterDTO register)
         {
+            if (!_captchaValidator.IsCaptchaPassedAsync(register.RecaptchaToken))
+            {
+                return BadRequest(new { error = "Recaptcha not valid" });
+            }
+
             var user = _mapper.Map<User>(register);
             try
             {
@@ -118,7 +125,18 @@ namespace FlipBack.Controllers
             if (!resultSend)
                 return BadRequest("Error in sending the message!");
 
-            return Ok();
+            var token = _jwtService.CreateToken(user);
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            refreshToken.UserId = user.Id;
+            await _context.RefreshTokens.AddAsync(refreshToken);
+            await _context.SaveChangesAsync();
+
+            return Ok(new TokenDTO
+            {
+                Token = token,
+                RefreshToken = refreshToken.Token
+            });
         }
 
         [HttpPost("login")]
@@ -126,6 +144,11 @@ namespace FlipBack.Controllers
         {
             try
             {
+                if (!_captchaValidator.IsCaptchaPassedAsync(login.RecaptchaToken))
+                {
+                    return BadRequest(new { error = "Recaptcha not valid" });
+                }
+
                 var findUser = await _userManager.Users.Include(u => u.RefreshTokens).SingleAsync(u => u.UserName == login.Name || u.Email == login.Name);
                 if (findUser == null)
                     return BadRequest("Error when searching for an account!");
@@ -142,9 +165,6 @@ namespace FlipBack.Controllers
                 refreshToken.UserId = user.Id;
                 await _context.RefreshTokens.AddAsync(refreshToken);
                 await _context.SaveChangesAsync();
-
-                //findUser.RefreshTokens.Add(refreshToken);
-                //await _userManager.UpdateAsync(findUser);
 
                 return Ok(new TokenDTO
                 {

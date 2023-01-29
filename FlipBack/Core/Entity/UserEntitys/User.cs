@@ -5,9 +5,7 @@ using Core.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using Twilio.Types;
 
 namespace Core.Entity.UserEntitys
 {

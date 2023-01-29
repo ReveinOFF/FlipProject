@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace Core.Helpers
 {
-    // DateOnly conversion.
     public class DateOnlyConverter : JsonConverter<DateOnly>
     {
         private const string Format = "yyyy-MM-dd";

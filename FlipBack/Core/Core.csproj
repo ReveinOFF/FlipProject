@@ -17,4 +17,8 @@
     <PackageReference Include="Twilio" Version="6.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\Post\" />
+  </ItemGroup>
+
 </Project>

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Outlet } from 'react-router-dom';
 import { useTypedSelector } from '../../Hooks/useTypedSelector';
 import './AuthBgStyle.css'
 
-export const AuthBg = (props) => {
+export const AuthBg = () => {
     const [mode, setMode] = useState<string>("light");
 
     const theme = useTypedSelector((state) => state.theme.mode)
@@ -99,7 +100,7 @@ export const AuthBg = (props) => {
                 <div className='big-ball'/>
             </div>
             <div className='center'>
-                {props.children}
+                <Outlet/>
             </div>
             <div className='footer'>
                 © 2023 Flip

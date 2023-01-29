@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.DTO.User;
 using Core.Entity.PostEntitys;
+using Core.Entity.ReelsEntity;
 using Core.Entity.UserEntitys;
 using Core.Helpers;
 using Infrastructure.Data;
@@ -278,8 +279,8 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpGet("get-saved-posts")]
-        public async Task<IActionResult> GetSavedPosts()
+        [HttpGet("get-bookmarks-post")]
+        public async Task<IActionResult> GetBookmarksPost()
         {
             string userId = User.FindFirst("UserId")?.Value;
 
@@ -294,8 +295,8 @@ namespace FlipBack.Controllers
             return Ok(post);
         }
 
-        [HttpPost("save-post")]
-        public async Task<IActionResult> SavePost(string userId, string postId)
+        [HttpPost("add-bookmarks-post")]
+        public async Task<IActionResult> AddBookmarksPost(string userId, string postId, string reelsId)
         {
             var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
 
@@ -310,8 +311,8 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpDelete("remove-save-post")]
-        public async Task<IActionResult> RemoveSavePost(string userId, string postId)
+        [HttpDelete("remove-bookmarks-post")]
+        public async Task<IActionResult> RemoveBookmarksPost(string userId, string postId)
         {
             var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
 
@@ -319,6 +320,52 @@ namespace FlipBack.Controllers
                 return BadRequest("The user did not save this post!");
 
             _context.UserPost.Remove(savedPost);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpGet("get-bookmarks-reels")]
+        public async Task<IActionResult> GetBookmarksReels()
+        {
+            string userId = User.FindFirst("UserId")?.Value;
+
+            var reels = await _userManager.Users.Where(x => x.Id == userId)
+                .Include(x => x.SavedReels).ThenInclude(t => t.Reels)
+                .SelectMany(s => s.SavedReels.Select(ss => ss.Reels))
+                .Reverse().ToListAsync();
+
+            if (reels == null)
+                return BadRequest("Saved post not found!");
+
+            return Ok(reels);
+        }
+
+        [HttpPost("add-bookmarks-reels")]
+        public async Task<IActionResult> AddBookmarksReels(string userId, string reelsId)
+        {
+            var savedReels = await _context.UserReels.Where(x => x.UserId == userId && x.ReelsId == reelsId).FirstOrDefaultAsync();
+
+            if (savedReels != null)
+                return BadRequest("A user has already saved this reels!");
+
+            UserReels userReels = new UserReels { ReelsId = reelsId, UserId = userId };
+
+            await _context.UserReels.AddAsync(userReels);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("remove-bookmarks-post")]
+        public async Task<IActionResult> RemoveBookmarksReels(string userId, string reelsId)
+        {
+            var savedReels = await _context.UserReels.Where(x => x.UserId == userId && x.ReelsId == reelsId).FirstOrDefaultAsync();
+
+            if (savedReels == null)
+                return BadRequest("The user did not save this post!");
+
+            _context.UserReels.Remove(savedReels);
             await _context.SaveChangesAsync();
 
             return Ok();

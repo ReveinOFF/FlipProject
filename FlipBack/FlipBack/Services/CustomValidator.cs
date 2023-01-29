@@ -10,14 +10,6 @@ namespace FlipBack.Services
         {
             IdentityResult result = await base.ValidateAsync(manager, user, password);
             List<IdentityError> errors = result.Succeeded ? new List<IdentityError>() : result.Errors.ToList();
-            if (string.Equals(user.UserName, password, StringComparison.OrdinalIgnoreCase))
-            {
-                errors.Add(new IdentityError
-                {
-                    Code = "UsernameAsPassword",
-                    Description = "You cannot use your username as your password!"
-                });
-            }
             if (string.Equals(user.UserName, user.Name, StringComparison.OrdinalIgnoreCase))
             {
                 errors.Add(new IdentityError

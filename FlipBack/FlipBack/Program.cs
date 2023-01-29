@@ -97,6 +97,7 @@ builder.Services.Configure<TwilioVerifySettings>(builder.Configuration.GetSectio
 
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IValidatorRepository, ValidatorRepository>();
+builder.Services.AddScoped(typeof(ICaptchaValidator), typeof(CaptchaValidator));
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<ITwilioService, TwilioService>();
 builder.Services.AddHttpClient<ITwilioRestClient, TwilioClient>();

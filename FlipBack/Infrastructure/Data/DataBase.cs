@@ -118,7 +118,7 @@ namespace Infrastructure.Data
         /* Reels */
         public virtual DbSet<Reels> Reels { get; set; }
         public virtual DbSet<ReelsFiles> ReelsFiles { get; set; }
-        public virtual DbSet<UserReels> ReelsPost { get; set; }
+        public virtual DbSet<UserReels> UserReels { get; set; }
         public virtual DbSet<ReelsReaction> ReelsReaction { get; set; }
         public virtual DbSet<ReelsCommentary> ReelsCommentary { get; set; }
         public virtual DbSet<ReelsAnswer> ReelsAnswer { get; set; }

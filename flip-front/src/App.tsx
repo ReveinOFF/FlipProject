@@ -2,28 +2,21 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { AuthSelection } from './Pages/Auth/Selection/AuthSelection';
 import { SignIn } from './Pages/Auth/SignIn/SignIn';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import { AuthBg } from './Components/Auth/AuthBg';
 
 const App = () => {
   return (
-    <Routes>
-      <Route path='/' element={<AuthSelection/>}>
-        
-      </Route>
-      <Route path='/signin' element={<SignIn/>}></Route>
-      {/* <Route path="/" element={<HomeLayout/>}>
-        <Route index element={
-          <RequireAuth redirectTo="/login">
-            <Home/>
-          </RequireAuth>
-        } />
-        <Route path='/login' element={
-          <NotRequireAuth redirectTo="/">
-              <Login/>
-          </NotRequireAuth>
-        } />
-        <Route path="*" element={<NoMatch />} />
-      </Route> */}
-    </Routes>
+    <GoogleReCaptchaProvider reCaptchaKey="6Le0YTQkAAAAAHftYF71fIFvFCyVdwfIlI5aLGDK">
+      <Routes>
+        <Route path='/' element={<AuthBg/>}>
+          <Route index element={<AuthSelection/>}/>
+          <Route path='signin' element={<SignIn/>}/>
+        </Route>
+
+        {/* <Route path="*" element={<NoMatch />} /> */}
+      </Routes>
+    </GoogleReCaptchaProvider>
   );
 }
 

@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthBg } from '../../../Components/Auth/AuthBg';
+import { Link, useNavigate } from 'react-router-dom';
 import * as yup from "yup";
 import { Form, FormikProvider, useFormik } from 'formik';
 import './SignInStyle.css';
 import { UserLogin } from '../../../Interface/Login';
 import axios from 'axios';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export const SignIn = () => {
     const navigate = useNavigate();
     const [visible, setVisoiblity] = useState(false);
+    const [bot, setBot] = useState<boolean>(false);
+    const { executeRecaptcha } = useGoogleReCaptcha();
 
     useEffect(() => {
         document.title = "Sign In - Flip";
@@ -30,17 +32,18 @@ export const SignIn = () => {
     });
 
     const PostLogin = async (value: UserLogin) => {
-        await axios.post("account/login", value).then(res => {
-            console.log(res.data.token);
-            console.log(res.data.refreshToken);
+        if (!executeRecaptcha) {
+            setBot(true);
+            return;
+        }
 
-            // localStorage.setItem('token', res.data.token);
-            // localStorage.setItem("refreshToken", res.data.refreshToken);
-            
-            // setTimeout(() => {
-            //     navigate("/");
-            // }, 400)
-        });
+        const recaptchaToken = await executeRecaptcha();
+        value.reCaptchaToken = recaptchaToken;
+
+        await axios.post("account/login", value).then(res => {
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem("refreshToken", res.data.refreshToken);
+        }).finally(() => navigate("/"));
     }
 
     const formik = useFormik({
@@ -59,7 +62,7 @@ export const SignIn = () => {
           dirty } = formik;
 
     return (
-        <AuthBg>
+        <>
             <div className='header'>Вхід</div>
             <FormikProvider value={formik}>
                 <Form className='form' onSubmit={handleSubmit}>
@@ -98,11 +101,11 @@ export const SignIn = () => {
                 <div className='other-btn'>
                     <button className="btn-reg">Зареєструватись</button>
                     <div className='fake-btn cancel' onClick={() => navigate('/')}>
-                        <div>Скасувати</div>
+                        <Link className='link' to="/">Скасувати</Link>
                         <div className='loader'></div>
                     </div>
                 </div>
             </div>
-        </AuthBg>
+        </>
     );
 }

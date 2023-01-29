@@ -13,6 +13,7 @@ namespace Core.Entity.MessageEntitys
         public string MessageText { get; set; }
         [Required]
         public DateTime DateSender { get; set; }
+        public DateTime DateChanged { get; set; }
         [Required]
         public bool IsEdited { get; set; }
 
