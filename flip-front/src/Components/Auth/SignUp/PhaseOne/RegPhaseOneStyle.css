@@ -1,0 +1,57 @@
+.reg-label {
+    margin-bottom: 89px;
+    width: 224px;
+    height: 48px;
+
+    font-style: normal;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 48px;
+
+    color: #2F2F2F;
+}
+
+.form-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-input input:nth-child(2) {
+    margin: 26px 0;
+}
+
+.selector {
+    display: flex;
+
+    margin-top: 20px;
+    margin-bottom: 45px;
+}
+
+.selector div:first-child {
+    margin-right: 9.5px;
+}
+
+.selector div:last-child {
+    margin-left: 9.5px;
+}
+
+.form-button {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-button button {
+    align-self: center;
+}
+
+.form-button div {
+    align-self: center;
+    margin-top: 25px;
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #575757;
+}
