@@ -1,0 +1,58 @@
+.svg {
+  margin-bottom: 50.97px;
+}
+
+.description {
+  margin-bottom: 79px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 30px;
+
+  color: #2f2f2f;
+}
+
+.form_btn {
+  .btn {
+    width: 445px;
+    height: 80px;
+    border: 0;
+
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 30px;
+
+    border-radius: 15px;
+  }
+
+  .btn_login {
+    color: #ffffff;
+
+    background: linear-gradient(88.74deg, #48d824 -18.76%, #10d0ea 99.82%);
+    margin-bottom: 30px;
+
+    &:hover {
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+        linear-gradient(88.74deg, #48d824 -18.76%, #10d0ea 99.82%);
+    }
+  }
+
+  .btn_reg {
+    color: #2f2f2f;
+
+    border: 1px solid transparent;
+    background: linear-gradient(#ffffff, #ffffff) padding-box,
+      linear-gradient(to right, #3ed647, #10cfe7) border-box;
+
+    &:hover {
+      color: #ffffff;
+
+      background: linear-gradient(
+        88.74deg,
+        rgba(72, 216, 36, 0.5) -18.76%,
+        rgba(16, 208, 234, 0.5) 99.82%
+      );
+    }
+  }
+}

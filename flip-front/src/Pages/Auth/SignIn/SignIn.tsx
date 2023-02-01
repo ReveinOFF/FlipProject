@@ -2,10 +2,16 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { Form, FormikProvider, useFormik } from "formik";
-import "./SignInStyle.css";
 import { UserLogin } from "../../../Interface/Login";
 import axios from "axios";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import styles from "./SignIn.module.scss";
+import {
+  CustomButton,
+  CustomButtonBG,
+  CustomMiniBTN,
+} from "../../../Components/MainBlock/Button/CustomButton";
+import { CustomInput } from "../../../Components/MainBlock/Input/CustomInput";
 
 export const SignIn = () => {
   const navigate = useNavigate();
@@ -64,41 +70,39 @@ export const SignIn = () => {
 
   return (
     <>
-      <div className="header">Вхід</div>
+      <div className={styles.log_header}>Вхід</div>
+
       <FormikProvider value={formik}>
-        <Form className="form" onSubmit={handleSubmit}>
-          <input
-            className={
-              errors.name && touched.name ? "error-input" : "input-name"
-            }
+        <Form
+          className={`${styles.log_form} dflex-column`}
+          onSubmit={handleSubmit}
+        >
+          <CustomInput
             value={values.name}
             onChange={handleChange}
             onBlur={handleBlur}
             name="name"
             type="text"
             placeholder="E-Mail або нікнейм"
+            error={touched.name && errors.name}
           />
           {touched.name && errors.name && (
-            <div className="error">{errors.name}</div>
+            <div className={styles.error}>{errors.name}</div>
           )}
 
-          <div className="form-pass">
-            <input
-              className={
-                errors.password && touched.password
-                  ? "input-pasw error-input"
-                  : "input-pasw"
-              }
+          <div className={styles.form_pass}>
+            <CustomInput
               type={visible ? "text" : "password"}
               value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
               name="password"
               placeholder="Пароль"
+              error={touched.password && errors.password}
             />
             <svg
               onClick={() => setVisoiblity((visible) => !visible)}
-              className="password-show"
+              className={styles.password_show}
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -113,26 +117,25 @@ export const SignIn = () => {
             </svg>
           </div>
           {touched.password && errors.password && (
-            <div className="error">{errors.password}</div>
+            <div className={styles.error}>{errors.password}</div>
           )}
 
-          <button
-            className={!(dirty && isValid) ? "btn-log-error" : "btn-log"}
+          <CustomButtonBG
+            content="Увійти"
             type="submit"
             disabled={!(dirty && isValid)}
-          >
-            Увійти
-          </button>
+            error={!(dirty && isValid)}
+          />
         </Form>
       </FormikProvider>
-      <div className="other">
-        <div className="data">
-          <div className="fake-btn">
-            <div>Забув(ла) пароль?</div>
-            <div className="loader"></div>
-          </div>
-        </div>
-        <div className="or">
+
+      <div className={`dflex-column ${styles.form_btn}`}>
+        <CustomMiniBTN
+          onClick={() => navigate("/")}
+          content="Забув(ла) пароль?"
+        />
+
+        <div className={styles.log_or}>
           <svg
             width="230"
             height="2"
@@ -167,16 +170,15 @@ export const SignIn = () => {
             />
           </svg>
         </div>
-        <div className="other-btn">
-          <button className="btn-reg" onClick={() => navigate("/signup")}>
-            Зареєструватись
-          </button>
-          <div className="fake-btn cancel" onClick={() => navigate(-1)}>
-            <Link className="link" to="/">
-              Скасувати
-            </Link>
-            <div className="loader"></div>
-          </div>
+
+        <div className={`${styles.log_other_btn} dflex-column`}>
+          <CustomButton
+            content="Зареєструватись"
+            className={styles.btn_reg}
+            onClick={() => navigate("/signup")}
+          />
+
+          <CustomMiniBTN onClick={() => navigate(-1)} content="Скасувати" />
         </div>
       </div>
     </>

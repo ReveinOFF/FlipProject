@@ -1,0 +1,37 @@
+.custom_input {
+  box-sizing: border-box;
+
+  background: #ffffff;
+  color: #939292;
+
+  width: 455px;
+  height: 55px;
+
+  box-shadow: 0px 2px 29px rgba(0, 0, 0, 0.05);
+  border-radius: 15px;
+  border: 0;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+
+  padding: 0 22px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #939292;
+  }
+}
+
+.input_error {
+  border: 1px solid #9d3535;
+  color: #9d3535;
+
+  &::placeholder {
+    color: #9d3535;
+  }
+}

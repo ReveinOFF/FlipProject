@@ -18,7 +18,7 @@ namespace FlipBack.Services
                     Description = "You cannot use your name as your username!"
                 });
             }
-            if (password.Length > 15)
+            if (password.Length > 20)
             {
                 errors.Add(new IdentityError
                 {

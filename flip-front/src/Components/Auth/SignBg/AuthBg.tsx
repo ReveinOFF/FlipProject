@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
-import "./AuthBgStyle.css";
+import "./AuthBgStyle.scss";
 
 export const AuthBg = () => {
   const [mode, setMode] = useState<string>("light");

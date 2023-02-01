@@ -1,4 +1,4 @@
-import "./App.css";
+import "./App.scss";
 import { Route, Routes } from "react-router-dom";
 import { AuthSelection } from "./Pages/Auth/Selection/AuthSelection";
 import { SignIn } from "./Pages/Auth/SignIn/SignIn";

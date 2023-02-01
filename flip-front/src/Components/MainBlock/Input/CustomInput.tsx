@@ -1,4 +1,4 @@
-import "./CustomInputStyle.css";
+import style from "./CustomInput.module.scss";
 
 export const CustomInput = (props) => {
   const { type, name, placeholder, value, onChange, onBlur, disabled, error } =
@@ -6,7 +6,7 @@ export const CustomInput = (props) => {
 
   return (
     <input
-      className={`custom-input ${error && "input-error"}`}
+      className={`${style.custom_input} ${error && style.input_error}`}
       value={value}
       type={type}
       name={name}

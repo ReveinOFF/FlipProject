@@ -1,0 +1,73 @@
+.log_header {
+  width: 86px;
+  height: 48px;
+
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 48px;
+
+  margin-bottom: 60px;
+
+  color: #2f2f2f;
+}
+
+.log_form {
+  .form_pass {
+    position: relative;
+
+    input {
+      margin-top: 20px;
+    }
+
+    svg {
+      position: absolute;
+      top: 35px;
+      left: 415px;
+
+      cursor: pointer;
+    }
+  }
+
+  button {
+    margin-top: 44px;
+    align-self: center;
+  }
+
+  .error {
+    margin-left: 22px;
+    margin-top: 10px;
+
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #9d3535;
+  }
+}
+
+.log_other_btn {
+  align-self: center;
+}
+
+.log_or {
+  display: flex;
+  align-items: center;
+  margin-top: 37px;
+  margin-bottom: 35px;
+
+  div {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #575757;
+  }
+}
+
+.form_btn > a,
+.log_other_btn > a {
+  align-self: center;
+}
