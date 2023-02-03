@@ -9,12 +9,18 @@ import * as yup from "yup";
 import { Form, FormikProvider, useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import styles from "./RegPhaseTwo.module.scss";
-import { useNavigate } from "react-router-dom";
+import { useTypedSelector } from "../../../../Hooks/useTypedSelector";
+import axios from "axios";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { RegMain } from "../store/types";
 
 export const RegPhaseTwo = () => {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const reg = useTypedSelector((state) => state.reg);
 
+  const [bot, setBot] = useState<boolean>(false);
+  const [data, setData] = useState<RegMain>();
   const [visible, setVisoiblity] = useState(false);
   const [visible2, setVisoiblity2] = useState(false);
   const hiddenFileInput = useRef<HTMLInputElement>(null);
@@ -24,66 +30,96 @@ export const RegPhaseTwo = () => {
       hiddenFileInput.current.click();
     }
   };
-  const handleChangeFile = (event) => {
-    const fileUploaded = event.target.files[0];
-  };
 
   useEffect(() => {
     document.title = "Sign Up | Phase Two - Flip";
   }, []);
 
+  useEffect(() => {
+    setData(reg.data);
+  }, [reg]);
+
   const initialValues: RegPhase2Res = {
-    file: new Blob(),
-    userName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    UserImage: null as any,
+    UserName: reg.data?.UserName || "",
+    Email: reg.data?.Email || "",
+    Password: "",
+    ConfirmPassword: "",
   };
 
   const loginMatches = /^[a-zA-Z0-9-._!]{5,15}$/;
 
   const Reg2Schema = yup.object({
-    userName: yup
+    UserName: yup
       .string()
       .min(5, "Логін повинен містити не менше 5 символів!")
       .max(15, "Логін повинен містити не більше 15 символів!")
       .matches(loginMatches, "Логін введений не вірно!")
       .required("Ім'я є обов'язковим полем!"),
-    email: yup
+    Email: yup
       .string()
       .email("Пошта введена не правильно!")
       .required("Пошта є обов'язковим полем!"),
-    password: yup
+    Password: yup
       .string()
       .min(8, "Пароль повинен містити не менше 8 символів!")
       .max(20, "Пароль повинен містити не більше 15 символів!")
       .oneOf(
-        [yup.ref("confirmPassword"), null],
+        [yup.ref("ConfirmPassword"), null],
         "Пароль не відповідає підтвердженому паролю!"
       )
       .required("Пароль є обов'язковим полем!"),
-    confirmPassword: yup
+    ConfirmPassword: yup
       .string()
       .oneOf(
-        [yup.ref("password"), null],
+        [yup.ref("Password"), null],
         "Підтвердження пароля не збігається з паролем!"
       )
       .required("Підтвердження пароля є обов'язковим полем!"),
   });
 
-  const PhaseTwo = (value: RegPhase2Res) => {
+  const PhaseTwo = async (value: RegPhase2Res) => {
+    const file = value.UserImage;
+
+    if (!executeRecaptcha) {
+      setBot(true);
+      return;
+    }
+
+    const RecaptchaToken = await executeRecaptcha();
+
     dispatch({
       type: "REG",
       payload: {
-        phase: SelectPhase.phaseTwo,
         data: {
-          file: value.file,
-          userName: value.userName,
-          email: value.email,
-          password: value.password,
+          UserName: value.UserName,
+          Email: value.Email,
+          Password: value.Password,
+          RecaptchaToken: RecaptchaToken,
         },
       },
     });
+
+    const dataPost = data;
+    dataPost!.UserImage = file;
+    dataPost!.UserName = value.UserName;
+    dataPost!.Email = value.Email;
+    dataPost!.Password = value.Password;
+    dataPost!.RecaptchaToken = RecaptchaToken;
+    setData(dataPost);
+
+    await axios
+      .post("account/registration", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .catch(() => {
+        alert(
+          "Ошибка в реєстрації! Можливо ошибка в неправильних введених данних!"
+        );
+      })
+      .finally(() =>
+        dispatch({ type: "REG", payload: { phase: SelectPhase.confrim } })
+      );
   };
 
   const formik = useFormik({
@@ -99,6 +135,7 @@ export const RegPhaseTwo = () => {
     errors,
     touched,
     handleBlur,
+    setFieldValue,
     isValid,
     dirty,
   } = formik;
@@ -111,8 +148,12 @@ export const RegPhaseTwo = () => {
             <input
               type="file"
               ref={hiddenFileInput}
-              onChange={handleChange}
+              onChange={(event: any) => {
+                setFieldValue("UserImage", event.currentTarget.files[0]);
+              }}
               style={{ display: "none" }}
+              accept=".jpg, .jpeg"
+              name="UserImage"
             />
             <svg
               width="479"
@@ -178,7 +219,7 @@ export const RegPhaseTwo = () => {
                 rx="4.11776"
                 fill="white"
                 stroke="white"
-                stroke-width="0.562874"
+                strokeWidth="0.562874"
               />
               <rect
                 x="349.221"
@@ -189,7 +230,7 @@ export const RegPhaseTwo = () => {
                 transform="rotate(90 349.221 215.655)"
                 fill="white"
                 stroke="white"
-                stroke-width="0.562874"
+                strokeWidth="0.562874"
               />
               <defs>
                 <filter
@@ -199,9 +240,9 @@ export const RegPhaseTwo = () => {
                   width="477.647"
                   height="330.647"
                   filterUnits="userSpaceOnUse"
-                  color-interpolation-filters="sRGB"
+                  colorInterpolationFilters="sRGB"
                 >
-                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                  <feFlood floodOpacity="0" result="BackgroundImageFix" />
                   <feColorMatrix
                     in="SourceAlpha"
                     type="matrix"
@@ -234,35 +275,35 @@ export const RegPhaseTwo = () => {
               <CustomInput
                 type="text"
                 placeholder="Нікнейм"
-                value={values.userName}
+                value={values.UserName}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                name="userName"
+                name="UserName"
               />
-              {touched.userName && errors.userName && (
-                <div className={styles.error}>{errors.userName}</div>
+              {touched.UserName && errors.UserName && (
+                <div className={styles.error}>{errors.UserName}</div>
               )}
 
               <CustomInput
                 type="email"
                 placeholder="E-Mail"
-                value={values.email}
+                value={values.Email}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                name="email"
+                name="Email"
               />
-              {touched.email && errors.email && (
-                <div className={styles.error}>{errors.email}</div>
+              {touched.Email && errors.Email && (
+                <div className={styles.error}>{errors.Email}</div>
               )}
 
               <div className={styles.input_menu}>
                 <CustomInput
                   type={visible ? "text" : "password"}
                   placeholder="Пароль"
-                  value={values.password}
+                  value={values.Password}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  name="password"
+                  name="Password"
                 />
                 <svg
                   onClick={() => setVisoiblity((visible) => !visible)}
@@ -279,18 +320,18 @@ export const RegPhaseTwo = () => {
                   />
                 </svg>
               </div>
-              {touched.password && errors.password && (
-                <div className={styles.error}>{errors.password}</div>
+              {touched.Password && errors.Password && (
+                <div className={styles.error}>{errors.Password}</div>
               )}
 
               <div className={styles.input_menu}>
                 <CustomInput
                   type={visible2 ? "text" : "password"}
                   placeholder="Повторіть пароль"
-                  value={values.confirmPassword}
+                  value={values.ConfirmPassword}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  name="confirmPassword"
+                  name="ConfirmPassword"
                 />
                 <svg
                   onClick={() => setVisoiblity2((visible2) => !visible2)}
@@ -307,8 +348,8 @@ export const RegPhaseTwo = () => {
                   />
                 </svg>
               </div>
-              {touched.confirmPassword && errors.confirmPassword && (
-                <div className={styles.error}>{errors.confirmPassword}</div>
+              {touched.ConfirmPassword && errors.ConfirmPassword && (
+                <div className={styles.error}>{errors.ConfirmPassword}</div>
               )}
             </div>
           </div>
@@ -343,7 +384,12 @@ export const RegPhaseTwo = () => {
         </Form>
       </FormikProvider>
 
-      <CustomMiniBTN content="Повернутися" onClick={() => navigate(-1)} />
+      <CustomMiniBTN
+        content="Повернутися"
+        onClick={() =>
+          dispatch({ type: "REG", payload: { phase: SelectPhase.phaseOne } })
+        }
+      />
     </>
   );
 };

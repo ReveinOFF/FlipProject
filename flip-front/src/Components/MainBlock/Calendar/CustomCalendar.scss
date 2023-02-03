@@ -1,0 +1,105 @@
+.react-calendar {
+  width: 240px;
+
+  .react-calendar__navigation {
+    display: flex;
+    margin-bottom: 41px;
+
+    button {
+      background-color: transparent;
+      border: 0;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 15px;
+
+      text-align: center;
+
+      color: #000000;
+    }
+
+    .react-calendar__navigation__label {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 18px;
+
+      color: #000000;
+    }
+
+    .react-calendar__navigation__next2-button,
+    .react-calendar__navigation__prev2-button {
+      display: none;
+    }
+  }
+
+  .react-calendar__viewContainer {
+    .react-calendar__month-view__weekdays__weekday {
+      text-align: center;
+    }
+
+    .react-calendar__month-view__weekdays {
+      margin-bottom: 28px;
+      display: flex;
+
+      abbr {
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 15px;
+
+        text-align: center;
+
+        color: #797979;
+      }
+    }
+
+    .react-calendar__month-view__days {
+      button {
+        border: 0;
+        color: #000000;
+        margin: 10px 0;
+        padding: 0;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        flex: 0;
+        flex: 0 0 14.2857%;
+        overflow: hidden;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+
+        abbr {
+          font-style: normal;
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 15px;
+        }
+      }
+
+      .react-calendar__tile:hover {
+        background: #8c99c3;
+        color: #fff;
+      }
+
+      .react-calendar__tile--active {
+        background: #8c99c3;
+        color: #fff;
+      }
+
+      .react-calendar__tile--active:enabled:hover,
+      .react-calendar__tile--active:enabled:focus {
+        background: #6f48eb;
+        color: white;
+      }
+
+      .react-calendar__month-view__days__day--neighboringMonth abbr {
+        color: #797979;
+      }
+    }
+  }
+}
+
+abbr[title] {
+  text-decoration: none;
+}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { RegPhase1Res } from "../../../../Interface/Registration";
 import {
   CustomButtonBG,
@@ -8,42 +8,50 @@ import { CustomInput } from "../../../MainBlock/Input/CustomInput";
 import * as yup from "yup";
 import { ErrorMessage, Form, FormikProvider, useFormik } from "formik";
 import { useDispatch } from "react-redux";
-import { SelectPhase } from "../store/types";
+import { RegMain, SelectPhase } from "../store/types";
 import styles from "./RegPhaseOne.module.scss";
 import { useNavigate } from "react-router-dom";
 import { getAge } from "../../../Convertor/convertDate";
 import { parse } from "date-fns";
+import { useTypedSelector } from "../../../../Hooks/useTypedSelector";
 
 export const RegPhaseOne = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const reg = useTypedSelector((state) => state.reg);
+
+  const [data, setData] = useState<RegMain>();
 
   useEffect(() => {
     document.title = "Sign Up | Phase One - Flip";
   }, []);
 
+  useEffect(() => {
+    setData(reg.data);
+  }, [reg]);
+
   const initialValues: RegPhase1Res = {
-    name: "",
-    phone: "",
-    dateBirth: new Date(new Date()),
+    Name: reg.data?.Name || "",
+    Phone: reg.data?.Phone || "",
+    DateOfBirth: new Date(new Date()),
   };
 
   const phoneRegExp = /^([\+]?[380]{3}?|[0])[0-9]{9}$/;
 
   const Reg1Schema = yup.object({
-    name: yup
+    Name: yup
       .string()
       .min(5, "Ім'я повинно містити не менше 5 символів!")
       .max(15, "Ім'я повинно містити не більше 15 символів!")
       .required("Ім'я є обов'язковим полем!"),
-    phone: yup.string().matches(phoneRegExp, "Номер телефона неправильний!"),
-    dateBirth: yup
+    Phone: yup.string().matches(phoneRegExp, "Номер телефона неправильний!"),
+    DateOfBirth: yup
       .date()
       .transform(function (value, originalValue) {
         if (this.isType(value)) {
           return value;
         }
-        const result = parse(originalValue, "dd.MM.yyyy", new Date());
+        const result = parse(originalValue, "yyyy-MM-dd", new Date());
         return result;
       })
       .test(
@@ -61,9 +69,9 @@ export const RegPhaseOne = () => {
       payload: {
         phase: SelectPhase.phaseTwo,
         data: {
-          name: value.name,
-          phone: value.phone,
-          dateBirth: value.dateBirth,
+          Name: value.Name,
+          Phone: value.Phone,
+          DateOfBirth: value.DateOfBirth,
         },
       },
     });
@@ -96,38 +104,38 @@ export const RegPhaseOne = () => {
             <CustomInput
               type="text"
               placeholder="Ім'я"
-              value={values.name}
+              value={values.Name}
               onChange={handleChange}
               onBlur={handleBlur}
-              name="name"
+              name="Name"
             />
-            {touched.name && errors.name && (
-              <div className={styles.error}>{errors.name}</div>
+            {touched.Name && errors.Name && (
+              <div className={styles.error}>{errors.Name}</div>
             )}
 
             <CustomInput
               type="text"
               placeholder="Телефон"
-              value={values.phone}
+              value={values.Phone}
               onChange={handleChange}
               onBlur={handleBlur}
-              name="phone"
+              name="Phone"
             />
-            {touched.phone && errors.phone && (
-              <div className={styles.error}>{errors.phone}</div>
+            {touched.Phone && errors.Phone && (
+              <div className={styles.error}>{errors.Phone}</div>
             )}
 
             <CustomInput
               type="date"
               placeholder="Дата народження"
-              value={values.dateBirth}
+              value={values.DateOfBirth}
               onChange={handleChange}
               onBlur={handleBlur}
-              name="dateBirth"
+              name="DateOfBirth"
             />
-            {touched.dateBirth && errors.dateBirth && (
+            {touched.DateOfBirth && errors.DateOfBirth && (
               <div className={styles.error}>
-                <ErrorMessage name="dateBirth" />
+                <ErrorMessage name="DateOfBirth" />
               </div>
             )}
           </div>

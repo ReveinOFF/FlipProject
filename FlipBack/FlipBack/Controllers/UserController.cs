@@ -357,7 +357,7 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpDelete("remove-bookmarks-post")]
+        [HttpDelete("remove-bookmarks-reels")]
         public async Task<IActionResult> RemoveBookmarksReels(string userId, string reelsId)
         {
             var savedReels = await _context.UserReels.Where(x => x.UserId == userId && x.ReelsId == reelsId).FirstOrDefaultAsync();

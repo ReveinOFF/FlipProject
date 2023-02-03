@@ -17,7 +17,7 @@ export const regReducer = (state = initialState, action: Action) : RegState => {
             return {
                 ...state,
                 phase: action.payload.phase,
-                data: {...action.payload.data}
+                data: {...state.data, ...action.payload.data}
             }
         default:
             return state

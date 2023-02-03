@@ -1,11 +1,12 @@
 export interface RegMain {
-    name: string,
-    phone: string,
-    dateBirth: Date,
-    file: Blob,
-    userName: string,
-    email: string,
-    password: string
+    Name: string,
+    Phone: string,
+    DateOfBirth: Date,
+    UserName: string,
+    UserImage: any,
+    Email: string,
+    Password: string,
+    RecaptchaToken: string
 }
 
 export enum SelectPhase {

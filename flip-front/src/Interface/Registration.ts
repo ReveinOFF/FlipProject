@@ -1,15 +1,15 @@
 export interface RegPhase1Res {
-    name: string,
-    phone: string,
-    dateBirth: Date
+    Name: string,
+    Phone: string,
+    DateOfBirth: Date
 }
 
 export interface RegPhase2Res {
-    file: Blob,
-    userName: string,
-    email: string,
-    password: string,
-    confirmPassword: string
+    UserImage: any,
+    UserName: string,
+    Email: string,
+    Password: string,
+    ConfirmPassword: string
 }
 
 export enum SelectPhase {

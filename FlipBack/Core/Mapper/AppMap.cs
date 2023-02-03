@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Core.DTO.Account;
-using Core.DTO.Post;
 using Core.DTO.Reels;
 using Core.DTO.User;
-using Core.Entity.PostEntitys;
 using Core.Entity.ReelsEntity;
 using Core.Entity.UserEntitys;
 
@@ -13,7 +11,8 @@ namespace Core.Mapper
     {
         public AppMap() 
         {
-            CreateMap<RegisterDTO, User>();
+            CreateMap<RegisterDTO, User>()
+                .ForMember(x => x.PhoneNumber, y => y.MapFrom(z => z.Phone));
             CreateMap<User, GetUserDTO>()
                 .ForMember(x => x.Followers, y => y.MapFrom(x => x.Followers.Count))
                 .ForMember(x => x.Followings, y => y.MapFrom(x => x.Followings.Count))

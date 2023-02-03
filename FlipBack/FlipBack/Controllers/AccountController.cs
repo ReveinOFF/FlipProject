@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FlipBack.Helpers;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace FlipBack.Controllers
 {
@@ -40,10 +42,10 @@ namespace FlipBack.Controllers
         [HttpPost("registration")]
         public async Task<IActionResult> Register([FromForm] RegisterDTO register)
         {
-            if (!_captchaValidator.IsCaptchaPassedAsync(register.RecaptchaToken))
-            {
-                return BadRequest(new { error = "Recaptcha not valid" });
-            }
+            //if (!_captchaValidator.IsCaptchaPassedAsync(register.RecaptchaToken))
+            //{
+            //    return BadRequest(new { error = "Recaptcha not valid" });
+            //}
 
             var user = _mapper.Map<User>(register);
             try
@@ -68,7 +70,7 @@ namespace FlipBack.Controllers
                 string fileDestDir = Path.Combine("Resources", "UserImage", user.Id);
                 var createImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, register.UserImage);
                 user.UserImage = createImage.FileName;
-                user.UserImagePath = createImage.FileName;
+                user.UserImagePath = createImage.FilePath;
 
                 var result = await _userManager.CreateAsync(user, register.Password);
                 if (!result.Succeeded)
@@ -79,7 +81,9 @@ namespace FlipBack.Controllers
                     return BadRequest(ExceptionBuild.BuilderException(role));
 
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var confirmationLink = $"http://uniwox.com/emailconfirm?token={token}";
+                byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(token);
+                var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
+                var confirmationLink = $"http://localhost:3000/email-confirm?token={codeEncoded}&email={user.Email}";
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
@@ -108,7 +112,9 @@ namespace FlipBack.Controllers
             if (user == null)
                 return BadRequest("Email not found!");
 
-            var result = await _userManager.ConfirmEmailAsync(user, confirmEmail.Token);
+            var codeDecodedBytes = WebEncoders.Base64UrlDecode(confirmEmail.Token);
+            var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
+            var result = await _userManager.ConfirmEmailAsync(user, codeDecoded);
 
             if (!result.Succeeded)
                 return BadRequest("There is a problem with password confirmation!");
@@ -144,10 +150,10 @@ namespace FlipBack.Controllers
         {
             try
             {
-                if (!_captchaValidator.IsCaptchaPassedAsync(login.RecaptchaToken))
-                {
-                    return BadRequest(new { error = "Recaptcha not valid" });
-                }
+                //if (!_captchaValidator.IsCaptchaPassedAsync(login.RecaptchaToken))
+                //{
+                //    return BadRequest(new { error = "Recaptcha not valid" });
+                //}
 
                 var findUser = await _userManager.Users.Include(u => u.RefreshTokens).SingleAsync(u => u.UserName == login.Name || u.Email == login.Name);
                 if (findUser == null)
