@@ -2,6 +2,12 @@
   .form_request {
     display: flex;
 
+    .upload_img {
+      border-radius: 15px;
+      align-self: center;
+      margin-right: 25px;
+    }
+
     .form_input {
       margin-top: 15px;
 

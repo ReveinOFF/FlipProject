@@ -24,13 +24,13 @@ export const SignIn = () => {
   }, []);
 
   const initialValues: UserLogin = {
-    name: "",
-    password: "",
+    Name: "",
+    Password: "",
   };
 
   const LoginSchema = yup.object({
-    name: yup.string().required("Логін є обов'язкови полем"),
-    password: yup.string().required("Пароль є обов'язкови полем"),
+    Name: yup.string().required("Логін є обов'язкови полем"),
+    Password: yup.string().required("Пароль є обов'язкови полем"),
   });
 
   const PostLogin = async (value: UserLogin) => {
@@ -39,8 +39,7 @@ export const SignIn = () => {
       return;
     }
 
-    const recaptchaToken = await executeRecaptcha();
-    value.reCaptchaToken = recaptchaToken;
+    value.RecaptchaToken = await executeRecaptcha();
 
     await axios
       .post("account/login", value)
@@ -78,27 +77,27 @@ export const SignIn = () => {
           onSubmit={handleSubmit}
         >
           <CustomInput
-            value={values.name}
+            value={values.Name}
             onChange={handleChange}
             onBlur={handleBlur}
-            name="name"
+            name="Name"
             type="text"
             placeholder="E-Mail або нікнейм"
-            error={touched.name && errors.name}
+            error={touched.Name && errors.Name}
           />
-          {touched.name && errors.name && (
-            <div className={styles.error}>{errors.name}</div>
+          {touched.Name && errors.Name && (
+            <div className={styles.error}>{errors.Name}</div>
           )}
 
           <div className={styles.form_pass}>
             <CustomInput
               type={visible ? "text" : "password"}
-              value={values.password}
+              value={values.Password}
               onChange={handleChange}
               onBlur={handleBlur}
-              name="password"
+              name="Password"
               placeholder="Пароль"
-              error={touched.password && errors.password}
+              error={touched.Password && errors.Password}
             />
             <svg
               onClick={() => setVisoiblity((visible) => !visible)}
@@ -116,8 +115,8 @@ export const SignIn = () => {
               />
             </svg>
           </div>
-          {touched.password && errors.password && (
-            <div className={styles.error}>{errors.password}</div>
+          {touched.Password && errors.Password && (
+            <div className={styles.error}>{errors.Password}</div>
           )}
 
           <CustomButtonBG

@@ -12,9 +12,10 @@ export const SignUp = () => {
 
   return (
     <>
-      {selector?.phase === SelectPhase.phaseOne && <RegPhaseOne />}
+      <RegPhaseTwo />
+      {/* {selector?.phase === SelectPhase.phaseOne || selector!.phase && <RegPhaseOne />}
       {selector?.phase === SelectPhase.phaseTwo && <RegPhaseTwo />}
-      {selector?.phase === SelectPhase.confrim && <Confirm />}
+      {selector?.phase === SelectPhase.confrim && <Confirm />} */}
     </>
   );
 };
