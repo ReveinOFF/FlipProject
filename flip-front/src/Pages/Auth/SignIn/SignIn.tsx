@@ -47,6 +47,7 @@ export const SignIn = () => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("refreshToken", res.data.refreshToken);
       })
+      .catch()
       .finally(() => navigate("/"));
   };
 

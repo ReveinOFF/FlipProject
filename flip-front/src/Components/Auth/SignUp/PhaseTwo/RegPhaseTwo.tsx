@@ -20,7 +20,6 @@ export const RegPhaseTwo = () => {
   const reg = useTypedSelector((state) => state.reg);
 
   const [bot, setBot] = useState<boolean>(false);
-  const [data, setData] = useState<RegMain>();
   const [selectedFile, setSelectedFile] = useState<any>();
   const [preview, setPreview] = useState<any>();
   const [visible, setVisoiblity] = useState(false);
@@ -50,7 +49,28 @@ export const RegPhaseTwo = () => {
   }, [selectedFile]);
 
   useEffect(() => {
-    setData(reg.data);
+    if (reg.succses) {
+      const data = reg.data;
+      data!.UserImage = selectedFile;
+
+      axios
+        .post("account/registration", data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then((res) =>
+          dispatch({
+            type: "REG-PHASE",
+            payload: {
+              phase: SelectPhase.confrim,
+            },
+          })
+        )
+        .catch(() => {
+          alert(
+            "Ошибка в реєстрації! Можливо ошибка в неправильних введених данних!"
+          );
+        });
+    }
   }, [reg]);
 
   const initialValues: RegPhase2Res = {
@@ -93,16 +113,13 @@ export const RegPhaseTwo = () => {
   });
 
   const PhaseTwo = async (value: RegPhase2Res) => {
-    const file = value.UserImage;
-
     if (!executeRecaptcha) {
       setBot(true);
       return;
     }
 
-    dispatch({
+    await dispatch({
       type: "REG",
-      phase: SelectPhase.phaseTwo,
       payload: {
         data: {
           UserName: value.UserName,
@@ -110,27 +127,9 @@ export const RegPhaseTwo = () => {
           Password: value.Password,
           RecaptchaToken: await executeRecaptcha(),
         },
+        succses: true,
       },
     });
-
-    setTimeout(async () => {
-      const dataPost = reg.data;
-      dataPost!.UserImage = file;
-      setData(dataPost);
-
-      await axios
-        .post("account/registration", data, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
-        .catch(() => {
-          alert(
-            "Ошибка в реєстрації! Можливо ошибка в неправильних введених данних!"
-          );
-        })
-        .finally(() =>
-          dispatch({ type: "REG", payload: { phase: SelectPhase.confrim } })
-        );
-    }, 400);
   };
 
   const formik = useFormik({
@@ -183,6 +182,7 @@ export const RegPhaseTwo = () => {
                 viewBox="0 0 479 332"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                style={{ cursor: "pointer" }}
                 onClick={handleClick}
               >
                 <g filter="url(#filter0_d_785_3803)">
@@ -410,7 +410,12 @@ export const RegPhaseTwo = () => {
       <CustomMiniBTN
         content="Повернутися"
         onClick={() =>
-          dispatch({ type: "REG", payload: { phase: SelectPhase.phaseOne } })
+          dispatch({
+            type: "REG-PHASE",
+            payload: {
+              phase: SelectPhase.phaseOne,
+            },
+          })
         }
       />
     </>

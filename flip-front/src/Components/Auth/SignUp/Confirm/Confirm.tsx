@@ -23,9 +23,21 @@ export const Confirm = () => {
 
       <CustomButton
         content="Змінити електронну адресу"
-        onClick={() =>
-          dispatch({ type: "REG", payload: { phase: SelectPhase.phaseTwo } })
-        }
+        onClick={() => {
+          dispatch({
+            type: "REG-PHASE",
+            payload: {
+              phase: SelectPhase.phaseTwo,
+            },
+          });
+
+          dispatch({
+            type: "REG",
+            payload: {
+              succes: false,
+            },
+          });
+        }}
       />
     </>
   );

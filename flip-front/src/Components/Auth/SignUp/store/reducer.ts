@@ -6,7 +6,8 @@ interface Action {
 }
 
 const initialState: RegState = {
-    phase: SelectPhase.phaseOne
+    phase: SelectPhase.phaseOne,
+    succses: false
 }
 
 export type RegAction = Action;
@@ -16,8 +17,13 @@ export const regReducer = (state = initialState, action: Action) : RegState => {
         case "REG":
             return {
                 ...state,
-                phase: action.payload.phase,
-                data: {...state.data, ...action.payload.data}
+                data: {...state.data, ...action.payload.data},
+                succses: action.payload.succses
+            }
+        case "REG-PHASE": 
+            return {
+                ...state,
+                phase: action.payload.phase
             }
         default:
             return state

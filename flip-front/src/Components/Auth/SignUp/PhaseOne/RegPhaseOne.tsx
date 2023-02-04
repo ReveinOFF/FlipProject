@@ -67,12 +67,18 @@ export const RegPhaseOne = () => {
     dispatch({
       type: "REG",
       payload: {
-        phase: SelectPhase.phaseTwo,
         data: {
           Name: value.Name,
           Phone: value.Phone,
           DateOfBirth: value.DateOfBirth,
         },
+      },
+    });
+
+    dispatch({
+      type: "REG-PHASE",
+      payload: {
+        phase: SelectPhase.phaseTwo,
       },
     });
   };

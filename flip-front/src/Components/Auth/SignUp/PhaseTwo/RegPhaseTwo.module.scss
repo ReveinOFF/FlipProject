@@ -3,9 +3,11 @@
     display: flex;
 
     .upload_img {
+      margin-top: 15px;
       border-radius: 15px;
-      align-self: center;
       margin-right: 25px;
+
+      cursor: pointer;
     }
 
     .form_input {

@@ -17,5 +17,6 @@ export enum SelectPhase {
 
 export interface RegState {
     phase: SelectPhase,
-    data?: RegMain
+    data?: RegMain,
+    succses: boolean
 }
