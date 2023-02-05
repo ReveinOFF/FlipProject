@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeActions } from "./Components/Theme/themeActions";
 import "./Components/Axios/axios";
+import AuthApp from "./AuthApp";
 
 const ldMode = localStorage.getItem("LightDarkMode");
 const token = localStorage.getItem("token");
@@ -22,34 +23,42 @@ if (!ldMode) {
 
 ThemeActions(store.dispatch);
 
-const NotUser = () => {
-  root.render(
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  );
-};
+// const NotUser = () => {
+//   root.render(
+//     <Provider store={store}>
+//       <BrowserRouter>
+//         <App />
+//       </BrowserRouter>
+//     </Provider>
+//   );
+// };
 
-if (token) {
-  const user = AuthUser(token as string, store.dispatch);
+// if (token) {
+//   const user = AuthUser(token as string, store.dispatch);
 
-  setTimeout(() => {
-    if (user) {
-      root.render(
-        <Provider store={store}>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </Provider>
-      );
-    } else {
-      NotUser();
-    }
-  }, 400);
-} else {
-  NotUser();
-}
+//   setTimeout(() => {
+//     if (user) {
+//       root.render(
+//         <Provider store={store}>
+//           <BrowserRouter>
+//             <AuthApp />
+//           </BrowserRouter>
+//         </Provider>
+//       );
+//     } else {
+//       NotUser();
+//     }
+//   }, 400);
+// } else {
+//   NotUser();
+// }
+
+root.render(
+  <Provider store={store}>
+    <BrowserRouter>
+      <AuthApp />
+    </BrowserRouter>
+  </Provider>
+);
 
 reportWebVitals();
