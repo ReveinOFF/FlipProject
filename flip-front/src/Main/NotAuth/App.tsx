@@ -1,11 +1,11 @@
 import "./App.scss";
 import { Route, Routes } from "react-router-dom";
-import { AuthSelection } from "./Pages/Auth/Selection/AuthSelection";
-import { SignIn } from "./Pages/Auth/SignIn/SignIn";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import { SignUp } from "./Pages/Auth/SignUp/SignUp";
-import { AuthBg } from "./Components/Auth/SignBg/AuthBg";
-import { ConfirmEmail } from "./Components/Auth/SignUp/ConfirmEmail/ConfirmEmail";
+import { AuthBg } from "../../Components/Auth/SignBg/AuthBg";
+import { AuthSelection } from "../../Pages/Auth/Selection/AuthSelection";
+import { SignIn } from "../../Pages/Auth/SignIn/SignIn";
+import { SignUp } from "../../Pages/Auth/SignUp/SignUp";
+import { ConfirmEmail } from "../../Components/Auth/SignUp/ConfirmEmail/ConfirmEmail";
 
 const App = () => {
   return (

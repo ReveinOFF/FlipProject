@@ -1,14 +1,14 @@
 import ReactDOM from "react-dom/client";
 import "./index.scss";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { AuthUser } from "./Components/Auth/store/actions";
 import { store } from "./Store/store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeActions } from "./Components/Theme/themeActions";
 import "./Components/Axios/axios";
-import AuthApp from "./AuthApp";
+import AuthApp from "./Main/IsAuth/AuthApp";
+import { AuthUser } from "./Components/Auth/store/actions";
+import App from "./Main/NotAuth/App";
 
 const ldMode = localStorage.getItem("LightDarkMode");
 const token = localStorage.getItem("token");
@@ -23,42 +23,34 @@ if (!ldMode) {
 
 ThemeActions(store.dispatch);
 
-// const NotUser = () => {
-//   root.render(
-//     <Provider store={store}>
-//       <BrowserRouter>
-//         <App />
-//       </BrowserRouter>
-//     </Provider>
-//   );
-// };
+const NotUser = () => {
+  root.render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  );
+};
 
-// if (token) {
-//   const user = AuthUser(token as string, store.dispatch);
+if (token) {
+  const user = AuthUser(token as string, store.dispatch);
 
-//   setTimeout(() => {
-//     if (user) {
-//       root.render(
-//         <Provider store={store}>
-//           <BrowserRouter>
-//             <AuthApp />
-//           </BrowserRouter>
-//         </Provider>
-//       );
-//     } else {
-//       NotUser();
-//     }
-//   }, 400);
-// } else {
-//   NotUser();
-// }
-
-root.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <AuthApp />
-    </BrowserRouter>
-  </Provider>
-);
+  setTimeout(() => {
+    if (user) {
+      root.render(
+        <Provider store={store}>
+          <BrowserRouter>
+            <AuthApp />
+          </BrowserRouter>
+        </Provider>
+      );
+    } else {
+      NotUser();
+    }
+  }, 400);
+} else {
+  NotUser();
+}
 
 reportWebVitals();

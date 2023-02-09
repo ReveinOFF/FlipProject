@@ -77,8 +77,8 @@ export const LeftMenu = () => {
               y2="-52.2247"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stop-color="#48D824" />
-              <stop offset="1" stop-color="#10D0EA" />
+              <stop stopColor="#48D824" />
+              <stop offset="1" stopColor="#10D0EA" />
             </linearGradient>
           </defs>
         </svg>
@@ -107,8 +107,8 @@ export const LeftMenu = () => {
                   y2="26.1982"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#000000" />
-                  <stop offset="1" stop-color="#000000" />
+                  <stop stopColor="#000000" />
+                  <stop offset="1" stopColor="#000000" />
                 </linearGradient>
               </defs>
             </svg>
@@ -141,8 +141,8 @@ export const LeftMenu = () => {
                   y2="25.0317"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#000000" />
-                  <stop offset="1" stop-color="#000000" />
+                  <stop stopColor="#000000" />
+                  <stop offset="1" stopColor="#000000" />
                 </linearGradient>
                 <linearGradient
                   id="paint1_linear_418_1299"
@@ -152,8 +152,8 @@ export const LeftMenu = () => {
                   y2="19.1035"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#000000" />
-                  <stop offset="1" stop-color="#000000" />
+                  <stop stopColor="#000000" />
+                  <stop offset="1" stopColor="#000000" />
                 </linearGradient>
               </defs>
             </svg>
@@ -186,8 +186,8 @@ export const LeftMenu = () => {
                   y2="25.1012"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#000000" />
-                  <stop offset="1" stop-color="#000000" />
+                  <stop stopColor="#000000" />
+                  <stop offset="1" stopColor="#000000" />
                 </linearGradient>
                 <linearGradient
                   id="paint1_linear_1037_3412"
@@ -197,8 +197,8 @@ export const LeftMenu = () => {
                   y2="13.0988"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#000000" />
-                  <stop offset="1" stop-color="#000000" />
+                  <stop stopColor="#000000" />
+                  <stop offset="1" stopColor="#000000" />
                 </linearGradient>
               </defs>
             </svg>
@@ -231,8 +231,8 @@ export const LeftMenu = () => {
                   y2="25.8441"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#000000" />
-                  <stop offset="1" stop-color="#000000" />
+                  <stop stopColor="#000000" />
+                  <stop offset="1" stopColor="#000000" />
                 </linearGradient>
                 <linearGradient
                   id="paint1_linear_1037_2510"
@@ -242,8 +242,8 @@ export const LeftMenu = () => {
                   y2="25.0317"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#000000" />
-                  <stop offset="1" stop-color="#000000" />
+                  <stop stopColor="#000000" />
+                  <stop offset="1" stopColor="#000000" />
                 </linearGradient>
               </defs>
             </svg>
@@ -276,8 +276,8 @@ export const LeftMenu = () => {
                   y2="18.4994"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#000000" />
-                  <stop offset="1" stop-color="#000000" />
+                  <stop stopColor="#000000" />
+                  <stop offset="1" stopColor="#000000" />
                 </linearGradient>
                 <linearGradient
                   id="paint1_linear_418_1318"
@@ -287,8 +287,8 @@ export const LeftMenu = () => {
                   y2="24.4356"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#000000" />
-                  <stop offset="1" stop-color="#000000" />
+                  <stop stopColor="#000000" />
+                  <stop offset="1" stopColor="#000000" />
                 </linearGradient>
               </defs>
             </svg>
@@ -362,8 +362,8 @@ export const LeftMenu = () => {
                 y2="12.3714"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint1_linear_623_2566"
@@ -373,8 +373,8 @@ export const LeftMenu = () => {
                 y2="14.095"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint2_linear_623_2566"
@@ -384,8 +384,8 @@ export const LeftMenu = () => {
                 y2="25.0317"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint3_linear_623_2566"
@@ -395,8 +395,8 @@ export const LeftMenu = () => {
                 y2="21.2687"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint4_linear_623_2566"
@@ -406,8 +406,8 @@ export const LeftMenu = () => {
                 y2="10.2382"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint5_linear_623_2566"
@@ -417,8 +417,8 @@ export const LeftMenu = () => {
                 y2="10.2382"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint6_linear_623_2566"
@@ -428,8 +428,8 @@ export const LeftMenu = () => {
                 y2="11.4135"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint7_linear_623_2566"
@@ -439,8 +439,8 @@ export const LeftMenu = () => {
                 y2="11.4135"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint8_linear_623_2566"
@@ -450,8 +450,8 @@ export const LeftMenu = () => {
                 y2="11.4135"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint9_linear_623_2566"
@@ -461,8 +461,8 @@ export const LeftMenu = () => {
                 y2="11.4135"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint10_linear_623_2566"
@@ -472,8 +472,8 @@ export const LeftMenu = () => {
                 y2="10.2382"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint11_linear_623_2566"
@@ -483,8 +483,8 @@ export const LeftMenu = () => {
                 y2="10.2382"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
               <linearGradient
                 id="paint12_linear_623_2566"
@@ -494,8 +494,8 @@ export const LeftMenu = () => {
                 y2="6.36377"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#000000" />
-                <stop offset="1" stop-color="#000000" />
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
               </linearGradient>
             </defs>
           </svg>
