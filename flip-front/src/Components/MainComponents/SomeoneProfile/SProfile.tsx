@@ -6,12 +6,29 @@ export const SProfile = (profile) => {
     <>
       <div className={styles.profile_inf}>
         <div className={styles.profile_inf_data}>
-          <div className={styles.profile_img}></div>
+          {profile.userImage ? (
+            <div
+              className={styles.profile_img}
+              style={{
+                background: `url(${profile.userImage}), #d9d9d9`,
+              }}
+            ></div>
+          ) : (
+            <div
+              className={styles.profile_img}
+              style={{
+                background:
+                  "url(../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg), #d9d9d9",
+              }}
+            ></div>
+          )}
           <div>
             <div>
               <div className={styles.profile_names}>
-                <div className={styles.profile_name}>Анна Голуб</div>
-                <div className={styles.profile_username}>(@golubok)</div>
+                <div className={styles.profile_name}>{profile.name}</div>
+                <div className={styles.profile_username}>
+                  (@{profile.userName})
+                </div>
                 <svg
                   width="19"
                   height="22"
@@ -28,14 +45,15 @@ export const SProfile = (profile) => {
                 </svg>
               </div>
               <div className={styles.profile_count}>
-                <div>ПІДПИСНИКИ: 500</div>
-                <div>ПІДПИСКИ: 480</div>
-                <div>ДОПИСИ: 20</div>
+                <div>ПІДПИСНИКИ: {profile.followers}</div>
+                <div>ПІДПИСКИ: {profile.followings}</div>
+                <div>ДОПИСИ: {profile.createdPostCount}</div>
               </div>
-              <div className={styles.profile_description}>
-                Але щоб ви зрозуміли, звідки виникає це хибне уявлення людей,
-                цуратись насолодиі вихваляти страждання, я розкрию перед вами
-              </div>
+              {profile.description && !profile.isPrivateUser && (
+                <div className={styles.profile_description}>
+                  {profile.description}
+                </div>
+              )}
             </div>
             <div className={styles.profile_btn}>
               <button>Стежити</button>
@@ -83,12 +101,16 @@ export const SProfile = (profile) => {
           <div>дописи</div>
         </div>
         <div className={styles.profile_data_imgs}>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
+          {profile.createdPost && !profile.isPrivateUser && (
+            <>
+              <div className={styles.profile_data_img}></div>
+              <div className={styles.profile_data_img}></div>
+              <div className={styles.profile_data_img}></div>
+              <div className={styles.profile_data_img}></div>
+              <div className={styles.profile_data_img}></div>
+              <div className={styles.profile_data_img}></div>
+            </>
+          )}
         </div>
       </div>
     </>

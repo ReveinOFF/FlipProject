@@ -1,6 +1,9 @@
+import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./LeftMenu.module.scss";
 
 export const LeftMenu = () => {
+  const profile = useTypedSelector((state) => state.auth.user);
+
   return (
     <div className={styles.left_menu}>
       <div>
@@ -29,29 +32,38 @@ export const LeftMenu = () => {
             fill="#2F2F2F"
           />
         </svg>
-        <div className={styles.flip_border_img}>
-          <div className={styles.profile_img}></div>
-        </div>
+        {profile && (
+          <>
+            <div className={styles.flip_border_img}>
+              {profile.userImage && (
+                <div
+                  className={styles.profile_img}
+                  style={{ background: `url(${profile.userImage})` }}
+                ></div>
+              )}
+            </div>
 
-        <div className={styles.profile_name}>Виктория Чыжук</div>
-        <div className={styles.profile_username}>@victoria</div>
+            <div className={styles.profile_name}>{profile.name}</div>
+            <div className={styles.profile_username}>@{profile.userName}</div>
 
-        <div className={styles.profile_inf}>
-          <div className={styles.inf_btn}>
-            <div className={styles.count}>46</div>
-            <div className={styles.inf_text}>дописів</div>
-          </div>
+            <div className={styles.profile_inf}>
+              <div className={styles.inf_btn}>
+                <div className={styles.count}>{profile.createdPostCount}</div>
+                <div className={styles.inf_text}>дописів</div>
+              </div>
 
-          <div className={`${styles.foll_ng} ${styles.inf_btn}`}>
-            <div className={styles.count}>4006</div>
-            <div className={styles.inf_text}>підписників</div>
-          </div>
+              <div className={`${styles.foll_ng} ${styles.inf_btn}`}>
+                <div className={styles.count}>{profile.followers}</div>
+                <div className={styles.inf_text}>підписників</div>
+              </div>
 
-          <div className={styles.inf_btn}>
-            <div className={styles.count}>460</div>
-            <div className={styles.inf_text}>підписок</div>
-          </div>
-        </div>
+              <div className={styles.inf_btn}>
+                <div className={styles.count}>{profile.followings}</div>
+                <div className={styles.inf_text}>підписок</div>
+              </div>
+            </div>
+          </>
+        )}
         <svg
           className={styles.border_bottom}
           width="371"

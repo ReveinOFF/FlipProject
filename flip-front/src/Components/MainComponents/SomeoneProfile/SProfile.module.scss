@@ -17,8 +17,6 @@
       width: 209px;
       height: 209px;
 
-      background: url(../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg),
-        #d9d9d9;
       background-position: center;
       background-size: 209px;
 
@@ -126,6 +124,10 @@
       }
       &:last-child {
         margin-left: 17px;
+
+        background: linear-gradient(#ffffff, #ffffff) padding-box,
+          linear-gradient(to right, #3ed647, #10cfe7) border-box;
+        border: 1px solid transparent;
 
         color: #2f2f2f;
       }

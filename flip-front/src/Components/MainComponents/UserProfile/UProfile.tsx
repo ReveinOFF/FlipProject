@@ -8,9 +8,9 @@ export const UProfile = (profile) => {
         <div className={styles.information}>
           <div className={styles.inf_profile}>
             <div className={styles.names_profile}>
-              <div className={styles.name}>Вікторія Чужик</div>
+              <div className={styles.name}>{profile.name}</div>
               <div className={styles.username}>
-                <div>(@victoria)</div>
+                <div>(@{profile.userName})</div>
                 <svg
                   width="19"
                   height="22"
@@ -27,10 +27,9 @@ export const UProfile = (profile) => {
                 </svg>
               </div>
             </div>
-            <div className={styles.description}>
-              Але щоб ви зрозуміли, звідки виникає це хибне уявлення людей,
-              цуратись насолодиі вихваляти страждання, я розкрию перед вами{" "}
-            </div>
+            {profile.description && (
+              <div className={styles.description}>{profile.description}</div>
+            )}
           </div>
           <div className={styles.profile_btn}>
             <svg
