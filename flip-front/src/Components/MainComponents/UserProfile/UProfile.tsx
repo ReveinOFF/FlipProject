@@ -1,7 +1,7 @@
 import styles from "./UProfile.module.scss";
 import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
 
-export const UProfile = () => {
+export const UProfile = (profile) => {
   return (
     <>
       <div className={styles.my_profile_inf}>
@@ -148,8 +148,8 @@ export const UProfile = () => {
                     y2="26.6362"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stop-color="#48D824" />
-                    <stop offset="1" stop-color="#10D0EA" />
+                    <stop stopColor="#48D824" />
+                    <stop offset="1" stopColor="#10D0EA" />
                   </linearGradient>
                   <linearGradient
                     id="paint1_linear_1108_1174"
@@ -159,8 +159,8 @@ export const UProfile = () => {
                     y2="38.168"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stop-color="#48D824" />
-                    <stop offset="1" stop-color="#10D0EA" />
+                    <stop stopColor="#48D824" />
+                    <stop offset="1" stopColor="#10D0EA" />
                   </linearGradient>
                 </defs>
               </svg>
