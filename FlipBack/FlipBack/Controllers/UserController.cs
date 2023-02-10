@@ -105,7 +105,7 @@ namespace FlipBack.Controllers
             return Ok(getUser);
         }
 
-        [HttpPost("{userid}/follow/{followId}")]
+        [HttpPost("follow")]
         public async Task<IActionResult> FollowUser(string userid, string followId)
         {
             var follow = await _context.Follows
@@ -146,6 +146,26 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
+        [HttpGet("check/{myUserId}/follow/{checkUserId}")]
+        public async Task<IActionResult> CheckFollow(string myUserId, string checkUserId)
+        {
+            var user = await _context.Users
+                .Include(x => x.Followers)
+                .ThenInclude(y => y.Follower)
+                .OrderByDescending(o => o.Followers.Count)
+                .FirstOrDefaultAsync(u => u.Id == myUserId);
+
+            if (user == null)
+                return BadRequest("The user was not found!");
+
+            var userFollower = user.Followers.Where(u => u.FollowingId == checkUserId).FirstOrDefault();
+
+            if (userFollower == null)
+                return BadRequest("The user was not followed!");
+
+            return Ok();
+        }
+
         [HttpGet("get-followers/{id}")]
         public async Task<IActionResult> GetFollowers(string id)
         {
@@ -158,7 +178,7 @@ namespace FlipBack.Controllers
             if (user == null)
                 return BadRequest("The user was not found!");
 
-            var userFollowers = user.Followers.Where(u => u.FollowerId == id).Select(x => x.Follower);
+            var userFollowers = user.Followers.Where(u => u.FollowingId == id).Select(x => x.Follower);
 
             var follow = _mapper.Map<List<GetUsersDTO>>(userFollowers);
 
@@ -296,8 +316,10 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("add-bookmarks-post")]
-        public async Task<IActionResult> AddBookmarksPost(string userId, string postId, string reelsId)
+        public async Task<IActionResult> AddBookmarksPost(string postId, string reelsId)
         {
+            string userId = User.FindFirst("UserId")?.Value;
+
             var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
 
             if (savedPost != null)
@@ -311,9 +333,11 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpDelete("remove-bookmarks-post")]
-        public async Task<IActionResult> RemoveBookmarksPost(string userId, string postId)
+        [HttpDelete("remove-bookmarks-post/{postId}")]
+        public async Task<IActionResult> RemoveBookmarksPost(string postId)
         {
+            string userId = User.FindFirst("UserId")?.Value;
+
             var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
 
             if (savedPost == null)
@@ -342,8 +366,10 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("add-bookmarks-reels")]
-        public async Task<IActionResult> AddBookmarksReels(string userId, string reelsId)
+        public async Task<IActionResult> AddBookmarksReels(string reelsId)
         {
+            string userId = User.FindFirst("UserId")?.Value;
+
             var savedReels = await _context.UserReels.Where(x => x.UserId == userId && x.ReelsId == reelsId).FirstOrDefaultAsync();
 
             if (savedReels != null)
@@ -357,9 +383,11 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpDelete("remove-bookmarks-reels")]
-        public async Task<IActionResult> RemoveBookmarksReels(string userId, string reelsId)
+        [HttpDelete("remove-bookmarks-reels/{reelsId}")]
+        public async Task<IActionResult> RemoveBookmarksReels(string reelsId)
         {
+            string userId = User.FindFirst("UserId")?.Value;
+
             var savedReels = await _context.UserReels.Where(x => x.UserId == userId && x.ReelsId == reelsId).FirstOrDefaultAsync();
 
             if (savedReels == null)

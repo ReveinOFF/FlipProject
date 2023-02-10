@@ -17,7 +17,7 @@ export interface IUser {
     followings: number
     createdPostCount: number
 
-    createdPost: string[]
+    createdPost: any
 }
 
 export interface AuthState {

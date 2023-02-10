@@ -1,7 +1,43 @@
 import styles from "./SProfile.module.scss";
 import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
+import { useTypedSelector } from "../../../Hooks/useTypedSelector";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export const SProfile = (profile) => {
+  const myProfile = useTypedSelector((state) => state.auth.user);
+  const [isFollow, setIsFollow] = useState<boolean>(false);
+
+  useEffect(() => {
+    axios
+      .get(`user/check/${myProfile?.id}/follow/${profile?.id}`)
+      .then((res) => setIsFollow(true))
+      .catch((err) => setIsFollow(false));
+  }, []);
+
+  const Follow = async () => {
+    await axios
+      .post(`user/follow`, {
+        userid: myProfile?.id,
+        followId: profile?.id,
+      })
+      .then((res) => {
+        alert("Followed");
+        setIsFollow(true);
+      })
+      .catch((err) => alert("Error followed"));
+  };
+
+  const UnFollow = async () => {
+    await axios
+      .delete(`user/${myProfile?.id}/unfollow/${profile?.id}`)
+      .then((res) => {
+        alert("UnFollowed");
+        setIsFollow(false);
+      })
+      .catch((err) => alert("Error unfollowed"));
+  };
+
   return (
     <>
       <div className={styles.profile_inf}>
@@ -56,8 +92,12 @@ export const SProfile = (profile) => {
               )}
             </div>
             <div className={styles.profile_btn}>
-              <button>Стежити</button>
-              <button>Повідомлення </button>
+              {isFollow ? (
+                <button onClick={Follow}>Стежити</button>
+              ) : (
+                <button onClick={UnFollow}>Відстежується</button>
+              )}
+              <button>Повідомлення</button>
             </div>
           </div>
           <div>
@@ -103,6 +143,7 @@ export const SProfile = (profile) => {
         <div className={styles.profile_data_imgs}>
           {profile.createdPost && !profile.isPrivateUser && (
             <>
+              {/* {profile?.createdPost.map((item) => )} */}
               <div className={styles.profile_data_img}></div>
               <div className={styles.profile_data_img}></div>
               <div className={styles.profile_data_img}></div>

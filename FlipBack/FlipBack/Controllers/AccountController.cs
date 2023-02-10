@@ -56,7 +56,10 @@ namespace FlipBack.Controllers
                     if (await _userManager.IsEmailConfirmedAsync(findEmail))
                         return BadRequest("Email already exists!");
                     else
+                    {
+                        StaticFiles.DeleteImageAsync(user.UserImagePath);
                         await _userManager.DeleteAsync(findEmail);
+                    }
                 }
 
                 var findLogin = await _userManager.FindByNameAsync(register.UserName);
