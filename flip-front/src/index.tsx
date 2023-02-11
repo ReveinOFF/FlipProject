@@ -7,8 +7,10 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeActions } from "./Components/Theme/themeActions";
 import "./Components/Axios/axios";
 import AuthApp from "./Main/IsAuth/AuthApp";
-import { AuthUser } from "./Components/Auth/store/actions";
 import App from "./Main/NotAuth/App";
+import { AuthUser } from "./Components/Auth/store/actions";
+import jwtDecode from "jwt-decode";
+import { JwtDecoder } from "./Interface/JwtDecoder";
 
 const ldMode = localStorage.getItem("LightDarkMode");
 const token = localStorage.getItem("token");
@@ -35,13 +37,17 @@ const NotUser = () => {
 
 if (token) {
   const user = AuthUser(token as string, store.dispatch);
+  const excToken = jwtDecode<JwtDecoder>(token);
+  const date = new Date().getTime();
 
   setTimeout(() => {
-    if (user) {
+    if (excToken.exp < date) {
       root.render(
         <Provider store={store}>
           <BrowserRouter>
-            <AuthApp />
+            <div className="root_main">
+              <AuthApp />
+            </div>
           </BrowserRouter>
         </Provider>
       );

@@ -33,7 +33,8 @@ namespace FlipBack.Controllers
         [HttpGet("get-user-auth")]
         public async Task<IActionResult> GetUserAuth()
         {
-            string username = User.FindFirst("Name")?.Value;
+            string username = User.FindFirst("UserName")?.Value;
+
             var user = await _userManager.Users
                     .Where(x => x.UserName == username)
                     .Include(x => x.Followers)
@@ -69,7 +70,7 @@ namespace FlipBack.Controllers
             return Ok(getUser);
         }
 
-        [HttpGet("get-user-by-name/{username}")]
+        [HttpGet("get-user-by-name/{name}")]
         public async Task<IActionResult> GetUserByName(string name)
         {
             var user = await _userManager.Users

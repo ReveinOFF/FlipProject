@@ -2,7 +2,7 @@ import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 export const ConfirmEmail = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const CheckToken = (): boolean => {

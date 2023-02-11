@@ -13,7 +13,7 @@ export const SProfile = (profile) => {
       .get(`user/check/${myProfile?.id}/follow/${profile?.id}`)
       .then((res) => setIsFollow(true))
       .catch((err) => setIsFollow(false));
-  }, []);
+  }, [myProfile?.id, profile?.id]);
 
   const Follow = async () => {
     await axios

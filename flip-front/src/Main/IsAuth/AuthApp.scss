@@ -1,16 +1,5 @@
 @import "../../Assets/Fonts/InterFont.scss";
 
-* {
-  box-sizing: border-box;
-
-  font-family: Inter;
-}
-
 body {
   background: #ebebeb;
-}
-
-#root {
-  display: flex;
-  justify-content: space-between;
 }

@@ -87,13 +87,13 @@ namespace FlipBack.Controllers
             var reels = _mapper.Map<Reels>(reelsDTO);
 
             string fileDestDir = Path.Combine("Resources", "ReelsFiles", reels.Id);
-            var files = StaticFiles.CreateReelsAsync(_env, fileDestDir, reelsDTO.files);
+            var file = await StaticFiles.CreateReelsAsync(_env, fileDestDir, reelsDTO.file);
 
-            files.ForEach(item => reels.Files.Add(new ReelsFiles
+            reels.Files.Add(new ReelsFiles
             {
-                PathName = item.FilePath,
-                FileName = item.FileName
-            }));
+                PathName = file.FilePath,
+                FileName = file.FileName
+            });
 
             await _context.Reels.AddAsync(reels);
             await _context.SaveChangesAsync();
@@ -157,10 +157,10 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpDelete("remove-reaction")]
-        public async Task<IActionResult> RemoveReaction([FromBody] ReelsReactionDTO reactionDTO)
+        [HttpDelete("remove/{UserId}/reaction/{ReelsID}")]
+        public async Task<IActionResult> RemoveReaction(string UserId, string ReelsID)
         {
-            var reelsreaction = await _context.ReelsReaction.Where(x => x.UserId.Equals(reactionDTO.UserId) && x.ReelsId.Equals(reactionDTO.ReelsID)).FirstOrDefaultAsync();
+            var reelsreaction = await _context.ReelsReaction.Where(x => x.UserId.Equals(UserId) && x.ReelsId.Equals(ReelsID)).FirstOrDefaultAsync();
             if (reelsreaction == null)
                 return BadRequest("Your reaction to this reels is not there!");
 

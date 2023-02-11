@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { Form, FormikProvider, useFormik } from "formik";
 import { UserLogin } from "../../../Interface/Login";
@@ -38,6 +38,8 @@ export const SignIn = () => {
       setBot(true);
       return;
     }
+
+    if (bot) return;
 
     value.RecaptchaToken = await executeRecaptcha();
 

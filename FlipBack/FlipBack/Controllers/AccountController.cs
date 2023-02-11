@@ -42,10 +42,10 @@ namespace FlipBack.Controllers
         [HttpPost("registration")]
         public async Task<IActionResult> Register([FromForm] RegisterDTO register)
         {
-            //if (!_captchaValidator.IsCaptchaPassedAsync(register.RecaptchaToken))
-            //{
-            //    return BadRequest(new { error = "Recaptcha not valid" });
-            //}
+            if (!_captchaValidator.IsCaptchaPassedAsync(register.RecaptchaToken))
+            {
+                return BadRequest(new { error = "Recaptcha not valid" });
+            }
 
             var user = _mapper.Map<User>(register);
             try
@@ -153,12 +153,12 @@ namespace FlipBack.Controllers
         {
             try
             {
-                //if (!_captchaValidator.IsCaptchaPassedAsync(login.RecaptchaToken))
-                //{
-                //    return BadRequest(new { error = "Recaptcha not valid" });
-                //}
+                if (!_captchaValidator.IsCaptchaPassedAsync(login.RecaptchaToken))
+                {
+                    return BadRequest(new { error = "Recaptcha not valid" });
+                }
 
-                var findUser = await _userManager.Users.Include(u => u.RefreshTokens).SingleAsync(u => u.UserName == login.Name || u.Email == login.Name);
+                var findUser = await _userManager.Users.Include(u => u.RefreshTokens).Where(u => u.UserName == login.Name || u.Email == login.Name).FirstOrDefaultAsync();
                 if (findUser == null)
                     return BadRequest("Error when searching for an account!");
                 if (!await _userManager.CheckPasswordAsync(findUser, login.Password))

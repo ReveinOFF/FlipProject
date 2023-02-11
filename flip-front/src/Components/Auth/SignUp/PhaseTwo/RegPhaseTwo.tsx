@@ -12,7 +12,6 @@ import styles from "./RegPhaseTwo.module.scss";
 import { useTypedSelector } from "../../../../Hooks/useTypedSelector";
 import axios from "axios";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-import { RegMain } from "../store/types";
 
 export const RegPhaseTwo = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -71,7 +70,7 @@ export const RegPhaseTwo = () => {
           );
         });
     }
-  }, [reg]);
+  }, [reg, dispatch, selectedFile]);
 
   const initialValues: RegPhase2Res = {
     UserImage: null as any,
@@ -117,6 +116,8 @@ export const RegPhaseTwo = () => {
       setBot(true);
       return;
     }
+
+    if (bot) return;
 
     await dispatch({
       type: "REG",
@@ -168,13 +169,42 @@ export const RegPhaseTwo = () => {
               name="UserImage"
             />
             {selectedFile ? (
-              <img
-                width="445"
-                height="298"
-                onClick={handleClick}
-                className={styles.upload_img}
-                src={preview}
-              />
+              <div className={styles.upload} onClick={handleClick}>
+                <div className={styles.upload_text}>Змінити фото</div>
+
+                <svg
+                  width="445"
+                  height="298"
+                  viewBox="0 0 445 298"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={styles.upload_svg}
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M15 0C6.71573 0 0 6.71573 0 15V283C0 291.284 6.71573 298 15 298H430C438.284 298 445 291.284 445 283V15C445 6.71573 438.284 0 430 0H15ZM222.5 280.089C294.898 280.089 353.589 221.398 353.589 149C353.589 76.6017 294.898 17.9113 222.5 17.9113C150.102 17.9113 91.4111 76.6017 91.4111 149C91.4111 221.398 150.102 280.089 222.5 280.089Z"
+                    fill="#6A6A6A"
+                    fill-opacity="0.5"
+                  />
+                  <path
+                    d="M114.787 65.9882C124.235 47.8997 149.208 24.3923 184.314 17.8799"
+                    stroke="white"
+                  />
+                  <path
+                    d="M337.031 219.81C329.31 238.7 306.638 264.433 272.292 274.19"
+                    stroke="white"
+                  />
+                </svg>
+
+                <img
+                  alt=""
+                  width="445"
+                  height="298"
+                  className={styles.upload_img}
+                  src={preview}
+                />
+              </div>
             ) : (
               <svg
                 width="479"

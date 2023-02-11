@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./LeftMenu.module.scss";
 
 export const LeftMenu = () => {
   const profile = useTypedSelector((state) => state.auth.user);
+  const navigate = useNavigate();
 
   return (
     <div className={styles.left_menu}>
@@ -218,7 +220,10 @@ export const LeftMenu = () => {
             <div>Повідомлення</div>
           </div>
 
-          <div className={styles.btn}>
+          <div
+            className={styles.btn}
+            onClick={() => navigate(`/${profile?.name}`)}
+          >
             <svg
               width="30"
               height="30"

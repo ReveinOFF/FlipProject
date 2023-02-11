@@ -2,12 +2,38 @@
   .form_request {
     display: flex;
 
-    .upload_img {
-      margin-top: 15px;
-      border-radius: 15px;
-      margin-right: 25px;
+    .upload {
+      position: relative;
 
-      cursor: pointer;
+      .upload_text {
+        position: absolute;
+
+        margin-top: 32.19px;
+        margin-left: 20px;
+
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 19px;
+
+        color: #ffffff;
+
+        z-index: 1;
+      }
+
+      .upload_svg {
+        position: absolute;
+
+        margin-top: 15px;
+      }
+
+      .upload_img {
+        margin-top: 15px;
+        border-radius: 15px;
+        margin-right: 25px;
+
+        cursor: pointer;
+      }
     }
 
     .form_input {

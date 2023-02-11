@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { RegPhase1Res } from "../../../../Interface/Registration";
 import {
   CustomButtonBG,
@@ -8,7 +8,7 @@ import { CustomInput } from "../../../MainBlock/Input/CustomInput";
 import * as yup from "yup";
 import { ErrorMessage, Form, FormikProvider, useFormik } from "formik";
 import { useDispatch } from "react-redux";
-import { RegMain, SelectPhase } from "../store/types";
+import { SelectPhase } from "../store/types";
 import styles from "./RegPhaseOne.module.scss";
 import { useNavigate } from "react-router-dom";
 import { getAge } from "../../../Convertor/convertDate";
@@ -20,15 +20,9 @@ export const RegPhaseOne = () => {
   const navigate = useNavigate();
   const reg = useTypedSelector((state) => state.reg);
 
-  const [data, setData] = useState<RegMain>();
-
   useEffect(() => {
     document.title = "Sign Up | Phase One - Flip";
   }, []);
-
-  useEffect(() => {
-    setData(reg.data);
-  }, [reg]);
 
   const initialValues: RegPhase1Res = {
     Name: reg.data?.Name || "",

@@ -10,6 +10,6 @@ namespace Core.DTO.Reels
         public bool IsPremium { get; set; }
         public bool IsBlocked { get; set; }
 
-        public IFormFileCollection files { get; set; }
+        public IFormFile file { get; set; }
     }
 }

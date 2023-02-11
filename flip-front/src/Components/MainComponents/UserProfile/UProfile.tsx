@@ -1,7 +1,10 @@
 import styles from "./UProfile.module.scss";
 import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
+import { IUser } from "../../../Interface/Profile";
 
-export const UProfile = (profile) => {
+export const UProfile = (props) => {
+  const { profile } = props;
+
   return (
     <>
       <div className={styles.my_profile_inf}>
@@ -20,8 +23,8 @@ export const UProfile = (profile) => {
                 >
                   <path
                     d="M17 6.8H12.2V2V1.8H12H6H5.8V2V16V16.2H6H17H17.2V16V7V6.8H17ZM2 20.2H12.8V21.8H2C1.50341 21.8 1.08351 21.6257 0.729421 21.2716C0.374593 20.9167 0.2 20.4965 0.2 20V6.2H1.8V20V20.2H2ZM17 17.8H6C5.50341 17.8 5.08351 17.6257 4.72942 17.2716C4.37459 16.9167 4.2 16.4965 4.2 16V2C4.2 1.50352 4.37459 1.08325 4.72942 0.728421C5.08351 0.374332 5.50341 0.2 6 0.2H12.9172L18.8 6.08284V16C18.8 16.4965 18.6257 16.9168 18.2716 17.2716C17.9168 17.6257 17.4965 17.8 17 17.8Z"
-                    fill="#606060"
-                    stroke="#F8F8F8"
+                    fill="#0b0303"
+                    stroke="#0b0303"
                     strokeWidth="0.4"
                   />
                 </svg>
