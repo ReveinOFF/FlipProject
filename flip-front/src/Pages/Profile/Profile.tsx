@@ -14,7 +14,6 @@ export const Profile = () => {
   const [profile, setProfile] = useState<IUser>();
 
   useEffect(() => {
-    console.log("my user ", profile);
     if (params.profile === myuser?.name) {
       setItsMe(true);
       setProfile(myuser);
@@ -27,7 +26,7 @@ export const Profile = () => {
         })
         .catch((err) => console.log("Error get-user"));
     }
-  }, []);
+  }, [myuser, params.profile]);
 
   return (
     <>

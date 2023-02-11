@@ -1,12 +1,16 @@
 .left_menu {
   width: 430px;
-  height: 1080px;
+  height: 1000px;
   background: #ffffff;
   border-radius: 0px 20px 20px 0px;
-  padding-bottom: 20.02px;
+  padding-bottom: 50.89px;
 
   position: sticky;
   top: 0;
+
+  .menu {
+    position: relative;
+  }
 
   .flip_icon {
     margin-left: 24.83px;
@@ -33,19 +37,18 @@
     .profile_img {
       height: 148px;
       width: 148px;
-      background-position: center;
-      background-size: 148px;
+
       border-radius: 50%;
     }
   }
 
   .profile_name {
-    margin-top: 13px;
+    margin-top: 1.7px;
 
     font-style: normal;
     font-weight: 600;
     font-size: 30px;
-    line-height: 150%;
+    line-height: 41.67px;
 
     text-align: center;
 
@@ -56,7 +59,7 @@
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
-    line-height: 150%;
+    line-height: 27.78px;
 
     text-align: center;
     letter-spacing: -0.011em;
@@ -67,7 +70,7 @@
   .profile_inf {
     display: flex;
     justify-content: center;
-    margin-top: 29px;
+    margin-top: 27.67px;
     margin-bottom: 15px;
     height: 59px;
 
@@ -101,11 +104,12 @@
   }
 
   .border_bottom {
+    position: absolute;
     margin-left: 30px;
   }
 
   .selector {
-    margin-top: 50px;
+    margin-top: 51.74px;
     margin-left: 50px;
 
     .select_pages {
@@ -163,6 +167,6 @@
   }
 
   .logout_btn {
-    margin-top: 119px;
+    margin-top: 83.11px;
   }
 }

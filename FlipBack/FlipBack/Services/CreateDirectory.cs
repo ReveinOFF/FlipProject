@@ -18,7 +18,8 @@ namespace FlipBack.Services
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(dir),
-                RequestPath = "/resources"
+                RequestPath = "/resources",
+                
             });
         }
     }

@@ -1,6 +1,5 @@
 import styles from "./UProfile.module.scss";
 import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
-import { IUser } from "../../../Interface/Profile";
 
 export const UProfile = (props) => {
   const { profile } = props;
@@ -15,6 +14,10 @@ export const UProfile = (props) => {
               <div className={styles.username}>
                 <div>(@{profile.userName})</div>
                 <svg
+                  onClick={() => {
+                    navigator.clipboard.writeText(profile.userName);
+                    alert("Скопировано");
+                  }}
                   width="19"
                   height="22"
                   viewBox="0 0 19 22"
@@ -174,9 +177,16 @@ export const UProfile = (props) => {
       <div className={styles.my_profile_data}>
         <div className={styles.selection}>
           <div>дописи</div>
+          <div>flipers</div>
           <div>збережено</div>
         </div>
         <div className={styles.profile_data_imgs}>
+          <div className={styles.profile_data_img}></div>
+          <div className={styles.profile_data_img}></div>
+          <div className={styles.profile_data_img}></div>
+          <div className={styles.profile_data_img}></div>
+          <div className={styles.profile_data_img}></div>
+          <div className={styles.profile_data_img}></div>
           <div className={styles.profile_data_img}></div>
           <div className={styles.profile_data_img}></div>
           <div className={styles.profile_data_img}></div>

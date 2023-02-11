@@ -7,6 +7,65 @@
   padding-right: 25px;
   padding-bottom: 20px;
 
+  margin-top: 40px;
+
+  .information {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .inf_menu {
+      display: flex;
+      justify-content: space-between;
+
+      .settings {
+        margin-top: 9px;
+      }
+    }
+
+    .profile_btn {
+      display: flex;
+      justify-content: center;
+
+      margin-top: 29px;
+      margin-bottom: 25px;
+
+      button {
+        border: 0;
+        border-radius: 15px;
+
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 19px;
+
+        width: 200px;
+        height: 35px;
+
+        &:first-child {
+          margin-right: 17px;
+
+          background: linear-gradient(
+            88.74deg,
+            #48d824 -18.76%,
+            #10d0ea 99.82%
+          );
+
+          color: #ffffff;
+        }
+        &:last-child {
+          margin-left: 17px;
+
+          background: linear-gradient(#ffffff, #ffffff) padding-box,
+            linear-gradient(to right, #3ed647, #10cfe7) border-box;
+          border: 1px solid transparent;
+
+          color: #2f2f2f;
+        }
+      }
+    }
+  }
+
   .profile_inf_data {
     display: flex;
 
@@ -17,6 +76,11 @@
       width: 209px;
       height: 209px;
 
+      min-width: 209px;
+      min-height: 209px;
+
+      background: url(../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg),
+        #d9d9d9;
       background-position: center;
       background-size: 209px;
 
@@ -83,8 +147,6 @@
     }
 
     .profile_description {
-      margin-bottom: 29px;
-
       width: 645px;
       height: 38px;
 
@@ -94,43 +156,6 @@
       line-height: 19px;
 
       color: #4f4f4f;
-    }
-  }
-
-  .profile_btn {
-    display: flex;
-    justify-content: center;
-
-    margin-bottom: 25px;
-
-    button {
-      border: 0;
-      border-radius: 15px;
-
-      font-style: normal;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 19px;
-
-      width: 200px;
-      height: 35px;
-
-      &:first-child {
-        margin-right: 17px;
-
-        background: linear-gradient(88.74deg, #48d824 -18.76%, #10d0ea 99.82%);
-
-        color: #ffffff;
-      }
-      &:last-child {
-        margin-left: 17px;
-
-        background: linear-gradient(#ffffff, #ffffff) padding-box,
-          linear-gradient(to right, #3ed647, #10cfe7) border-box;
-        border: 1px solid transparent;
-
-        color: #2f2f2f;
-      }
     }
   }
 
@@ -190,6 +215,8 @@
   .selection {
     display: flex;
     justify-content: center;
+
+    margin-top: 45px;
     margin-bottom: 30px;
 
     div {
@@ -203,14 +230,22 @@
 
       cursor: pointer;
 
-      color: #000000;
+      color: #2f2f2f;
 
-      border-bottom: 1px solid #000000;
+      &:first-child {
+        border-bottom: 1px solid #2f2f2f;
+        margin-right: 61.5px;
+      }
+
+      &:last-child {
+        margin-left: 61.5px;
+      }
     }
   }
 
   .profile_data_imgs {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
 
     .profile_data_img {
@@ -227,7 +262,9 @@
       margin-bottom: 29px;
 
       &:nth-child(3n + 3) {
-        margin-right: 0;
+        @media (min-width: 1919px) {
+          margin-right: 0px;
+        }
       }
     }
   }

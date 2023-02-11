@@ -107,22 +107,22 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("follow")]
-        public async Task<IActionResult> FollowUser(string userid, string followId)
+        public async Task<IActionResult> FollowUser([FromBody] FollowDTO followDTO)
         {
             var follow = await _context.Follows
-                    .FirstOrDefaultAsync(u => u.FollowerId == userid &&
-                                              u.FollowingId == followId);
+                    .FirstOrDefaultAsync(u => u.FollowerId == followDTO.UserId &&
+                                              u.FollowingId == followDTO.FollowId);
 
             if (follow != null)
                 return BadRequest("You already followed this user!");
 
-            if (await GetUserById(followId) == null)
+            if (await GetUserById(followDTO.FollowId) == null)
                 return NotFound("The user with this id was not found!");
 
             follow = new Follow
             {
-                FollowerId = followId,
-                FollowingId = userid
+                FollowerId = followDTO.FollowId,
+                FollowingId = followDTO.UserId
             };
 
             await _context.Follows.AddAsync(follow);
@@ -151,20 +151,18 @@ namespace FlipBack.Controllers
         public async Task<IActionResult> CheckFollow(string myUserId, string checkUserId)
         {
             var user = await _context.Users
-                .Include(x => x.Followers)
-                .ThenInclude(y => y.Follower)
-                .OrderByDescending(o => o.Followers.Count)
+                .Include(x => x.Followings)
                 .FirstOrDefaultAsync(u => u.Id == myUserId);
 
             if (user == null)
                 return BadRequest("The user was not found!");
 
-            var userFollower = user.Followers.Where(u => u.FollowingId == checkUserId).FirstOrDefault();
+            var userFollower = user.Followings.Where(u => u.FollowerId == checkUserId).FirstOrDefault();
 
             if (userFollower == null)
-                return BadRequest("The user was not followed!");
+                return Ok(false);
 
-            return Ok();
+            return Ok(true);
         }
 
         [HttpGet("get-followers/{id}")]

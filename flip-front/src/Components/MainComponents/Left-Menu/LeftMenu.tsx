@@ -1,14 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./LeftMenu.module.scss";
+import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
 
 export const LeftMenu = () => {
   const profile = useTypedSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   if (profile?.userImage)
+  //     getBase64FromUrl(
+  //       `http://localhost:5170/resources/userimages/${profile.id}/${profile.userImage}`
+  //     ).then((res) => setImage(res));
+  // }, []);
+
   return (
     <div className={styles.left_menu}>
-      <div>
+      <div className={styles.menu}>
         <svg
           className={styles.flip_icon}
           width="94.8"
@@ -37,10 +45,20 @@ export const LeftMenu = () => {
         {profile && (
           <>
             <div className={styles.flip_border_img}>
-              {profile.userImage && (
+              {profile.userImage ? (
+                <img
+                  className={styles.profile_img}
+                  src={`http://localhost:5170/resources/userimages/${profile.id}/${profile.userImage}`}
+                  alt=""
+                />
+              ) : (
                 <div
                   className={styles.profile_img}
-                  style={{ background: `url(${profile.userImage})` }}
+                  style={{
+                    background: `url(${img})`,
+                    backgroundPosition: "center",
+                    backgroundSize: "148px",
+                  }}
                 ></div>
               )}
             </div>
