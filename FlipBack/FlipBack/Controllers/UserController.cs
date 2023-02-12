@@ -135,8 +135,8 @@ namespace FlipBack.Controllers
         public async Task<IActionResult> UnFollowUser(string userid, string followId)
         {
             var follow = await _context.Follows
-                    .FirstOrDefaultAsync(u => u.FollowerId == userid &&
-                                              u.FollowingId == followId);
+                    .FirstOrDefaultAsync(u => u.FollowerId == followId &&
+                                              u.FollowingId == userid);
 
             if (follow == null)
                 return BadRequest("User not found!");

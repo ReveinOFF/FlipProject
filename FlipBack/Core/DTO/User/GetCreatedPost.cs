@@ -2,7 +2,7 @@
 {
     public class GetCreatedPost
     {
-        public int Id { get; set; }
-        public GetFileCreatedPost File { get; set; }
+        public string Id { get; set; }
+        public ICollection<string> File { get; set; }
     }
 }

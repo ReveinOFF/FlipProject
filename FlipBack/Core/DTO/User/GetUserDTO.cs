@@ -15,7 +15,6 @@ namespace Core.DTO.User
 
         public int Followers { get; set; }
         public int Followings { get; set; }
-        public int CreatedPostCount { get; set; }
 
         public ICollection<GetCreatedPost> CreatedPost { get; set; }
     }

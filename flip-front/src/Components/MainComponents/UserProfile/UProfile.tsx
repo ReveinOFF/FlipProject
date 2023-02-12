@@ -1,5 +1,6 @@
 import styles from "./UProfile.module.scss";
 import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
+import { CreatedPost } from "../../../Interface/Profile";
 
 export const UProfile = (props) => {
   const { profile } = props;
@@ -181,18 +182,18 @@ export const UProfile = (props) => {
           <div>збережено</div>
         </div>
         <div className={styles.profile_data_imgs}>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
-          <div className={styles.profile_data_img}></div>
+          {profile.createdPost && (
+            <>
+              {profile.createdPost.map((item: CreatedPost, index) => (
+                <img
+                  className={styles.profile_data_img}
+                  key={item.id}
+                  src={`http://localhost:5170/resources/postfiles/default/${item.file[0]}`}
+                  alt=""
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
     </>

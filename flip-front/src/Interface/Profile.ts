@@ -10,19 +10,13 @@ export interface IUser {
 
   followers: number;
   followings: number;
-  createdPostCount: number;
 
-  // createdPost: CreatedPost;
+  createdPost: CreatedPost[];
 }
 
 export interface CreatedPost {
   id: string;
-  file: FileCreatedPost;
-}
-
-export interface FileCreatedPost {
-  id: string;
-  fileName: string;
+  file: string;
 }
 
 export interface FollowUser {

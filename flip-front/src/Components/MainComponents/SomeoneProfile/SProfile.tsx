@@ -3,7 +3,7 @@ import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b2
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FollowUser } from "../../../Interface/Profile";
+import { CreatedPost, FollowUser } from "../../../Interface/Profile";
 
 export const SProfile = (props) => {
   const myProfile = useTypedSelector((state) => state.auth.user);
@@ -64,6 +64,10 @@ export const SProfile = (props) => {
                     (@{profile.userName})
                   </div>
                   <svg
+                    onClick={() => {
+                      navigator.clipboard.writeText(profile.userName);
+                      alert("Скопировано");
+                    }}
                     width="19"
                     height="22"
                     viewBox="0 0 19 22"
@@ -81,7 +85,7 @@ export const SProfile = (props) => {
                 <div className={styles.profile_count}>
                   <div>ПІДПИСНИКИ: {profile.followers}</div>
                   <div>ПІДПИСКИ: {profile.followings}</div>
-                  <div>ДОПИСИ: {profile.createdPostCount}</div>
+                  <div>ДОПИСИ: {profile.createdPost.length}</div>
                 </div>
                 {profile.description && !profile.isPrivateUser && (
                   <div className={styles.profile_description}>
@@ -143,13 +147,13 @@ export const SProfile = (props) => {
         <div className={styles.profile_data_imgs}>
           {profile.createdPost && !profile.isPrivateUser && (
             <>
-              {/* {profile?.createdPost.map((item) => )} */}
-              <div className={styles.profile_data_img}></div>
-              <div className={styles.profile_data_img}></div>
-              <div className={styles.profile_data_img}></div>
-              <div className={styles.profile_data_img}></div>
-              <div className={styles.profile_data_img}></div>
-              <div className={styles.profile_data_img}></div>
+              {profile.createdPost.map((item: CreatedPost, index) => (
+                <img
+                  key={item.id}
+                  src={`http://localhost:5170/resources/postfiles/default/${item.file[0]}`}
+                  alt=""
+                />
+              ))}
             </>
           )}
         </div>

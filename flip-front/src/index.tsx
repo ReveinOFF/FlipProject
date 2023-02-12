@@ -36,12 +36,15 @@ const NotUser = () => {
 };
 
 if (token) {
-  const user = AuthUser(token as string, store.dispatch);
+  var user;
+  AuthUser(token as string, store.dispatch).then((value) => {
+    user = value;
+  });
   const excToken = jwtDecode<JwtDecoder>(token);
   const date = new Date().getTime();
 
   setTimeout(() => {
-    if (excToken.exp < date) {
+    if (excToken.exp < date && user) {
       root.render(
         <Provider store={store}>
           <BrowserRouter>

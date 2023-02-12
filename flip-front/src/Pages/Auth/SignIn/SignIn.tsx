@@ -46,8 +46,13 @@ export const SignIn = () => {
     await axios
       .post("account/login", value)
       .then((res) => {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("refreshToken", res.data.refreshToken);
+        if (res.status === 200) {
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("refreshToken", res.data.refreshToken);
+
+          navigate("/");
+          window.location.reload();
+        }
       })
       .catch()
       .finally(() => navigate("/"));

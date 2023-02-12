@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./LeftMenu.module.scss";
 import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
+import axios from "axios";
 
 export const LeftMenu = () => {
   const profile = useTypedSelector((state) => state.auth.user);
@@ -13,6 +14,25 @@ export const LeftMenu = () => {
   //       `http://localhost:5170/resources/userimages/${profile.id}/${profile.userImage}`
   //     ).then((res) => setImage(res));
   // }, []);
+
+  const Logout = () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    axios
+      .post("account/revoke-token", refreshToken, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("refreshToken");
+
+          navigate("/");
+          window.location.reload();
+        }
+      });
+  };
 
   return (
     <div className={styles.left_menu}>
@@ -68,7 +88,7 @@ export const LeftMenu = () => {
 
             <div className={styles.profile_inf}>
               <div className={styles.inf_btn}>
-                <div className={styles.count}>{profile.createdPostCount}</div>
+                <div className={styles.count}>{profile.createdPost.length}</div>
                 <div className={styles.inf_text}>дописів</div>
               </div>
 
@@ -332,7 +352,7 @@ export const LeftMenu = () => {
           </div>
         </div>
 
-        <div className={`${styles.btn} ${styles.logout_btn}`}>
+        <div className={`${styles.btn} ${styles.logout_btn}`} onClick={Logout}>
           <svg
             width="30"
             height="30"

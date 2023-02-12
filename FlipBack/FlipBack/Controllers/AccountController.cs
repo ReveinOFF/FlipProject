@@ -319,9 +319,9 @@ namespace FlipBack.Controllers
 
         [Authorize]
         [HttpPost("revoke-token")]
-        public async Task<IActionResult> RevokeToken(string refreshToken)
+        public async Task<IActionResult> RevokeToken([FromBody] string refreshToken)
         {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
+            var user = await _userManager.Users.Include(x => x.RefreshTokens).SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
 
             if (user == null)
                 return BadRequest("Token is required!");
