@@ -70,7 +70,7 @@ namespace FlipBack.Controllers
                 user.IsVerified = false;
                 user.IsPrivateUser = false;
 
-                string fileDestDir = Path.Combine("Resources", "UserImage", user.Id);
+                string fileDestDir = Path.Combine("Resources", "UserImages", user.Id);
                 var createImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, register.UserImage);
                 user.UserImage = createImage.FileName;
                 user.UserImagePath = createImage.FilePath;

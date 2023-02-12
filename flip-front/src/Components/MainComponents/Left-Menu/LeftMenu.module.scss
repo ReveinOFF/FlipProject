@@ -1,6 +1,6 @@
 .left_menu {
   width: 430px;
-  height: 1000px;
+  height: 100vh;
   background: #ffffff;
   border-radius: 0px 20px 20px 0px;
   padding-bottom: 50.89px;
@@ -112,13 +112,11 @@
     margin-top: 51.74px;
     margin-left: 50px;
 
-    .select_pages {
-      .btn {
-        margin-bottom: 40px;
+    .btn {
+      margin-bottom: 40px;
 
-        &:last-child {
-          margin-bottom: 0;
-        }
+      &:last-child {
+        margin-bottom: 0;
       }
     }
   }

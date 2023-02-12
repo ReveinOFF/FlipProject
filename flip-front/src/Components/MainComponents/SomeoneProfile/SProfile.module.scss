@@ -9,6 +9,8 @@
 
   margin-top: 40px;
 
+  width: 988px;
+
   .information {
     display: flex;
     flex-direction: column;
@@ -230,7 +232,7 @@
 
       cursor: pointer;
 
-      color: #2f2f2f;
+      color: #5e5e5e;
 
       &:first-child {
         border-bottom: 1px solid #2f2f2f;
@@ -248,7 +250,7 @@
     justify-content: center;
     flex-wrap: wrap;
 
-    .profile_data_img {
+    img {
       width: 311px;
       height: 311px;
 

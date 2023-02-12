@@ -1,5 +1,4 @@
 import styles from "./SProfile.module.scss";
-import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -116,26 +115,6 @@ export const SProfile = (props) => {
               )}
               <button>Повідомлення</button>
             </div>
-          </div>
-        </div>
-        <div className={styles.recomendation}>
-          <div className={styles.rec_prof}>
-            <div className={styles.rec_border}>
-              <img src={img} alt="" />
-            </div>
-            <div className={styles.rec_text}>Про мене</div>
-          </div>
-          <div className={styles.rec_prof}>
-            <div className={styles.rec_border}>
-              <img src={img} alt="" />
-            </div>
-            <div className={styles.rec_text}>Цікавинки</div>
-          </div>
-          <div className={styles.rec_prof}>
-            <div className={styles.rec_border}>
-              <img src={img} alt="" />
-            </div>
-            <div className={styles.rec_text}>Спогади</div>
           </div>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import styles from "./UProfile.module.scss";
-import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
 import { CreatedPost } from "../../../Interface/Profile";
 
 export const UProfile = (props) => {
@@ -107,71 +106,6 @@ export const UProfile = (props) => {
                 fill="#2F2F2F"
               />
             </svg>
-          </div>
-        </div>
-        <div className={styles.recomendation}>
-          <div className={styles.rec_prof}>
-            <div className={styles.rec_border}>
-              <img src={img} alt="" />
-            </div>
-            <div className={styles.rec_text}>Про мене</div>
-          </div>
-          <div className={styles.rec_prof}>
-            <div className={styles.rec_border}>
-              <img src={img} alt="" />
-            </div>
-            <div className={styles.rec_text}>Цікавинки</div>
-          </div>
-          <div className={styles.rec_prof}>
-            <div className={styles.rec_border}>
-              <img src={img} alt="" />
-            </div>
-            <div className={styles.rec_text}>Спогади</div>
-          </div>
-          <div className={styles.rec_prof}>
-            <div className={styles.rec_border}>
-              <svg
-                width="58"
-                height="58"
-                viewBox="0 0 58 58"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M38.6663 30.8125H19.333C18.3422 30.8125 17.5205 29.9908 17.5205 29C17.5205 28.0092 18.3422 27.1875 19.333 27.1875H38.6663C39.6572 27.1875 40.4788 28.0092 40.4788 29C40.4788 29.9908 39.6572 30.8125 38.6663 30.8125Z"
-                  fill="url(#paint0_linear_1108_1174)"
-                />
-                <path
-                  d="M29 40.4791C28.0092 40.4791 27.1875 39.6574 27.1875 38.6666V19.3333C27.1875 18.3424 28.0092 17.5208 29 17.5208C29.9908 17.5208 30.8125 18.3424 30.8125 19.3333V38.6666C30.8125 39.6574 29.9908 40.4791 29 40.4791Z"
-                  fill="url(#paint1_linear_1108_1174)"
-                />
-                <defs>
-                  <linearGradient
-                    id="paint0_linear_1108_1174"
-                    x1="13.0678"
-                    y1="30.45"
-                    x2="40.3606"
-                    y2="26.6362"
-                    gradientUnits="userSpaceOnUse"
-                  >
-                    <stop stopColor="#48D824" />
-                    <stop offset="1" stopColor="#10D0EA" />
-                  </linearGradient>
-                  <linearGradient
-                    id="paint1_linear_1108_1174"
-                    x1="26.4844"
-                    y1="38.1833"
-                    x2="30.8779"
-                    y2="38.168"
-                    gradientUnits="userSpaceOnUse"
-                  >
-                    <stop stopColor="#48D824" />
-                    <stop offset="1" stopColor="#10D0EA" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-            <div className={styles.rec_text}>Додати</div>
           </div>
         </div>
       </div>

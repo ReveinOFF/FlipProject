@@ -9,7 +9,7 @@ const AuthApp = () => {
     <Routes>
       <Route path="/" element={<Loyout />}>
         <Route path=":profile" element={<Profile />} />
-        <Route path="fliper/:flip" element={<Fliper />} />
+        <Route path="fliper" element={<Fliper />} />
       </Route>
       {/* <Route path="*" element={<NoMatch />} /> */}
     </Routes>

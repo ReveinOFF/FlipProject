@@ -56,21 +56,22 @@ export const RegPhaseTwo = () => {
         .post("account/registration", data, {
           headers: { "Content-Type": "multipart/form-data" },
         })
-        .then((res) =>
-          dispatch({
-            type: "REG-PHASE",
-            payload: {
-              phase: SelectPhase.confrim,
-            },
-          })
-        )
+        .then((res) => {
+          if (res.status === 200)
+            dispatch({
+              type: "REG-PHASE",
+              payload: {
+                phase: SelectPhase.confrim,
+              },
+            });
+        })
         .catch(() => {
           alert(
             "Ошибка в реєстрації! Можливо ошибка в неправильних введених данних!"
           );
         });
     }
-  }, [reg, dispatch, selectedFile]);
+  }, [reg]);
 
   const initialValues: RegPhase2Res = {
     UserImage: null as any,

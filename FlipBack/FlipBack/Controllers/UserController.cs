@@ -217,7 +217,7 @@ namespace FlipBack.Controllers
                     return BadRequest("Image not found!");
             }
 
-            string fileDestDir = Path.Combine("Resources", "UserImage", user.Id);
+            string fileDestDir = Path.Combine("Resources", "UserImages", user.Id);
 
             var newImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, file);
 
