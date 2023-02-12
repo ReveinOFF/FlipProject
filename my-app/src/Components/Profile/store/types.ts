@@ -1,6 +1,5 @@
-export enum AuthActionTypes {
-    LOGIN = "AUTH/LOGIN",
-    LOGOUT = "AUTH/LOGOUT"
+export enum ProfileActionTypes {
+    USER = "PROFILE"
 }
 
 export interface IUser {
@@ -19,8 +18,6 @@ export interface IUser {
     createdPost: string[]
 }
 
-export interface AuthState {
-    user?: IUser,
-    token?: string,
-    isAuth: boolean
+export interface ProfileState {
+    user?: IUser
 }
