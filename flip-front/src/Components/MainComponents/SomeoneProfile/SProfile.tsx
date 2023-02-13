@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import { CreatedPost, FollowUser } from "../../../Interface/Profile";
 
 export const SProfile = (props) => {
+  const { profile } = props;
+
   const myProfile = useTypedSelector((state) => state.auth.user);
   const [isFollow, setIsFollow] = useState<boolean>(false);
-  const { profile } = props;
+  const [selector, setSelector] = useState(1);
 
   useEffect(() => {
     setTimeout(() => {
@@ -120,11 +122,21 @@ export const SProfile = (props) => {
       </div>
       <div className={styles.profile_data}>
         <div className={styles.selection}>
-          <div>дописи</div>
-          <div>flipers</div>
+          <div
+            className={selector === 1 ? styles.select : ""}
+            onClick={() => setSelector(1)}
+          >
+            дописи
+          </div>
+          <div
+            className={selector === 2 ? styles.select : ""}
+            onClick={() => setSelector(2)}
+          >
+            flipers
+          </div>
         </div>
         <div className={styles.profile_data_imgs}>
-          {profile.createdPost && !profile.isPrivateUser && (
+          {profile.createdPost && selector === 1 && !profile.isPrivateUser && (
             <>
               {profile.createdPost.map((item: CreatedPost, index) => (
                 <img

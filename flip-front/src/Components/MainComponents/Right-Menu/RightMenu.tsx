@@ -157,6 +157,7 @@ export const RightMenu = () => {
           <div>
             <div className={styles.notification}>
               <img
+                alt=""
                 className={styles.notif_img_h}
                 src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=30&height=30"
               />
@@ -173,6 +174,7 @@ export const RightMenu = () => {
           <div>
             <div className={styles.notification}>
               <img
+                alt=""
                 className={styles.notif_img_h}
                 src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=30&height=30"
               />
@@ -180,6 +182,7 @@ export const RightMenu = () => {
                 <span>Руся Щем</span> вподобав(-ла) вашу світлину.
               </div>
               <img
+                alt=""
                 className={styles.notif_img_m}
                 src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=46&height=52"
               />
@@ -188,6 +191,7 @@ export const RightMenu = () => {
 
             <div className={styles.notification}>
               <img
+                alt=""
                 className={styles.notif_img_h}
                 src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=30&height=30"
               />

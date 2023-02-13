@@ -1,8 +1,11 @@
 import styles from "./UProfile.module.scss";
 import { CreatedPost } from "../../../Interface/Profile";
+import { useState } from "react";
 
 export const UProfile = (props) => {
   const { profile } = props;
+
+  const [selector, setSelector] = useState(1);
 
   return (
     <>
@@ -111,14 +114,29 @@ export const UProfile = (props) => {
       </div>
       <div className={styles.my_profile_data}>
         <div className={styles.selection}>
-          <div>дописи</div>
-          <div>flipers</div>
-          <div>збережено</div>
+          <div
+            className={selector === 1 ? styles.select : ""}
+            onClick={() => setSelector(1)}
+          >
+            дописи
+          </div>
+          <div
+            className={selector === 2 ? styles.select : ""}
+            onClick={() => setSelector(2)}
+          >
+            flipers
+          </div>
+          <div
+            className={selector === 3 ? styles.select : ""}
+            onClick={() => setSelector(3)}
+          >
+            збережено
+          </div>
         </div>
         <div className={styles.profile_data_imgs}>
-          {profile.createdPost && (
+          {profile.createdPost && selector === 1 && (
             <>
-              {profile.createdPost.map((item: CreatedPost, index) => (
+              {profile.createdPost.map((item: CreatedPost) => (
                 <img
                   className={styles.profile_data_img}
                   key={item.id}

@@ -1,18 +1,10 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./LeftMenu.module.scss";
 import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
-import { useEffect } from "react";
 
 export const LeftMenu = () => {
   const profile = useTypedSelector((state) => state.auth.user);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // useEffect(() => {
-  //   const pathname = location.pathname;
-
-  // }, [])
 
   // useEffect(() => {
   //   if (profile?.userImage)
@@ -143,7 +135,7 @@ export const LeftMenu = () => {
       </div>
 
       <div className={styles.selector}>
-        <div className={styles.btn}>
+        <NavLink to="/" className={styles.btn}>
           <svg
             width="30"
             height="30"
@@ -171,9 +163,9 @@ export const LeftMenu = () => {
           </svg>
 
           <div>Головна</div>
-        </div>
+        </NavLink>
 
-        <div className={styles.btn} onClick={() => navigate(`/fliper`)}>
+        <NavLink to="/fliper" className={styles.btn}>
           <svg
             width="30"
             height="30"
@@ -216,9 +208,9 @@ export const LeftMenu = () => {
           </svg>
 
           <div>Fliper</div>
-        </div>
+        </NavLink>
 
-        <div className={styles.btn}>
+        <NavLink to="/messages" className={styles.btn}>
           <svg
             width="30"
             height="30"
@@ -261,12 +253,9 @@ export const LeftMenu = () => {
           </svg>
 
           <div>Повідомлення</div>
-        </div>
+        </NavLink>
 
-        <div
-          className={styles.btn}
-          onClick={() => navigate(`/${profile?.name}`)}
-        >
+        <NavLink to={`/${profile?.name}`} className={styles.btn}>
           <svg
             width="30"
             height="30"
@@ -309,9 +298,9 @@ export const LeftMenu = () => {
           </svg>
 
           <div>Профіль</div>
-        </div>
+        </NavLink>
 
-        <div className={styles.btn}>
+        <NavLink to="/settings" className={styles.btn}>
           <svg
             width="30"
             height="30"
@@ -354,7 +343,7 @@ export const LeftMenu = () => {
           </svg>
 
           <div>Налаштування</div>
-        </div>
+        </NavLink>
       </div>
     </div>
   );
