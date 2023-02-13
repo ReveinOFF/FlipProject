@@ -1,7 +1,6 @@
 ﻿using Core.Entity.UserEntitys;
 using Core.Interface;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Core.Service
 {

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Core.DTO.Account;
-using Core.DTO.Post;
 using Core.DTO.Reels;
 using Core.DTO.User;
 using Core.Entity.PostEntitys;
@@ -13,19 +12,17 @@ namespace Core.Mapper
     {
         public AppMap() 
         {
-            CreateMap<RegisterDTO, User>();
+            CreateMap<RegisterDTO, User>()
+                .ForMember(x => x.PhoneNumber, y => y.MapFrom(z => z.Phone));
             CreateMap<User, GetUserDTO>()
                 .ForMember(x => x.Followers, y => y.MapFrom(x => x.Followers.Count))
                 .ForMember(x => x.Followings, y => y.MapFrom(x => x.Followings.Count))
-                .ForMember(x => x.CreatedPostCount, y => y.MapFrom(x => x.CreatedPosts.Count))
-                .ForMember(x => x.CreatedPost, y => y.MapFrom(x => x.CreatedPosts.Select(x => x.Files.Select(y => y.FileName)).ToList()));
+                .ForMember(x => x.CreatedPost, y => y.MapFrom(x => x.CreatedPosts.ToList()));
             CreateMap<User, GetUsersDTO>();
 
-            CreateMap<Post, GetPostDTO>()
-                .ForMember(x => x.CommentaryCount, y => y.MapFrom(x => x.Commentary.Count))
-                .ForMember(x => x.AnswerCount, y => y.MapFrom(x => x.Commentary.Select(s => s.PostAnswers).Count()))
-                .ForMember(x => x.ReactionCount, y => y.MapFrom(x => x.Reactions.Count))
-                .ForMember(x => x.Files, y => y.MapFrom(x => x.Files.Select(y => y.FileName).ToList()));
+            CreateMap<Post, GetCreatedPost>()
+                .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
+                .ForMember(x => x.File, y => y.MapFrom(x => x.Files.Select(s => s.FileName)));
 
             CreateMap<Reels, GetReelsDTO>()
                 .ForMember(x => x.CommentaryCount, y => y.MapFrom(x => x.Commentary.Count))

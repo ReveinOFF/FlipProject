@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.DTO.User;
 using Core.Entity.PostEntitys;
+using Core.Entity.ReelsEntity;
 using Core.Entity.UserEntitys;
 using Core.Helpers;
 using Infrastructure.Data;
@@ -32,7 +33,8 @@ namespace FlipBack.Controllers
         [HttpGet("get-user-auth")]
         public async Task<IActionResult> GetUserAuth()
         {
-            string username = User.FindFirst("Name")?.Value;
+            string username = User.FindFirst("UserName")?.Value;
+
             var user = await _userManager.Users
                     .Where(x => x.UserName == username)
                     .Include(x => x.Followers)
@@ -68,7 +70,7 @@ namespace FlipBack.Controllers
             return Ok(getUser);
         }
 
-        [HttpGet("get-user-by-name/{username}")]
+        [HttpGet("get-user-by-name/{name}")]
         public async Task<IActionResult> GetUserByName(string name)
         {
             var user = await _userManager.Users
@@ -104,23 +106,23 @@ namespace FlipBack.Controllers
             return Ok(getUser);
         }
 
-        [HttpPost("{userid}/follow/{followId}")]
-        public async Task<IActionResult> FollowUser(string userid, string followId)
+        [HttpPost("follow")]
+        public async Task<IActionResult> FollowUser([FromBody] FollowDTO followDTO)
         {
             var follow = await _context.Follows
-                    .FirstOrDefaultAsync(u => u.FollowerId == userid &&
-                                              u.FollowingId == followId);
+                    .FirstOrDefaultAsync(u => u.FollowerId == followDTO.UserId &&
+                                              u.FollowingId == followDTO.FollowId);
 
             if (follow != null)
                 return BadRequest("You already followed this user!");
 
-            if (await GetUserById(followId) == null)
+            if (await GetUserById(followDTO.FollowId) == null)
                 return NotFound("The user with this id was not found!");
 
             follow = new Follow
             {
-                FollowerId = followId,
-                FollowingId = userid
+                FollowerId = followDTO.FollowId,
+                FollowingId = followDTO.UserId
             };
 
             await _context.Follows.AddAsync(follow);
@@ -133,8 +135,8 @@ namespace FlipBack.Controllers
         public async Task<IActionResult> UnFollowUser(string userid, string followId)
         {
             var follow = await _context.Follows
-                    .FirstOrDefaultAsync(u => u.FollowerId == userid &&
-                                              u.FollowingId == followId);
+                    .FirstOrDefaultAsync(u => u.FollowerId == followId &&
+                                              u.FollowingId == userid);
 
             if (follow == null)
                 return BadRequest("User not found!");
@@ -143,6 +145,24 @@ namespace FlipBack.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpGet("check/{myUserId}/follow/{checkUserId}")]
+        public async Task<IActionResult> CheckFollow(string myUserId, string checkUserId)
+        {
+            var user = await _context.Users
+                .Include(x => x.Followings)
+                .FirstOrDefaultAsync(u => u.Id == myUserId);
+
+            if (user == null)
+                return BadRequest("The user was not found!");
+
+            var userFollower = user.Followings.Where(u => u.FollowerId == checkUserId).FirstOrDefault();
+
+            if (userFollower == null)
+                return Ok(false);
+
+            return Ok(true);
         }
 
         [HttpGet("get-followers/{id}")]
@@ -157,7 +177,7 @@ namespace FlipBack.Controllers
             if (user == null)
                 return BadRequest("The user was not found!");
 
-            var userFollowers = user.Followers.Where(u => u.FollowerId == id).Select(x => x.Follower);
+            var userFollowers = user.Followers.Where(u => u.FollowingId == id).Select(x => x.Follower);
 
             var follow = _mapper.Map<List<GetUsersDTO>>(userFollowers);
 
@@ -197,7 +217,7 @@ namespace FlipBack.Controllers
                     return BadRequest("Image not found!");
             }
 
-            string fileDestDir = Path.Combine("Resources", "UserImage", user.Id);
+            string fileDestDir = Path.Combine("Resources", "UserImages", user.Id);
 
             var newImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, file);
 
@@ -278,8 +298,8 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpGet("get-saved-posts")]
-        public async Task<IActionResult> GetSavedPosts()
+        [HttpGet("get-bookmarks-post")]
+        public async Task<IActionResult> GetBookmarksPost()
         {
             string userId = User.FindFirst("UserId")?.Value;
 
@@ -294,9 +314,11 @@ namespace FlipBack.Controllers
             return Ok(post);
         }
 
-        [HttpPost("save-post")]
-        public async Task<IActionResult> SavePost(string userId, string postId)
+        [HttpPost("add-bookmarks-post")]
+        public async Task<IActionResult> AddBookmarksPost(string postId, string reelsId)
         {
+            string userId = User.FindFirst("UserId")?.Value;
+
             var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
 
             if (savedPost != null)
@@ -310,15 +332,67 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpDelete("remove-save-post")]
-        public async Task<IActionResult> RemoveSavePost(string userId, string postId)
+        [HttpDelete("remove-bookmarks-post/{postId}")]
+        public async Task<IActionResult> RemoveBookmarksPost(string postId)
         {
+            string userId = User.FindFirst("UserId")?.Value;
+
             var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
 
             if (savedPost == null)
                 return BadRequest("The user did not save this post!");
 
             _context.UserPost.Remove(savedPost);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpGet("get-bookmarks-reels")]
+        public async Task<IActionResult> GetBookmarksReels()
+        {
+            string userId = User.FindFirst("UserId")?.Value;
+
+            var reels = await _userManager.Users.Where(x => x.Id == userId)
+                .Include(x => x.SavedReels).ThenInclude(t => t.Reels)
+                .SelectMany(s => s.SavedReels.Select(ss => ss.Reels))
+                .Reverse().ToListAsync();
+
+            if (reels == null)
+                return BadRequest("Saved post not found!");
+
+            return Ok(reels);
+        }
+
+        [HttpPost("add-bookmarks-reels")]
+        public async Task<IActionResult> AddBookmarksReels(string reelsId)
+        {
+            string userId = User.FindFirst("UserId")?.Value;
+
+            var savedReels = await _context.UserReels.Where(x => x.UserId == userId && x.ReelsId == reelsId).FirstOrDefaultAsync();
+
+            if (savedReels != null)
+                return BadRequest("A user has already saved this reels!");
+
+            UserReels userReels = new UserReels { ReelsId = reelsId, UserId = userId };
+
+            await _context.UserReels.AddAsync(userReels);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("remove-bookmarks-reels/{reelsId}")]
+        public async Task<IActionResult> RemoveBookmarksReels(string reelsId)
+        {
+            string userId = User.FindFirst("UserId")?.Value;
+
+            var savedReels = await _context.UserReels.Where(x => x.UserId == userId && x.ReelsId == reelsId).FirstOrDefaultAsync();
+
+            if (savedReels == null)
+                return BadRequest("The user did not save this post!");
+
+            _context.UserReels.Remove(savedReels);
             await _context.SaveChangesAsync();
 
             return Ok();

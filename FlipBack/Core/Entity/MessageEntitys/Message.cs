@@ -15,6 +15,7 @@ namespace Core.Entity.MessageEntitys
         public DateTime DateSender { get; set; }
         [Required]
         public bool IsEdited { get; set; }
+        public bool IsChanged { get; set; }
 
         /* Sender */
         [Required]

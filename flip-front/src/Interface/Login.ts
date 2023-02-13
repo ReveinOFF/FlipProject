@@ -1,4 +1,5 @@
 export interface UserLogin {
-    name: string;
-    password: string;
+    Name: string;
+    Password: string;
+    RecaptchaToken?: string;
 }

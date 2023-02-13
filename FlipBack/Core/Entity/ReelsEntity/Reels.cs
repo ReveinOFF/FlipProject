@@ -1,11 +1,4 @@
-﻿using Core.Entity.PostEntitys;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Entity.ReelsEntity
+﻿namespace Core.Entity.ReelsEntity
 {
     public class Reels : BasePR
     {

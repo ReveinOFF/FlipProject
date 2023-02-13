@@ -1,0 +1,93 @@
+.form {
+  .form_request {
+    display: flex;
+
+    .upload {
+      position: relative;
+
+      .upload_text {
+        position: absolute;
+
+        margin-top: 32.19px;
+        margin-left: 20px;
+
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 19px;
+
+        color: #ffffff;
+
+        z-index: 1;
+      }
+
+      .upload_svg {
+        position: absolute;
+
+        margin-top: 15px;
+      }
+
+      .upload_img {
+        margin-top: 15px;
+        border-radius: 15px;
+        margin-right: 25px;
+
+        cursor: pointer;
+      }
+    }
+
+    .form_input {
+      margin-top: 15px;
+
+      input[type="email"] {
+        margin-top: 26px;
+      }
+
+      .input_menu {
+        margin-top: 26px;
+        position: relative;
+
+        svg {
+          position: absolute;
+          top: 15px;
+          left: 415px;
+
+          cursor: pointer;
+        }
+      }
+
+      .error {
+        margin-left: 22px;
+        margin-top: 10px;
+
+        font-style: normal;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 19px;
+
+        color: #9d3535;
+      }
+    }
+  }
+
+  .selector {
+    display: flex;
+    align-self: center;
+
+    margin-top: 25px;
+    margin-bottom: 45px;
+
+    svg:first-child {
+      margin-right: 9.5px;
+    }
+    svg:last-child {
+      margin-left: 9.5px;
+    }
+  }
+
+  button {
+    align-self: center;
+
+    margin-bottom: 25px;
+  }
+}

@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FlipBack.Helpers;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace FlipBack.Controllers
 {
@@ -24,8 +26,9 @@ namespace FlipBack.Controllers
         private readonly IMailService _mailService;
         private readonly IWebHostEnvironment _env;
         private readonly DataBase _context;
+        private readonly ICaptchaValidator _captchaValidator;
 
-        public AccountController(UserManager<User> userManager, IJwtService jwtService, IMapper mapper, IMailService mailService, IWebHostEnvironment env, DataBase context)
+        public AccountController(UserManager<User> userManager, IJwtService jwtService, IMapper mapper, IMailService mailService, IWebHostEnvironment env, DataBase context, ICaptchaValidator captchaValidator)
         {
             _userManager = userManager;
             _jwtService = jwtService;
@@ -33,11 +36,17 @@ namespace FlipBack.Controllers
             _mailService = mailService;
             _env = env;
             _context = context;
+            _captchaValidator = captchaValidator;
         }
 
         [HttpPost("registration")]
         public async Task<IActionResult> Register([FromForm] RegisterDTO register)
         {
+            if (!_captchaValidator.IsCaptchaPassedAsync(register.RecaptchaToken))
+            {
+                return BadRequest(new { error = "Recaptcha not valid" });
+            }
+
             var user = _mapper.Map<User>(register);
             try
             {
@@ -47,7 +56,10 @@ namespace FlipBack.Controllers
                     if (await _userManager.IsEmailConfirmedAsync(findEmail))
                         return BadRequest("Email already exists!");
                     else
+                    {
+                        StaticFiles.DeleteImageAsync(user.UserImagePath);
                         await _userManager.DeleteAsync(findEmail);
+                    }
                 }
 
                 var findLogin = await _userManager.FindByNameAsync(register.UserName);
@@ -58,10 +70,10 @@ namespace FlipBack.Controllers
                 user.IsVerified = false;
                 user.IsPrivateUser = false;
 
-                string fileDestDir = Path.Combine("Resources", "UserImage", user.Id);
+                string fileDestDir = Path.Combine("Resources", "UserImages", user.Id);
                 var createImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, register.UserImage);
                 user.UserImage = createImage.FileName;
-                user.UserImagePath = createImage.FileName;
+                user.UserImagePath = createImage.FilePath;
 
                 var result = await _userManager.CreateAsync(user, register.Password);
                 if (!result.Succeeded)
@@ -72,7 +84,9 @@ namespace FlipBack.Controllers
                     return BadRequest(ExceptionBuild.BuilderException(role));
 
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var confirmationLink = $"http://uniwox.com/emailconfirm?token={token}";
+                byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(token);
+                var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
+                var confirmationLink = $"http://localhost:3000/email-confirm?token={codeEncoded}&email={user.Email}";
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
@@ -101,7 +115,9 @@ namespace FlipBack.Controllers
             if (user == null)
                 return BadRequest("Email not found!");
 
-            var result = await _userManager.ConfirmEmailAsync(user, confirmEmail.Token);
+            var codeDecodedBytes = WebEncoders.Base64UrlDecode(confirmEmail.Token);
+            var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
+            var result = await _userManager.ConfirmEmailAsync(user, codeDecoded);
 
             if (!result.Succeeded)
                 return BadRequest("There is a problem with password confirmation!");
@@ -118,7 +134,18 @@ namespace FlipBack.Controllers
             if (!resultSend)
                 return BadRequest("Error in sending the message!");
 
-            return Ok();
+            var token = _jwtService.CreateToken(user);
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            refreshToken.UserId = user.Id;
+            await _context.RefreshTokens.AddAsync(refreshToken);
+            await _context.SaveChangesAsync();
+
+            return Ok(new TokenDTO
+            {
+                Token = token,
+                RefreshToken = refreshToken.Token
+            });
         }
 
         [HttpPost("login")]
@@ -126,7 +153,12 @@ namespace FlipBack.Controllers
         {
             try
             {
-                var findUser = await _userManager.Users.Include(u => u.RefreshTokens).SingleAsync(u => u.UserName == login.Name || u.Email == login.Name);
+                if (!_captchaValidator.IsCaptchaPassedAsync(login.RecaptchaToken))
+                {
+                    return BadRequest(new { error = "Recaptcha not valid" });
+                }
+
+                var findUser = await _userManager.Users.Include(u => u.RefreshTokens).Where(u => u.UserName == login.Name || u.Email == login.Name).FirstOrDefaultAsync();
                 if (findUser == null)
                     return BadRequest("Error when searching for an account!");
                 if (!await _userManager.CheckPasswordAsync(findUser, login.Password))
@@ -142,9 +174,6 @@ namespace FlipBack.Controllers
                 refreshToken.UserId = user.Id;
                 await _context.RefreshTokens.AddAsync(refreshToken);
                 await _context.SaveChangesAsync();
-
-                //findUser.RefreshTokens.Add(refreshToken);
-                //await _userManager.UpdateAsync(findUser);
 
                 return Ok(new TokenDTO
                 {
@@ -290,9 +319,9 @@ namespace FlipBack.Controllers
 
         [Authorize]
         [HttpPost("revoke-token")]
-        public async Task<IActionResult> RevokeToken(string refreshToken)
+        public async Task<IActionResult> RevokeToken([FromBody] string refreshToken)
         {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
+            var user = await _userManager.Users.Include(x => x.RefreshTokens).SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
 
             if (user == null)
                 return BadRequest("Token is required!");

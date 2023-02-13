@@ -1,6 +1,4 @@
-﻿using Core.DTO.User;
-
-namespace Core.DTO.Account
+﻿namespace Core.DTO.Account
 {
     public class TokenDTO
     {

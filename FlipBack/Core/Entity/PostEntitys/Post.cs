@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using Core.Entity.UserEntitys;
-
-namespace Core.Entity.PostEntitys
+﻿namespace Core.Entity.PostEntitys
 {
     public class Post : BasePR
     {

@@ -1,0 +1,57 @@
+.reg_label {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 48px;
+
+  color: #2f2f2f;
+
+  margin-bottom: 89px;
+}
+
+.form {
+  .form_input {
+    input {
+      margin-top: 26px;
+
+      &:first-child {
+        margin-top: 0px;
+      }
+    }
+
+    .error {
+      margin-left: 22px;
+      margin-top: 10px;
+
+      font-style: normal;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 19px;
+
+      color: #9d3535;
+    }
+  }
+
+  .selector {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 45px;
+
+    svg:first-child {
+      margin-right: 9.5px;
+    }
+
+    svg:last-child {
+      margin-left: 9.5px;
+    }
+  }
+
+  button {
+    align-self: center;
+  }
+}
+
+a {
+  margin-top: 25px;
+}

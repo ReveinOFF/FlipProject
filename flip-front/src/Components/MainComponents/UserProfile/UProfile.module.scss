@@ -1,0 +1,195 @@
+.my_profile_inf {
+  background: #f8f8f8;
+  border-radius: 15px;
+
+  padding-top: 20.42px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-bottom: 20px;
+
+  margin-top: 40px;
+  margin-bottom: 45px;
+
+  width: 988px;
+
+  .information {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 32px;
+
+    .inf_profile {
+      margin-right: 134px;
+
+      .names_profile {
+        display: flex;
+        margin-bottom: 15px;
+
+        .name {
+          margin-right: 30px;
+
+          font-style: normal;
+          font-weight: 300;
+          font-size: 36px;
+          line-height: 150%;
+
+          text-align: center;
+          letter-spacing: -0.011em;
+
+          color: #0b0303;
+        }
+
+        .username {
+          display: flex;
+          align-items: center;
+
+          div {
+            margin-right: 5px;
+
+            font-style: normal;
+            font-weight: 300;
+            font-size: 24px;
+            line-height: 150%;
+
+            text-align: center;
+            letter-spacing: -0.011em;
+
+            color: #0b0303;
+          }
+
+          svg {
+            cursor: pointer;
+          }
+        }
+      }
+
+      .description {
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 19px;
+
+        color: #4f4f4f;
+      }
+    }
+
+    .profile_btn {
+      display: flex;
+      margin-top: 9px;
+
+      svg {
+        margin-right: 21px;
+
+        cursor: pointer;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  .recomendation {
+    display: flex;
+
+    .rec_prof {
+      margin-right: 45px;
+
+      cursor: pointer;
+
+      &:last-child {
+        margin-right: 0px;
+      }
+
+      .rec_border {
+        border-radius: 50%;
+        border: 2px solid transparent;
+        background: linear-gradient(#ffffff, #ffffff) padding-box,
+          linear-gradient(to right, #3ed647, #10cfe7) border-box;
+
+        padding: 6px;
+
+        height: 100px;
+        width: 100px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-bottom: 10px;
+
+        img {
+          height: 87.06px;
+          width: 87.06px;
+
+          border-radius: 50%;
+        }
+      }
+
+      .rec_text {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 150%;
+
+        text-align: center;
+        letter-spacing: -0.011em;
+
+        color: #2f2f2f;
+      }
+    }
+  }
+}
+
+.my_profile_data {
+  .selection {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 30px;
+
+    div {
+      font-style: normal;
+      font-weight: 300;
+      font-size: 18px;
+      line-height: 150%;
+
+      text-align: center;
+      letter-spacing: -0.011em;
+
+      cursor: pointer;
+
+      color: #5e5e5e;
+
+      &:first-child {
+        border-bottom: 1px solid #000000;
+      }
+    }
+  }
+
+  .profile_data_imgs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .profile_data_img {
+      width: 311px;
+      height: 311px;
+
+      background: url(../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg),
+        #d9d9d9;
+      background-position: center;
+      background-size: 311px;
+      border-radius: 15px;
+
+      margin-right: 27.5px;
+      margin-bottom: 40px;
+
+      &:nth-child(3n + 3) {
+        @media (min-width: 1919px) {
+          margin-right: 0px;
+        }
+      }
+    }
+  }
+}
