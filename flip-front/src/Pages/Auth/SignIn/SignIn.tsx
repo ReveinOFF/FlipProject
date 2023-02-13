@@ -12,15 +12,18 @@ import {
   CustomMiniBTN,
 } from "../../../Components/MainBlock/Button/CustomButton";
 import { CustomInput } from "../../../Components/MainBlock/Input/CustomInput";
+import { useTranslation } from "react-i18next";
 
 export const SignIn = () => {
-  const navigate = useNavigate();
   const [visible, setVisoiblity] = useState(false);
   const [bot, setBot] = useState<boolean>(false);
+
+  const navigate = useNavigate();
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const [t] = useTranslation("translation");
 
   useEffect(() => {
-    document.title = "Sign In - Flip";
+    document.title = t("auht.signin.title_page");
   }, []);
 
   const initialValues: UserLogin = {
@@ -29,8 +32,8 @@ export const SignIn = () => {
   };
 
   const LoginSchema = yup.object({
-    Name: yup.string().required("Логін є обов'язкови полем"),
-    Password: yup.string().required("Пароль є обов'язкови полем"),
+    Name: yup.string().required(t("auht.signin.yup.name").toString()),
+    Password: yup.string().required(t("auht.signin.yup.password").toString()),
   });
 
   const PostLogin = async (value: UserLogin) => {
@@ -77,7 +80,7 @@ export const SignIn = () => {
 
   return (
     <>
-      <div className={styles.log_header}>Вхід</div>
+      <div className={styles.log_header}>{t("auht.signin.header")}</div>
 
       <FormikProvider value={formik}>
         <Form
@@ -90,7 +93,7 @@ export const SignIn = () => {
             onBlur={handleBlur}
             name="Name"
             type="text"
-            placeholder="E-Mail або нікнейм"
+            placeholder={t("auht.signin.login_ph")}
             error={touched.Name && errors.Name}
           />
           {touched.Name && errors.Name && (
@@ -104,7 +107,7 @@ export const SignIn = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               name="Password"
-              placeholder="Пароль"
+              placeholder={t("auht.signin.password_ph")}
               error={touched.Password && errors.Password}
             />
             <svg
@@ -128,7 +131,7 @@ export const SignIn = () => {
           )}
 
           <CustomButtonBG
-            content="Увійти"
+            content={t("auht.signin.btn_login")}
             type="submit"
             disabled={!(dirty && isValid)}
             error={!(dirty && isValid)}
@@ -139,7 +142,7 @@ export const SignIn = () => {
       <div className={`dflex-column ${styles.form_btn}`}>
         <CustomMiniBTN
           onClick={() => navigate("/")}
-          content="Забув(ла) пароль?"
+          content={t("auht.signin.btn_rec_psw")}
         />
 
         <div className={styles.log_or}>
@@ -159,7 +162,7 @@ export const SignIn = () => {
               strokeLinecap="square"
             />
           </svg>
-          <div>або</div>
+          <div>{t("auht.signin.or")}</div>
           <svg
             width="230"
             height="2"
@@ -180,12 +183,15 @@ export const SignIn = () => {
 
         <div className={`${styles.log_other_btn} dflex-column`}>
           <CustomButton
-            content="Зареєструватись"
+            content={t("auht.signin.btn_reg")}
             className={styles.btn_reg}
             onClick={() => navigate("/signup")}
           />
 
-          <CustomMiniBTN onClick={() => navigate(-1)} content="Скасувати" />
+          <CustomMiniBTN
+            onClick={() => navigate(-1)}
+            content={t("auht.signin.btn_cancel")}
+          />
         </div>
       </div>
     </>

@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./AuthSelection.module.scss";
 
 export const AuthSelection = () => {
   const theme = useTypedSelector((state) => state.theme.mode);
+  const [t] = useTranslation("translation");
 
   const [mode, setMode] = useState<string>("light");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Welcome to Flip";
+    document.title = t("auht.selection.title_page");
   }, []);
 
   useEffect(() => {
@@ -74,20 +76,20 @@ export const AuthSelection = () => {
         </svg>
       )}
       <div className={styles.description}>
-        Швидка, надійна соціальна мережа для всіх
+        {t("auht.selection.description")}
       </div>
       <div className={`${styles.form_btn} dflex-column`}>
         <button
           className={`${styles.btn} ${styles.btn_login} ${mode}-login`}
           onClick={() => navigate("/signin")}
         >
-          Увійти
+          {t("auht.selection.signin")}
         </button>
         <button
           className={`${styles.btn} ${styles.btn_reg} ${mode}-reg`}
           onClick={() => navigate("/signup")}
         >
-          Зареєструватись
+          {t("auht.selection.signup")}
         </button>
       </div>
     </>

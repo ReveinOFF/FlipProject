@@ -1,6 +1,9 @@
+import { useTranslation } from "react-i18next";
 import styles from "./RightMenu.module.scss";
 
 export const RightMenu = () => {
+  const [t] = useTranslation("translation");
+
   return (
     <div className={styles.right_menu}>
       <div className={styles.top_menu}>
@@ -22,7 +25,10 @@ export const RightMenu = () => {
               fill="#474747"
             />
           </svg>
-          <input type="text" placeholder="Пошук" />
+          <input
+            type="text"
+            placeholder={t("main.right_menu.search_ph").toString()}
+          />
         </label>
 
         <svg
@@ -151,9 +157,11 @@ export const RightMenu = () => {
       </div>
 
       <div className={styles.bottom_menu}>
-        <div className={styles.header}>Сповіщення</div>
+        <div className={styles.header}>{t("main.right_menu.notification")}</div>
         <div className={styles.notif_first}>
-          <div className={styles.secondary_header}>Цього тижня</div>
+          <div className={styles.secondary_header}>
+            {t("main.right_menu.header1")}
+          </div>
           <div>
             <div className={styles.notification}>
               <img
@@ -162,15 +170,19 @@ export const RightMenu = () => {
                 src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=30&height=30"
               />
               <div className={styles.notinf_text}>
-                <span>Іван Гук</span> починає стежити за вами.
+                <span>Іван Гук</span> {t("main.right_menu.foll_ed")}
               </div>
-              <button className={styles.btn_unfoll}>Відстежується</button>
+              <button className={styles.btn_unfoll}>
+                {t("main.right_menu.is_foll_ed")}
+              </button>
             </div>
             <div className={styles.notinf_date}>3 д.</div>
           </div>
         </div>
         <div>
-          <div className={styles.secondary_header}>Цього місяця</div>
+          <div className={styles.secondary_header}>
+            {t("main.right_menu.header2")}
+          </div>
           <div>
             <div className={styles.notification}>
               <img
@@ -179,7 +191,7 @@ export const RightMenu = () => {
                 src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=30&height=30"
               />
               <div className={styles.notinf_text}>
-                <span>Руся Щем</span> вподобав(-ла) вашу світлину.
+                <span>Руся Щем</span> {t("main.right_menu.like_post")}
               </div>
               <img
                 alt=""
@@ -196,9 +208,11 @@ export const RightMenu = () => {
                 src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=30&height=30"
               />
               <div className={styles.notinf_text}>
-                <span>Вадис Семенко</span> починає стежити за вами.
+                <span>Вадис Семенко</span> {t("main.right_menu.foll_ed")}
               </div>
-              <button className={styles.btn_foll}>Стежити</button>
+              <button className={styles.btn_foll}>
+                {t("main.right_menu.follow")}
+              </button>
             </div>
             <div className={styles.notinf_date}>3 д.</div>
           </div>

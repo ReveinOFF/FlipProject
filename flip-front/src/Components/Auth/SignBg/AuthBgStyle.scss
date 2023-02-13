@@ -1,5 +1,5 @@
 .light {
-  background: #f8f8f8;
+  background: #ebebeb;
   color: #2f2f2f;
 }
 
@@ -57,7 +57,7 @@
 }
 
 .lan-type {
-  margin: 9px 11.7px 7.3px 10px;
+  margin: 9px 11.7px 9px 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -127,11 +127,11 @@
 }
 
 .light .block-img {
-  background: #eaeaea;
+  background: #ffffff;
 }
 
 .bi1 {
-  transform: rotate(31.18deg);
+  // transform: rotate(31.18deg);
 
   width: 176.69px;
   height: 214px;
@@ -264,7 +264,7 @@
   width: 12px;
   height: 12px;
 
-  background: #282828;
+  background: #ffffff;
   border-radius: 50%;
 
   animation: 20s linear 0s infinite alternate anim-ssb;
@@ -303,13 +303,13 @@
 .heart-gray,
 .heart-gray:after,
 .heart-gray:before {
-  background-color: #282828;
+  background-color: #ffffff;
 }
 
 .heart-lightgray,
 .heart-lightgray:after,
 .heart-lightgray:before {
-  background-color: #3c3c3c;
+  background-color: #ffffff;
 }
 
 .light .super-small-ball,
@@ -385,11 +385,11 @@
 }
 
 .small-gray {
-  border: 5px solid #282828;
+  border: 5px solid #ffffff;
 }
 
 .small-lightgray {
-  border: 5px solid #383838;
+  border: 5px solid #ffffff;
 }
 
 .sb1 {
@@ -418,7 +418,7 @@
 
   position: absolute;
 
-  border: 5px solid #282828;
+  border: 5px solid #ffffff;
   border-radius: 50%;
 
   animation: 25s linear 0s infinite alternate anim-smb;
@@ -459,7 +459,7 @@
 
   box-sizing: border-box;
 
-  border: 5px solid #292929;
+  border: 5px solid #ffffff;
   border-radius: 50%;
 
   left: 40.99%;
@@ -487,11 +487,11 @@
 }
 
 .bm-gray {
-  border: 5px solid #292929;
+  border: 5px solid #ffffff;
 }
 
 .bm-lightgray {
-  border: 5px solid #505050;
+  border: 5px solid #ffffff;
 }
 
 .bm1 {
@@ -526,7 +526,7 @@
   box-sizing: border-box;
 
   position: absolute;
-  left: 93.03%;
+
   right: 2.24%;
   top: 58.64%;
   bottom: 33.58%;
@@ -534,7 +534,7 @@
   width: 65px;
   height: 65px;
 
-  border: 5px solid #aaaaaa;
+  border: 5px solid #ffffff;
   border-radius: 50%;
 
   animation: 20s linear 0s infinite alternate anim-bb;
@@ -544,7 +544,7 @@
 .light .bm3,
 .light .bm4,
 .light .big-ball {
-  border-color: #eaeaea;
+  border-color: #ffffff;
 }
 
 .light .sb1,

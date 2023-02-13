@@ -14,14 +14,16 @@ import { useNavigate } from "react-router-dom";
 import { getAge } from "../../../Convertor/convertDate";
 import { parse } from "date-fns";
 import { useTypedSelector } from "../../../../Hooks/useTypedSelector";
+import { useTranslation } from "react-i18next";
 
 export const RegPhaseOne = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const reg = useTypedSelector((state) => state.reg);
+  const [t] = useTranslation("translation");
 
   useEffect(() => {
-    document.title = "Sign Up | Phase One - Flip";
+    document.title = t("auht.signup.reg_p1.title_page");
   }, []);
 
   const initialValues: RegPhase1Res = {
@@ -35,10 +37,12 @@ export const RegPhaseOne = () => {
   const Reg1Schema = yup.object({
     Name: yup
       .string()
-      .min(5, "Ім'я повинно містити не менше 5 символів!")
-      .max(15, "Ім'я повинно містити не більше 15 символів!")
-      .required("Ім'я є обов'язковим полем!"),
-    Phone: yup.string().matches(phoneRegExp, "Номер телефона неправильний!"),
+      .min(5, t("auht.signup.reg_p1.yup.name.min").toString())
+      .max(15, t("auht.signup.reg_p1.yup.name.max").toString())
+      .required(t("auht.signup.reg_p1.yup.name.req").toString()),
+    Phone: yup
+      .string()
+      .matches(phoneRegExp, t("auht.signup.reg_p1.yup.phone").toString()),
     DateOfBirth: yup
       .date()
       .transform(function (value, originalValue) {
@@ -50,7 +54,7 @@ export const RegPhaseOne = () => {
       })
       .test(
         "DateOfBirth",
-        "Вам повинно бути не менше 18 років!",
+        t("auht.signup.reg_p1.yup.date_birth").toString(),
         function (value) {
           return getAge(new Date(value as Date)) >= 18;
         }
@@ -103,7 +107,7 @@ export const RegPhaseOne = () => {
           <div className={`${styles.form_input} dflex-column`}>
             <CustomInput
               type="text"
-              placeholder="Ім'я"
+              placeholder={t("auht.signup.reg_p1.name_ph")}
               value={values.Name}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -115,7 +119,7 @@ export const RegPhaseOne = () => {
 
             <CustomInput
               type="text"
-              placeholder="Телефон"
+              placeholder={t("auht.signup.reg_p1.phone_ph")}
               value={values.Phone}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -127,7 +131,7 @@ export const RegPhaseOne = () => {
 
             <CustomInput
               type="date"
-              placeholder="Дата народження"
+              placeholder={t("auht.signup.reg_p1.date_ph")}
               value={values.DateOfBirth}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -162,7 +166,7 @@ export const RegPhaseOne = () => {
           </div>
 
           <CustomButtonBG
-            content="Далі"
+            content={t("auht.signup.reg_p1.btn_next")}
             type="submit"
             disabled={!(dirty && isValid)}
             error={!(dirty && isValid)}
@@ -170,7 +174,10 @@ export const RegPhaseOne = () => {
         </Form>
       </FormikProvider>
 
-      <CustomMiniBTN content="Скасувати" onClick={() => navigate(-1)} />
+      <CustomMiniBTN
+        content={t("auht.signup.reg_p1.btn_cancel")}
+        onClick={() => navigate(-1)}
+      />
     </>
   );
 };

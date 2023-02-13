@@ -12,11 +12,13 @@ import styles from "./RegPhaseTwo.module.scss";
 import { useTypedSelector } from "../../../../Hooks/useTypedSelector";
 import axios from "axios";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useTranslation } from "react-i18next";
 
 export const RegPhaseTwo = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const dispatch = useDispatch();
   const reg = useTypedSelector((state) => state.reg);
+  const [t] = useTranslation("translation");
 
   const [bot, setBot] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<any>();
@@ -33,6 +35,7 @@ export const RegPhaseTwo = () => {
 
   useEffect(() => {
     document.title = "Sign Up | Phase Two - Flip";
+    document.title = t("auht.signup.reg_p2.title_page");
   }, []);
 
   useEffect(() => {
@@ -86,30 +89,33 @@ export const RegPhaseTwo = () => {
   const Reg2Schema = yup.object({
     UserName: yup
       .string()
-      .min(5, "Логін повинен містити не менше 5 символів!")
-      .max(15, "Логін повинен містити не більше 15 символів!")
-      .matches(loginMatches, "Логін введений не вірно!")
-      .required("Ім'я є обов'язковим полем!"),
+      .min(5, t("auht.signup.reg_p2.yup.username.min").toString())
+      .max(15, t("auht.signup.reg_p2.yup.username.max").toString())
+      .matches(
+        loginMatches,
+        t("auht.signup.reg_p2.yup.username.mat").toString()
+      )
+      .required(t("auht.signup.reg_p2.yup.username.req").toString()),
     Email: yup
       .string()
-      .email("Пошта введена не правильно!")
-      .required("Пошта є обов'язковим полем!"),
+      .email(t("auht.signup.reg_p2.yup.email.mat").toString())
+      .required(t("auht.signup.reg_p2.yup.email.req").toString()),
     Password: yup
       .string()
-      .min(8, "Пароль повинен містити не менше 8 символів!")
-      .max(20, "Пароль повинен містити не більше 15 символів!")
+      .min(8, t("auht.signup.reg_p2.yup.password.min").toString())
+      .max(20, t("auht.signup.reg_p2.yup.password.max").toString())
       .oneOf(
         [yup.ref("ConfirmPassword"), null],
-        "Пароль не відповідає підтвердженому паролю!"
+        t("auht.signup.reg_p2.yup.password.one").toString()
       )
-      .required("Пароль є обов'язковим полем!"),
+      .required(t("auht.signup.reg_p2.yup.password.req").toString()),
     ConfirmPassword: yup
       .string()
       .oneOf(
         [yup.ref("Password"), null],
-        "Підтвердження пароля не збігається з паролем!"
+        t("auht.signup.reg_p2.yup.confirm_pass.one").toString()
       )
-      .required("Підтвердження пароля є обов'язковим полем!"),
+      .required(t("auht.signup.reg_p2.yup.confirm_pass.req").toString()),
   });
 
   const PhaseTwo = async (value: RegPhase2Res) => {
@@ -171,7 +177,9 @@ export const RegPhaseTwo = () => {
             />
             {selectedFile ? (
               <div className={styles.upload} onClick={handleClick}>
-                <div className={styles.upload_text}>Змінити фото</div>
+                <div className={styles.upload_text}>
+                  {t("auht.signup.reg_p2.file")}
+                </div>
 
                 <svg
                   width="445"
@@ -328,7 +336,7 @@ export const RegPhaseTwo = () => {
             <div className={`${styles.form_input} dflex-column`}>
               <CustomInput
                 type="text"
-                placeholder="Нікнейм"
+                placeholder={t("auht.signup.reg_p2.nickname_ph")}
                 value={values.UserName}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -340,7 +348,7 @@ export const RegPhaseTwo = () => {
 
               <CustomInput
                 type="email"
-                placeholder="E-Mail"
+                placeholder={t("auht.signup.reg_p2.email_ph")}
                 value={values.Email}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -353,7 +361,7 @@ export const RegPhaseTwo = () => {
               <div className={styles.input_menu}>
                 <CustomInput
                   type={visible ? "text" : "password"}
-                  placeholder="Пароль"
+                  placeholder={t("auht.signup.reg_p2.password_ph")}
                   value={values.Password}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -381,7 +389,7 @@ export const RegPhaseTwo = () => {
               <div className={styles.input_menu}>
                 <CustomInput
                   type={visible2 ? "text" : "password"}
-                  placeholder="Повторіть пароль"
+                  placeholder={t("auht.signup.reg_p2.confirm_pass_ph")}
                   value={values.ConfirmPassword}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -430,7 +438,7 @@ export const RegPhaseTwo = () => {
           </div>
 
           <CustomButtonBG
-            content="Далі"
+            content={t("auht.signup.reg_p2.btn_next")}
             type="submit"
             disabled={!(dirty && isValid)}
             error={!(dirty && isValid)}
@@ -439,7 +447,7 @@ export const RegPhaseTwo = () => {
       </FormikProvider>
 
       <CustomMiniBTN
-        content="Повернутися"
+        content={t("auht.signup.reg_p2.btn_back")}
         onClick={() =>
           dispatch({
             type: "REG-PHASE",
