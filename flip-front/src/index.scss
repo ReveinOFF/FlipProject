@@ -17,3 +17,22 @@ body {
   display: flex;
   justify-content: space-between;
 }
+
+.active {
+  svg defs stop {
+    &:first-child {
+      stop-color: #2f8d18;
+    }
+
+    &:last-child {
+      stop-color: #0f8999;
+    }
+  }
+
+  div {
+    background: linear-gradient(88.74deg, #2f8d18 -18.76%, #0f8999 99.82%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}

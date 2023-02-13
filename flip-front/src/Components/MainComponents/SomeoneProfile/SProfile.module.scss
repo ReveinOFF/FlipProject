@@ -235,13 +235,17 @@
       color: #5e5e5e;
 
       &:first-child {
-        border-bottom: 1px solid #2f2f2f;
         margin-right: 61.5px;
       }
 
       &:last-child {
         margin-left: 61.5px;
       }
+    }
+
+    .select {
+      color: #2f2f2f;
+      border-bottom: 1px solid #2f2f2f;
     }
   }
 
