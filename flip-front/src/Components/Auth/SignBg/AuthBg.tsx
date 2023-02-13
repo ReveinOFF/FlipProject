@@ -1,19 +1,52 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
+import i18n from "../../../Assets/i18n/i18n";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import "./AuthBgStyle.scss";
 
 export const AuthBg = () => {
   const [mode, setMode] = useState<string>("light");
+  const [trans, setTrans] = useState<string>("UA");
 
   const theme = useTypedSelector((state) => state.theme.mode);
   const dispatch = useDispatch();
+
+  const [t] = useTranslation("translation");
 
   useEffect(() => {
     if (theme === "light") setMode("light");
     else setMode("dark");
   }, [theme]);
+
+  useEffect(() => {
+    const lng = localStorage.getItem("lng");
+
+    if (lng === "ua") {
+      i18n.changeLanguage("ua");
+      localStorage.setItem("lng", "ua");
+      setTrans("UA");
+    } else {
+      i18n.changeLanguage("en");
+      localStorage.setItem("lng", "en");
+      setTrans("EN");
+    }
+  }, []);
+
+  const changeLanguageOnClick = () => {
+    const lng = localStorage.getItem("lng");
+
+    if (lng === "ua") {
+      i18n.changeLanguage("en");
+      localStorage.setItem("lng", "en");
+      setTrans("EN");
+    } else {
+      i18n.changeLanguage("ua");
+      localStorage.setItem("lng", "ua");
+      setTrans("UA");
+    }
+  };
 
   const LightOrDarkMode = () => {
     if (mode === "light") {
@@ -27,10 +60,12 @@ export const AuthBg = () => {
     }
   };
 
+  // <h1>{t("title")}</h1>;
+
   return (
     <div className={`main-auth ${mode}`}>
       <div className="bg-setting">
-        <div className="language">
+        <div className="language" onClick={() => changeLanguageOnClick()}>
           {mode === "light" ? (
             <svg
               className="lan-svg"
@@ -85,7 +120,7 @@ export const AuthBg = () => {
             </svg>
           )}
           <div className="lan-type">
-            <div className="lan-name">UA</div>
+            <div className="lan-name">{trans}</div>
           </div>
         </div>
         <div className="l_d-mode" onClick={LightOrDarkMode}>

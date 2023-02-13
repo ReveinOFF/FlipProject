@@ -11,16 +11,28 @@ import App from "./Main/NotAuth/App";
 import { AuthUser } from "./Components/Auth/store/actions";
 import jwtDecode from "jwt-decode";
 import { JwtDecoder } from "./Interface/JwtDecoder";
+import "./Assets/i18n/i18n";
+import { Suspense } from "react";
+import axios from "axios";
 
 const ldMode = localStorage.getItem("LightDarkMode");
 const token = localStorage.getItem("token");
+const lng = localStorage.getItem("lng");
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-if (!ldMode) {
-  localStorage.setItem("LightDarkMode", "light");
+if (!ldMode) localStorage.setItem("LightDarkMode", "light");
+
+if (!lng) {
+  axios.get("https://ipapi.co/json/").then((response) => {
+    let data = response.data;
+
+    if (data.country_name === "Ukraine") localStorage.setItem("lng", "ua");
+    else if (data.country_name === "Russian") localStorage.setItem("lng", "ru");
+    else localStorage.setItem("lng", "en");
+  });
 }
 
 ThemeActions(store.dispatch);
@@ -28,9 +40,11 @@ ThemeActions(store.dispatch);
 const NotUser = () => {
   root.render(
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <Suspense fallback={<div>...</div>}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Suspense>
     </Provider>
   );
 };
@@ -47,11 +61,13 @@ if (token) {
     if (excToken.exp < date && user) {
       root.render(
         <Provider store={store}>
-          <BrowserRouter>
-            <div className="root_main">
-              <AuthApp />
-            </div>
-          </BrowserRouter>
+          <Suspense fallback={<div>...</div>}>
+            <BrowserRouter>
+              <div className="root_main">
+                <AuthApp />
+              </div>
+            </BrowserRouter>
+          </Suspense>
         </Provider>
       );
     } else {

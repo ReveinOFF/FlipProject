@@ -1,11 +1,18 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./LeftMenu.module.scss";
 import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
+import { useEffect } from "react";
 
 export const LeftMenu = () => {
   const profile = useTypedSelector((state) => state.auth.user);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // useEffect(() => {
+  //   const pathname = location.pathname;
+
+  // }, [])
 
   // useEffect(() => {
   //   if (profile?.userImage)

@@ -32,7 +32,7 @@ namespace Core.Helpers
                     string uploadFile = Path.Combine(fileDestDir, newFileName);
 
                     using var image = Image.Load(file.OpenReadStream());
-                    image.Mutate(x => x.Resize(100, 100));
+                    image.Mutate(x => x.Resize(148, 148));
                     await image.SaveAsync(uploadFile);
 
                     return (FilePath: uploadFile, FileName: newFileName);
@@ -123,7 +123,7 @@ namespace Core.Helpers
                         });
 
                         using var image = Image.Load(item.OpenReadStream());
-                        image.Mutate(x => x.Resize(100, 100));
+                        image.Mutate(x => x.Resize(528, 755));
                         image.Save(Path.Combine(fileDestDir, name));
                     }
 
