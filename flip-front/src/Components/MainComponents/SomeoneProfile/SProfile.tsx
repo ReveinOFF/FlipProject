@@ -3,20 +3,27 @@ import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { CreatedPost, FollowUser } from "../../../Interface/Profile";
+import { useTranslation } from "react-i18next";
 
 export const SProfile = (props) => {
   const { profile } = props;
 
   const myProfile = useTypedSelector((state) => state.auth.user);
+  const [t] = useTranslation("translation");
+
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [selector, setSelector] = useState(1);
+
+  useEffect(() => {
+    document.title = `${profile.name} - Flip`;
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
       axios
         .get(`user/check/${myProfile?.id}/follow/${profile?.id}`)
         .then((res) => {
-          setIsFollow(res.data);
+          if (res.status === 200) setIsFollow(res.data);
         });
     }, 400);
   }, [myProfile?.id, profile?.id]);
@@ -27,8 +34,10 @@ export const SProfile = (props) => {
     await axios
       .post("user/follow", follow)
       .then((res) => {
-        alert("Followed");
-        setIsFollow(true);
+        if (res.status === 200) {
+          alert("Followed");
+          setIsFollow(true);
+        }
       })
       .catch((err) => alert("Error followed"));
   };
@@ -37,8 +46,10 @@ export const SProfile = (props) => {
     await axios
       .delete(`user/${myProfile?.id}/unfollow/${profile?.id}`)
       .then((res) => {
-        alert("UnFollowed");
-        setIsFollow(false);
+        if (res.status === 200) {
+          alert("UnFollowed");
+          setIsFollow(false);
+        }
       })
       .catch((err) => alert("Error unfollowed"));
   };
@@ -84,9 +95,15 @@ export const SProfile = (props) => {
                   </svg>
                 </div>
                 <div className={styles.profile_count}>
-                  <div>ПІДПИСНИКИ: {profile.followers}</div>
-                  <div>ПІДПИСКИ: {profile.followings}</div>
-                  <div>ДОПИСИ: {profile.createdPost.length}</div>
+                  <div>{`${t("main.s_profile.foll_ers")} ${
+                    profile.followers
+                  }`}</div>
+                  <div>{`${t("main.s_profile.foll_ing")} ${
+                    profile.followings
+                  }`}</div>
+                  <div>{`${t("main.s_profile.post")} ${
+                    profile.createdPost.length
+                  }`}</div>
                 </div>
                 {profile.description && !profile.isPrivateUser && (
                   <div className={styles.profile_description}>
@@ -111,11 +128,15 @@ export const SProfile = (props) => {
             </div>
             <div className={styles.profile_btn}>
               {isFollow ? (
-                <button onClick={UnFollow}>Відстежується</button>
+                <button onClick={UnFollow}>
+                  {t("main.s_profile.is_follow")}
+                </button>
               ) : (
-                <button onClick={Follow}>Стежити</button>
+                <button onClick={Follow}>
+                  {t("main.s_profile.is_not_follow")}
+                </button>
               )}
-              <button>Повідомлення</button>
+              <button>{t("main.s_profile.notif_btn")}</button>
             </div>
           </div>
         </div>
@@ -126,7 +147,7 @@ export const SProfile = (props) => {
             className={selector === 1 ? styles.select : ""}
             onClick={() => setSelector(1)}
           >
-            дописи
+            {t("main.s_profile.post2")}
           </div>
           <div
             className={selector === 2 ? styles.select : ""}
@@ -138,7 +159,7 @@ export const SProfile = (props) => {
         <div className={styles.profile_data_imgs}>
           {profile.createdPost && selector === 1 && !profile.isPrivateUser && (
             <>
-              {profile.createdPost.map((item: CreatedPost, index) => (
+              {profile.createdPost.map((item: CreatedPost) => (
                 <img
                   key={item.id}
                   src={`http://localhost:5170/resources/postfiles/default/${item.file[0]}`}

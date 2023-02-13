@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
 import i18n from "../../../Assets/i18n/i18n";
@@ -12,8 +11,6 @@ export const AuthBg = () => {
 
   const theme = useTypedSelector((state) => state.theme.mode);
   const dispatch = useDispatch();
-
-  const [t] = useTranslation("translation");
 
   useEffect(() => {
     if (theme === "light") setMode("light");
@@ -59,8 +56,6 @@ export const AuthBg = () => {
       dispatch({ type: "Theme", payload: { mode: "light" } });
     }
   };
-
-  // <h1>{t("title")}</h1>;
 
   return (
     <div className={`main-auth ${mode}`}>

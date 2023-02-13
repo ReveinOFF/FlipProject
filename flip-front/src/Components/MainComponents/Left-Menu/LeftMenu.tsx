@@ -1,10 +1,14 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./LeftMenu.module.scss";
 import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
+import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 export const LeftMenu = () => {
   const profile = useTypedSelector((state) => state.auth.user);
+  const [t] = useTranslation("translation");
+  const navigator = useNavigate();
 
   // useEffect(() => {
   //   if (profile?.userImage)
@@ -13,24 +17,24 @@ export const LeftMenu = () => {
   //     ).then((res) => setImage(res));
   // }, []);
 
-  // const Logout = () => {
-  //   const refreshToken = localStorage.getItem("refreshToken");
-  //   axios
-  //     .post("account/revoke-token", refreshToken, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     })
-  //     .then((res) => {
-  //       if (res.status === 200) {
-  //         localStorage.removeItem("token");
-  //         localStorage.removeItem("refreshToken");
+  const Logout = () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    axios
+      .post("account/revoke-token", refreshToken, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("refreshToken");
 
-  //         navigate("/");
-  //         window.location.reload();
-  //       }
-  //     });
-  // };
+          navigator("/");
+          window.location.reload();
+        }
+      });
+  };
 
   return (
     <div className={styles.left_menu}>
@@ -87,17 +91,23 @@ export const LeftMenu = () => {
             <div className={styles.profile_inf}>
               <div className={styles.inf_btn}>
                 <div className={styles.count}>{profile.createdPost.length}</div>
-                <div className={styles.inf_text}>дописів</div>
+                <div className={styles.inf_text}>
+                  {t("main.left_menu.post")}
+                </div>
               </div>
 
               <div className={`${styles.foll_ng} ${styles.inf_btn}`}>
                 <div className={styles.count}>{profile.followers}</div>
-                <div className={styles.inf_text}>підписників</div>
+                <div className={styles.inf_text}>
+                  {t("main.left_menu.foll_ers")}
+                </div>
               </div>
 
               <div className={styles.inf_btn}>
                 <div className={styles.count}>{profile.followings}</div>
-                <div className={styles.inf_text}>підписок</div>
+                <div className={styles.inf_text}>
+                  {t("main.left_menu.foll_ing")}
+                </div>
               </div>
             </div>
           </>
@@ -162,7 +172,7 @@ export const LeftMenu = () => {
             </defs>
           </svg>
 
-          <div>Головна</div>
+          <div>{t("main.left_menu.main")}</div>
         </NavLink>
 
         <NavLink to="/fliper" className={styles.btn}>
@@ -252,7 +262,7 @@ export const LeftMenu = () => {
             </defs>
           </svg>
 
-          <div>Повідомлення</div>
+          <div>{t("main.left_menu.messages")}</div>
         </NavLink>
 
         <NavLink to={`/${profile?.name}`} className={styles.btn}>
@@ -297,7 +307,7 @@ export const LeftMenu = () => {
             </defs>
           </svg>
 
-          <div>Профіль</div>
+          <div>{t("main.left_menu.profile")}</div>
         </NavLink>
 
         <NavLink to="/settings" className={styles.btn}>
@@ -342,8 +352,53 @@ export const LeftMenu = () => {
             </defs>
           </svg>
 
-          <div>Налаштування</div>
+          <div>{t("main.left_menu.settings")}</div>
         </NavLink>
+
+        <div className={styles.btn} onClick={Logout}>
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 30 30"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15 19.6875C12.4125 19.6875 10.3125 17.5875 10.3125 15C10.3125 12.4125 12.4125 10.3125 15 10.3125C17.5875 10.3125 19.6875 12.4125 19.6875 15C19.6875 17.5875 17.5875 19.6875 15 19.6875ZM15 12.1875C13.45 12.1875 12.1875 13.45 12.1875 15C12.1875 16.55 13.45 17.8125 15 17.8125C16.55 17.8125 17.8125 16.55 17.8125 15C17.8125 13.45 16.55 12.1875 15 12.1875Z"
+              fill="url(#paint0_linear_418_1318)"
+            />
+            <path
+              d="M19.0125 27.7374C18.75 27.7374 18.4875 27.6999 18.225 27.6374C17.45 27.4249 16.8 26.9374 16.3875 26.2499L16.2375 25.9999C15.5 24.7249 14.4875 24.7249 13.75 25.9999L13.6125 26.2374C13.2 26.9374 12.55 27.4374 11.775 27.6374C10.9875 27.8499 10.175 27.7374 9.4875 27.3249L7.3375 26.0874C6.95972 25.8709 6.62832 25.5821 6.36226 25.2375C6.09619 24.8928 5.90068 24.4991 5.78691 24.0788C5.67313 23.6586 5.64333 23.22 5.6992 22.7882C5.75506 22.3564 5.89551 21.9398 6.1125 21.5624C6.475 20.9249 6.575 20.3499 6.3625 19.9874C6.15 19.6249 5.6125 19.4124 4.875 19.4124C3.05 19.4124 1.5625 17.9249 1.5625 16.0999V13.8999C1.5625 12.0749 3.05 10.5874 4.875 10.5874C5.6125 10.5874 6.15 10.3749 6.3625 10.0124C6.575 9.64987 6.4875 9.07487 6.1125 8.43737C5.675 7.67487 5.5625 6.77487 5.7875 5.92487C6.0125 5.06237 6.5625 4.34987 7.3375 3.91237L9.5 2.67487C10.9125 1.83737 12.775 2.32487 13.625 3.76237L13.775 4.01237C14.5125 5.28737 15.525 5.28737 16.2625 4.01237L16.4 3.77487C17.25 2.32487 19.1125 1.83737 20.5375 2.68737L22.6875 3.92487C23.0653 4.14133 23.3967 4.43014 23.6627 4.77478C23.9288 5.11943 24.1243 5.51314 24.2381 5.93341C24.3519 6.35368 24.3817 6.79225 24.3258 7.22405C24.2699 7.65585 24.1295 8.0724 23.9125 8.44987C23.55 9.08737 23.45 9.66237 23.6625 10.0249C23.875 10.3874 24.4125 10.5999 25.15 10.5999C26.975 10.5999 28.4625 12.0874 28.4625 13.9124V16.1124C28.4625 17.9374 26.975 19.4249 25.15 19.4249C24.4125 19.4249 23.875 19.6374 23.6625 19.9999C23.45 20.3624 23.5375 20.9374 23.9125 21.5749C24.35 22.3374 24.475 23.2374 24.2375 24.0874C24.1288 24.5103 23.9354 24.9067 23.669 25.2527C23.4026 25.5986 23.0686 25.8868 22.6875 26.0999L20.525 27.3374C20.05 27.5999 19.5375 27.7374 19.0125 27.7374ZM15 23.1124C16.1125 23.1124 17.15 23.8124 17.8625 25.0499L18 25.2874C18.15 25.5499 18.4 25.7374 18.7 25.8124C19 25.8874 19.3 25.8499 19.55 25.6999L21.7125 24.4499C22.0425 24.2595 22.2841 23.9466 22.3847 23.5791C22.4854 23.2117 22.437 22.8193 22.25 22.4874C21.5375 21.2624 21.45 19.9999 22 19.0374C22.55 18.0749 23.6875 17.5249 25.1125 17.5249C25.9125 17.5249 26.55 16.8874 26.55 16.0874V13.8874C26.55 13.0999 25.9125 12.4499 25.1125 12.4499C23.6875 12.4499 22.55 11.8999 22 10.9374C21.45 9.97487 21.5375 8.71237 22.25 7.48737C22.4375 7.16237 22.4875 6.77487 22.3875 6.39987C22.2875 6.02487 22.05 5.72487 21.725 5.52487L19.5625 4.28737C19.432 4.21087 19.2878 4.16086 19.138 4.14019C18.9882 4.11952 18.8357 4.12861 18.6894 4.16692C18.5431 4.20524 18.4058 4.27203 18.2854 4.36348C18.1649 4.45493 18.0637 4.56924 17.9875 4.69987L17.85 4.93737C17.1375 6.17487 16.1 6.87487 14.9875 6.87487C13.875 6.87487 12.8375 6.17487 12.125 4.93737L11.9875 4.68737C11.8322 4.43191 11.5833 4.24717 11.2938 4.17246C11.0043 4.09775 10.6971 4.13898 10.4375 4.28737L8.275 5.53737C7.94497 5.72774 7.70339 6.04064 7.60275 6.40811C7.50211 6.77557 7.55053 7.1679 7.7375 7.49987C8.45 8.72487 8.5375 9.98737 7.9875 10.9499C7.4375 11.9124 6.3 12.4624 4.875 12.4624C4.075 12.4624 3.4375 13.0999 3.4375 13.8999V16.0999C3.4375 16.8874 4.075 17.5374 4.875 17.5374C6.3 17.5374 7.4375 18.0874 7.9875 19.0499C8.5375 20.0124 8.45 21.2749 7.7375 22.4999C7.55 22.8249 7.5 23.2124 7.6 23.5874C7.7 23.9624 7.9375 24.2624 8.2625 24.4624L10.425 25.6999C10.6875 25.8624 11 25.8999 11.2875 25.8249C11.5875 25.7499 11.8375 25.5499 12 25.2874L12.1375 25.0499C12.85 23.8249 13.8875 23.1124 15 23.1124Z"
+              fill="url(#paint1_linear_418_1318)"
+            />
+            <defs>
+              <linearGradient
+                id="paint0_linear_418_1318"
+                x1="8.49425"
+                y1="18.75"
+                x2="19.8513"
+                y2="18.4994"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
+              </linearGradient>
+              <linearGradient
+                id="paint1_linear_418_1318"
+                x1="-3.65465"
+                y1="25.1947"
+                x2="28.9308"
+                y2="24.4356"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="#000000" />
+                <stop offset="1" stopColor="#000000" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <div>Вийти</div>
+        </div>
       </div>
     </div>
   );

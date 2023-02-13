@@ -1,11 +1,18 @@
 import styles from "./UProfile.module.scss";
 import { CreatedPost } from "../../../Interface/Profile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export const UProfile = (props) => {
   const { profile } = props;
 
   const [selector, setSelector] = useState(1);
+
+  const [t] = useTranslation("translation");
+
+  useEffect(() => {
+    document.title = `${profile.name} - Flip`;
+  }, []);
 
   return (
     <>
@@ -118,7 +125,7 @@ export const UProfile = (props) => {
             className={selector === 1 ? styles.select : ""}
             onClick={() => setSelector(1)}
           >
-            дописи
+            {t("main.u_profile.post")}
           </div>
           <div
             className={selector === 2 ? styles.select : ""}
@@ -130,7 +137,7 @@ export const UProfile = (props) => {
             className={selector === 3 ? styles.select : ""}
             onClick={() => setSelector(3)}
           >
-            збережено
+            {t("main.u_profile.saved")}
           </div>
         </div>
         <div className={styles.profile_data_imgs}>
