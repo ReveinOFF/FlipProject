@@ -124,7 +124,8 @@
             "title_page": "Налаштування - Flip"
         },
         "message_selection": {
-            "title_page": "Повідомлення - Flip"
+            "title_page": "Повідомлення - Flip",
+            "search_ph": "Пошук"
         },
         "message_room": {
             

@@ -30,7 +30,10 @@ export const MessageSelection = () => {
           />
         </svg>
 
-        <input type="text" placeholder="Пошук" />
+        <input
+          type="text"
+          placeholder={t("main.message_selection.search_ph").toString()}
+        />
       </div>
 
       <div className={styles.messages_box}>
