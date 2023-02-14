@@ -6,6 +6,7 @@ import { AuthSelection } from "../../Pages/Auth/Selection/AuthSelection";
 import { SignIn } from "../../Pages/Auth/SignIn/SignIn";
 import { SignUp } from "../../Pages/Auth/SignUp/SignUp";
 import { ConfirmEmail } from "../../Components/Auth/SignUp/ConfirmEmail/ConfirmEmail";
+import { PageNotFound } from "../../Pages/PageNotFound/PageNotFound";
 
 const App = () => {
   return (
@@ -17,7 +18,7 @@ const App = () => {
           <Route path="signup" element={<SignUp />} />
           <Route path="email-confirm" element={<ConfirmEmail />} />
         </Route>
-        {/* <Route path="*" element={<NoMatch />} /> */}
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </GoogleReCaptchaProvider>
   );

@@ -9,7 +9,7 @@
 
   margin-top: 40px;
 
-  width: 988px;
+  width: 100%;
 
   .information {
     display: flex;
@@ -250,28 +250,22 @@
   }
 
   .profile_data_imgs {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-column-gap: 27.5px;
+
+    width: 100vh;
 
     img {
-      width: 311px;
-      height: 311px;
+      height: 301px;
+      width: 301px;
 
-      background: url(../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg),
-        #d9d9d9;
+      margin-bottom: 29px;
+
+      background: #d9d9d9;
       background-position: center;
       background-size: 311px;
       border-radius: 15px;
-
-      margin-right: 27.5px;
-      margin-bottom: 29px;
-
-      &:nth-child(3n + 3) {
-        @media (min-width: 1919px) {
-          margin-right: 0px;
-        }
-      }
     }
   }
 }
