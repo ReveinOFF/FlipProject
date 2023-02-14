@@ -7,6 +7,7 @@ import { Main } from "../../Pages/Main/Main";
 import { Settings } from "../../Pages/Settings/Settings";
 import { MessageSelection } from "../../Pages/Messages/MessageSelection/MessageSelection";
 import { MessageRoom } from "../../Pages/Messages/MessageRoom/MessageRoom";
+import { PageNotFound } from "../../Pages/PageNotFound/PageNotFound";
 
 const AuthApp = () => {
   return (
@@ -19,7 +20,7 @@ const AuthApp = () => {
         <Route path="messages" element={<MessageSelection />} />
         <Route path="testmessages" element={<MessageRoom />} />
       </Route>
-      {/* <Route path="*" element={<NoMatch />} /> */}
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 };
