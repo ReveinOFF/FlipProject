@@ -1,0 +1,157 @@
+.messages {
+  margin-top: 40px;
+
+  .input {
+    position: relative;
+
+    margin-bottom: 30px;
+
+    svg {
+      position: absolute;
+
+      margin-left: 6px;
+      margin-top: 9px;
+    }
+
+    input {
+      width: 988px;
+      height: 40px;
+
+      border: 0;
+
+      padding-left: 39px;
+      padding-right: 39px;
+
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 19px;
+
+      background: #f8f8f8;
+      border-radius: 10px;
+
+      color: #474747;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .messages_box {
+    .message_active {
+      background: linear-gradient(#f5f5f5, #f5f5f5) padding-box,
+        linear-gradient(to right, #3ed647, #10cfe7) border-box;
+
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    .message_inactive {
+      background: #f5f5f5;
+    }
+
+    .message_user {
+      display: flex;
+
+      border: 2px solid transparent;
+
+      border-radius: 15px;
+
+      padding-left: 40px;
+      padding-right: 40px;
+      padding-top: 17px;
+      padding-bottom: 17px;
+
+      cursor: pointer;
+
+      margin-bottom: 5px;
+
+      .img {
+        position: relative;
+
+        img {
+          min-width: 86px;
+          min-height: 87px;
+
+          max-width: 86px;
+          max-height: 87px;
+
+          border-radius: 50%;
+
+          margin-right: 20px;
+        }
+
+        div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          position: absolute;
+          right: 10px;
+          top: 60px;
+
+          height: 31px;
+          width: 31px;
+
+          font-style: normal;
+          font-weight: 300;
+          font-size: 18px;
+          line-height: 22px;
+
+          color: #ffffff;
+
+          background: linear-gradient(
+            88.74deg,
+            #48d824 -18.76%,
+            #10d0ea 99.82%
+          );
+          border-radius: 50%;
+        }
+      }
+
+      .message_select {
+        display: flex;
+        justify-content: space-between;
+
+        width: 100%;
+
+        .message_text {
+          .message_name {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 24px;
+            text-transform: capitalize;
+
+            color: #2f2f2f;
+
+            margin-bottom: 15px;
+          }
+
+          .message {
+            font-style: normal;
+            font-weight: 300;
+            font-size: 17px;
+            line-height: 21px;
+
+            color: #2f2f2f;
+          }
+        }
+
+        .message_icon {
+          display: flex;
+          align-items: center;
+
+          svg {
+            &:first-child {
+              margin-right: 15px;
+            }
+            &:last-child {
+              margin-left: 15px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
