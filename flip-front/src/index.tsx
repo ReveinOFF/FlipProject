@@ -11,7 +11,7 @@ import App from "./Main/NotAuth/App";
 import { AuthUser } from "./Components/Auth/store/actions";
 import jwtDecode from "jwt-decode";
 import { JwtDecoder } from "./Interface/JwtDecoder";
-import "./Assets/i18n/i18n";
+import "./Components/i18n/i18n";
 import { Suspense } from "react";
 import axios from "axios";
 

@@ -324,7 +324,7 @@ namespace FlipBack.Controllers
             var user = await _userManager.Users.Include(x => x.RefreshTokens).SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
 
             if (user == null)
-                return BadRequest("Token is required!");
+                return BadRequest("Token not found!");
 
             var refToken = user.RefreshTokens.Single(x => x.Token == refreshToken);
 

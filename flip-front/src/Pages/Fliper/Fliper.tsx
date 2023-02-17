@@ -1,7 +1,6 @@
 import styles from "./Fliper.module.scss";
 import { useEffect, useRef, useState } from "react";
 import video from "./video.mp4";
-import img from "../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
 import { useTranslation } from "react-i18next";
 
 export const Fliper = () => {
@@ -128,7 +127,13 @@ export const Fliper = () => {
         <div className={styles.information}>
           <div className={styles.profile}>
             <div className={styles.image_profile}>
-              <img src={img} alt="" />
+              <img
+                src={
+                  process.env.PUBLIC_URL +
+                  "/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
+                }
+                alt=""
+              />
             </div>
             <div className={styles.name_profile}>Влад Тощий</div>
             <button className={styles.follow_profile}>

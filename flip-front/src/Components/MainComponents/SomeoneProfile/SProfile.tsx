@@ -65,7 +65,12 @@ export const SProfile = (props) => {
               alt=""
             />
           ) : (
-            <div className={styles.profile_img}></div>
+            <div
+              className={styles.profile_img}
+              style={{
+                background: `url(${process.env.PUBLIC_URL}/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg), #d9d9d9`,
+              }}
+            ></div>
           )}
           <div className={styles.information}>
             <div className={styles.inf_menu}>

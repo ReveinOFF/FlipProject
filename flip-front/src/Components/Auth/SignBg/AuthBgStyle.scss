@@ -121,6 +121,10 @@
 .block-img {
   position: absolute;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
     #eaeaea;
   border-radius: 20px;
@@ -131,8 +135,6 @@
 }
 
 .bi1 {
-  // transform: rotate(31.18deg);
-
   width: 176.69px;
   height: 214px;
 
@@ -142,6 +144,13 @@
   bottom: 69.48%;
 
   animation: 20s linear 0s infinite alternate anim-bi1;
+
+  img {
+    width: 166.69px;
+    height: 204px;
+
+    border-radius: 20px;
+  }
 }
 
 .bi2 {
@@ -155,6 +164,13 @@
   top: 0%;
   bottom: 84.6%;
   animation: 20s linear 0s infinite alternate anim-bi2;
+
+  img {
+    width: 141.98px;
+    height: 174.07px;
+
+    border-radius: 20px;
+  }
 }
 
 .bi3 {
@@ -169,6 +185,13 @@
   bottom: 61.4%;
 
   animation: 20s linear 0s infinite alternate anim-bi3;
+
+  img {
+    width: 109.28px;
+    height: 134.46px;
+
+    border-radius: 20px;
+  }
 }
 
 .bi4 {
@@ -183,6 +206,13 @@
   bottom: 24.32%;
 
   animation: 20s linear 0s infinite alternate anim-bi4;
+
+  img {
+    width: 90.51px;
+    height: 111.74px;
+
+    border-radius: 20px;
+  }
 }
 
 .bi5 {
@@ -197,6 +227,13 @@
   bottom: 17.04%;
 
   animation: 20s linear 0s infinite alternate anim-bi5;
+
+  img {
+    width: 55.38px;
+    height: 69.19px;
+
+    border-radius: 20px;
+  }
 }
 
 .bi6 {
@@ -211,19 +248,43 @@
   bottom: 75.47%;
 
   animation: 20s linear 0s infinite alternate anim-bi6;
+
+  div {
+    position: absolute;
+    width: 114.85px;
+    height: 141.21px;
+
+    filter: drop-shadow(16px 16px 20px blue);
+
+    border-radius: 20px;
+  }
+
+  img {
+    width: 114.85px;
+    height: 141.21px;
+
+    border-radius: 20px;
+  }
 }
 
 .bi7 {
   transform: rotate(51.3deg);
 
-  width: 113.81px;
-  height: 137.84px;
+  width: 103.81px;
+  height: 127.84px;
 
   left: 86.54%;
   right: 7.67%;
   top: 56.71%;
   bottom: 31.76%;
   animation: 20s linear 0s infinite alternate anim-bi7;
+
+  img {
+    width: 93.81px;
+    height: 117.84px;
+
+    border-radius: 20px;
+  }
 }
 
 .bi8 {
@@ -238,6 +299,13 @@
   bottom: 17.51%;
 
   animation: 20s linear 0s infinite alternate anim-bi8;
+
+  img {
+    width: 109.28px;
+    height: 134.46px;
+
+    border-radius: 20px;
+  }
 }
 
 .bi9 {
@@ -252,6 +320,13 @@
   bottom: 5.38%;
 
   animation: 20s linear 0s infinite alternate anim-bi9;
+
+  img {
+    width: 187.76px;
+    height: 229.52px;
+
+    border-radius: 20px;
+  }
 }
 
 .super-small-ball {

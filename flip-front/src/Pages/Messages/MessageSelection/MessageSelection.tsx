@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./MessageSelection.module.scss";
-import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
 
 export const MessageSelection = () => {
   const [t] = useTranslation("translation");
@@ -39,7 +38,13 @@ export const MessageSelection = () => {
       <div className={styles.messages_box}>
         <div className={`${styles.message_user} ${styles.message_active}`}>
           <div className={styles.img}>
-            <img src={img} alt="" />
+            <img
+              src={
+                process.env.PUBLIC_URL +
+                "/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
+              }
+              alt=""
+            />
             <div>1</div>
           </div>
           <div className={styles.message_select}>
@@ -82,7 +87,13 @@ export const MessageSelection = () => {
 
         <div className={`${styles.message_user} ${styles.message_inactive}`}>
           <div className={styles.img}>
-            <img src={img} alt="" />
+            <img
+              src={
+                process.env.PUBLIC_URL +
+                "/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
+              }
+              alt=""
+            />
           </div>
           <div className={styles.message_select}>
             <div className={styles.message_text}>

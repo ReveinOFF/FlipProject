@@ -1,7 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./LeftMenu.module.scss";
-import img from "../../../Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 
@@ -17,9 +16,9 @@ export const LeftMenu = () => {
   //     ).then((res) => setImage(res));
   // }, []);
 
-  const Logout = () => {
+  const Logout = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
-    axios
+    await axios
       .post("account/revoke-token", refreshToken, {
         headers: {
           "Content-Type": "application/json",
@@ -77,7 +76,10 @@ export const LeftMenu = () => {
                 <div
                   className={styles.profile_img}
                   style={{
-                    background: `url(${img})`,
+                    background: `url(${
+                      process.env.PUBLIC_URL +
+                      "/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
+                    }})`,
                     backgroundPosition: "center",
                     backgroundSize: "148px",
                   }}
