@@ -186,5 +186,48 @@
 
       cursor: pointer;
     }
+
+    .send_message {
+      position: absolute;
+      bottom: 27px;
+      left: 46px;
+
+      display: flex;
+      align-items: center;
+
+      input {
+        border: 0;
+        outline: none;
+
+        width: 588px;
+        height: 50px;
+
+        padding-left: 22px;
+        padding-right: 121px;
+
+        border-radius: 24.7648px;
+
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 150%;
+
+        letter-spacing: -0.011em;
+
+        background: rgba(255, 255, 255, 0.5);
+        color: rgba(47, 47, 47, 0.8);
+      }
+
+      .like {
+        position: absolute;
+        right: 80px;
+      }
+
+      .send {
+        position: absolute;
+
+        right: 34px;
+      }
+    }
   }
 }

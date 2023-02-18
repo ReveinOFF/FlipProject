@@ -265,5 +265,35 @@
       background-size: 311px;
       border-radius: 15px;
     }
+
+    .flipers {
+      height: 301px;
+      width: 301px;
+
+      cursor: pointer;
+
+      position: relative;
+
+      img {
+        height: 100%;
+        width: 100%;
+
+        margin-bottom: 29px;
+
+        background: #d9d9d9;
+        background-position: center;
+        background-size: 311px;
+        border-radius: 15px;
+      }
+
+      svg {
+        position: absolute;
+
+        z-index: 1;
+
+        left: 35%;
+        top: 35%;
+      }
+    }
   }
 }

@@ -198,7 +198,7 @@ namespace FlipBack.Controllers
                     return BadRequest("Email not found!");
 
                 var token = _userManager.GeneratePasswordResetTokenAsync(user);
-                var confirmationLink = $"http://uniwox.com/recoverpassword?token={token}";
+                var confirmationLink = $"http://localhost:3000/recover-password?token={token}&email={email}";
 
                 MailDataDTO mailData = new MailDataDTO()
                 {

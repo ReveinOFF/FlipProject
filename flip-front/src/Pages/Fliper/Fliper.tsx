@@ -2,10 +2,13 @@ import styles from "./Fliper.module.scss";
 import { useEffect, useRef, useState } from "react";
 import video from "./video.mp4";
 import { useTranslation } from "react-i18next";
+import { FliperMenu } from "../../Components/MainComponents/FliperMenu/FliperMenu";
 
 export const Fliper = () => {
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [t] = useTranslation("translation");
@@ -137,7 +140,7 @@ export const Fliper = () => {
             </div>
             <div className={styles.name_profile}>Влад Тощий</div>
             <button className={styles.follow_profile}>
-              {t("main.btn_follow.fliper")}
+              {t("main.fliper.btn_follow")}
             </button>
           </div>
           <div className={styles.description}>
@@ -253,6 +256,7 @@ export const Fliper = () => {
           />
         </svg>
         <svg
+          onClick={() => setShowMenu(!showMenu)}
           className={styles.menu_btn}
           width="31"
           height="31"
@@ -281,6 +285,8 @@ export const Fliper = () => {
           fillOpacity="0.6"
         />
       </svg>
+
+      {/* {showMenu && <FliperMenu/>} */}
     </div>
   );
 };
