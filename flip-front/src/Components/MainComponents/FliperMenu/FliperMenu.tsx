@@ -1,6 +1,9 @@
+import { useTranslation } from "react-i18next";
 import styles from "./FliperMenu.module.scss";
 
 export const FliperMenu = () => {
+  const [t] = useTranslation("translation");
+
   return (
     <div className={styles.fliper_menu}>
       <div className={styles.fliper}>
@@ -15,10 +18,10 @@ export const FliperMenu = () => {
         </svg>
 
         <div className={styles.menu}>
-          <div className={styles.btn}>Перейти до публікації</div>
-          <div className={styles.btn}>Поділитись</div>
-          <div className={styles.btn}>Копіювати посилання </div>
-          <div className={styles.last_btn}>Поскаржитись</div>
+          <div className={styles.btn}>{t("main.fliper_menu.btn1")}</div>
+          <div className={styles.btn}>{t("main.fliper_menu.btn2")}</div>
+          <div className={styles.btn}>{t("main.fliper_menu.btn3")}</div>
+          <div className={styles.last_btn}>{t("main.fliper_menu.btn4")}</div>
         </div>
       </div>
     </div>

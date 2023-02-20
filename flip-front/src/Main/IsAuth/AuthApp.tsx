@@ -1,26 +1,62 @@
 import { Route, Routes } from "react-router-dom";
-import { Fliper } from "../../Pages/Fliper/Fliper";
-import { Loyout } from "../../Components/Layout/Layout";
-import { Profile } from "../../Pages/Profile/Profile";
 import "./AuthApp.scss";
-import { Main } from "../../Pages/Main/Main";
-import { Settings } from "../../Pages/Settings/Settings";
-import { MessageSelection } from "../../Pages/Messages/MessageSelection/MessageSelection";
-import { MessageRoom } from "../../Pages/Messages/MessageRoom/MessageRoom";
-import { PageNotFound } from "../../Pages/PageNotFound/PageNotFound";
+import React from "react";
+
+const LoyoutComponent = React.lazy(() =>
+  import("../../Components/Layout/Layout").then((module) => ({
+    default: module.Loyout,
+  }))
+);
+const MainComponent = React.lazy(() =>
+  import("../../Pages/Main/Main").then((module) => ({
+    default: module.Main,
+  }))
+);
+const ProfileComponent = React.lazy(() =>
+  import("../../Pages/Profile/Profile").then((module) => ({
+    default: module.Profile,
+  }))
+);
+const FliperComponent = React.lazy(() =>
+  import("../../Pages/Fliper/Fliper").then((module) => ({
+    default: module.Fliper,
+  }))
+);
+const SettingsComponent = React.lazy(() =>
+  import("../../Pages/Settings/Settings").then((module) => ({
+    default: module.Settings,
+  }))
+);
+const MessagesSelectionComponent = React.lazy(() =>
+  import("../../Pages/Messages/MessageSelection/MessageSelection").then(
+    (module) => ({
+      default: module.MessageSelection,
+    })
+  )
+);
+const MessagesRoomComponent = React.lazy(() =>
+  import("../../Pages/Messages/MessageRoom/MessageRoom").then((module) => ({
+    default: module.MessageRoom,
+  }))
+);
+const PNFComponent = React.lazy(() =>
+  import("../../Pages/PageNotFound/PageNotFound").then((module) => ({
+    default: module.PageNotFound,
+  }))
+);
 
 const AuthApp = () => {
   return (
     <Routes>
-      <Route path="/" element={<Loyout />}>
-        <Route index element={<Main />} />
-        <Route path=":profile" element={<Profile />} />
-        <Route path="fliper" element={<Fliper />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="messages" element={<MessageSelection />} />
-        <Route path="testmessages" element={<MessageRoom />} />
+      <Route path="/" element={<LoyoutComponent />}>
+        <Route index element={<MainComponent />} />
+        <Route path=":profile" element={<ProfileComponent />} />
+        <Route path="fliper" element={<FliperComponent />} />
+        <Route path="settings" element={<SettingsComponent />} />
+        <Route path="messages" element={<MessagesSelectionComponent />} />
+        <Route path="testmessages" element={<MessagesRoomComponent />} />
       </Route>
-      <Route path="*" element={<PageNotFound />} />
+      <Route path="*" element={<PNFComponent />} />
     </Routes>
   );
 };

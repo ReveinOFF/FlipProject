@@ -26,7 +26,46 @@
 
       border-radius: 16.1307px;
 
+      object-fit: fill;
+
       background: #f8f8f8;
+    }
+
+    &:hover .progress_bar,
+    &:hover .send_message,
+    &:hover .profile {
+      opacity: 1;
+
+      transform: scaleY(1);
+    }
+
+    &:hover .header {
+      opacity: 1;
+
+      transform: scaleY(1) matrix(1, 0, 0, -1, 0, 0);
+    }
+
+    .header {
+      position: absolute;
+      top: -152px;
+      left: 0;
+      right: 0;
+
+      opacity: 0;
+
+      transform: scaleY(0) matrix(1, 0, 0, -1, 0, 0);
+      transform-origin: bottom;
+
+      height: 152px;
+
+      background: linear-gradient(
+        360deg,
+        rgba(47, 47, 47, 0.7) 40.63%,
+        rgba(47, 47, 47, 0) 100%
+      );
+      border-radius: 15px;
+
+      transition: all 0.5s ease-out;
     }
 
     .progress_bar {
@@ -34,6 +73,11 @@
       top: 0px;
       left: 0;
       right: 0;
+
+      opacity: 0;
+
+      transform: scaleY(0);
+      transform-origin: top;
 
       margin-top: 27.44px;
       margin-left: 44.89px;
@@ -44,6 +88,8 @@
       height: 5px;
 
       background: #939292;
+
+      transition: all 0.5s;
 
       .progress {
         border-radius: 15px;
@@ -61,11 +107,18 @@
       margin-top: 15px;
       margin-left: 45.89px;
 
+      opacity: 0;
+
+      transform: scaleY(0);
+      transform-origin: top;
+
       display: flex;
       align-items: center;
 
       position: absolute;
       top: 27.44px;
+
+      transition: all 0.5s;
 
       .img {
         border-radius: 50%;
@@ -166,6 +219,10 @@
           justify-content: center;
 
           cursor: pointer;
+
+          .paused {
+            margin-bottom: 1px;
+          }
         }
       }
     }
@@ -189,11 +246,26 @@
 
     .send_message {
       position: absolute;
-      bottom: 27px;
-      left: 46px;
+      bottom: 0;
+      left: 0;
+
+      opacity: 0;
+
+      transform: scaleY(0);
+      transform-origin: bottom;
+
+      padding-bottom: 27px;
+      padding-left: 46px;
+      padding-right: 41px;
+      padding-top: 27px;
+
+      background: rgba(47, 47, 47, 0.7);
+      border-radius: 15px;
 
       display: flex;
       align-items: center;
+
+      transition: all 0.5s;
 
       input {
         border: 0;
@@ -220,13 +292,13 @@
 
       .like {
         position: absolute;
-        right: 80px;
+        right: 110px;
       }
 
       .send {
         position: absolute;
 
-        right: 34px;
+        right: 64px;
       }
     }
   }

@@ -12,8 +12,8 @@ import { AuthUser } from "./Components/Auth/store/actions";
 import jwtDecode from "jwt-decode";
 import { JwtDecoder } from "./Interface/JwtDecoder";
 import "./Components/i18n/i18n";
-import { Suspense } from "react";
 import axios from "axios";
+import { Suspense } from "react";
 
 const ldMode = localStorage.getItem("LightDarkMode");
 const token = localStorage.getItem("token");
@@ -39,13 +39,13 @@ ThemeActions(store.dispatch);
 
 const NotUser = () => {
   root.render(
-    <Provider store={store}>
-      <Suspense fallback={<div>...</div>}>
+    <Suspense fallback="">
+      <Provider store={store}>
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </Suspense>
-    </Provider>
+      </Provider>
+    </Suspense>
   );
 };
 
@@ -60,15 +60,15 @@ if (token) {
   setTimeout(() => {
     if (excToken.exp < date && user) {
       root.render(
-        <Provider store={store}>
-          <Suspense fallback={<div>...</div>}>
+        <Suspense fallback="">
+          <Provider store={store}>
             <BrowserRouter>
               <div className="root_main">
                 <AuthApp />
               </div>
             </BrowserRouter>
-          </Suspense>
-        </Provider>
+          </Provider>
+        </Suspense>
       );
     } else {
       NotUser();

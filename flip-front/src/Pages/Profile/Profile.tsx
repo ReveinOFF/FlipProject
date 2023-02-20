@@ -5,6 +5,7 @@ import { SProfile } from "../../Components/MainComponents/SomeoneProfile/SProfil
 import { UProfile } from "../../Components/MainComponents/UserProfile/UProfile";
 import { useTypedSelector } from "../../Hooks/useTypedSelector";
 import { IUser } from "../../Interface/Profile";
+import { PageNotFound } from "../PageNotFound/PageNotFound";
 
 export const Profile = () => {
   const myuser = useTypedSelector((state) => state.auth.user);
@@ -22,7 +23,7 @@ export const Profile = () => {
       axios
         .get(`user/get-user-by-name/${params.profile}`)
         .then((res) => {
-          setProfile(res.data);
+          if (res.status === 200) setProfile(res.data);
         })
         .catch((err) => console.log("Error get-user"));
     }
@@ -30,7 +31,7 @@ export const Profile = () => {
 
   return (
     <>
-      {profile && (
+      {profile ? (
         <div>
           {itsMe ? (
             <UProfile profile={profile} />
@@ -38,6 +39,8 @@ export const Profile = () => {
             <SProfile profile={profile} />
           )}
         </div>
+      ) : (
+        <PageNotFound />
       )}
     </>
   );

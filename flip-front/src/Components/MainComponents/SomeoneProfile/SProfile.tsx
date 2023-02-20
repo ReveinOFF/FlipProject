@@ -81,10 +81,13 @@ export const SProfile = (props) => {
                     (@{profile.userName})
                   </div>
                   <svg
-                    onClick={() => {
-                      navigator.clipboard.writeText(profile.userName);
-                      alert("Скопировано");
-                    }}
+                    onClick={() =>
+                      navigator.clipboard
+                        .writeText(profile.userName)
+                        .then(() => {
+                          alert("Copied");
+                        })
+                    }
                     width="19"
                     height="22"
                     viewBox="0 0 19 22"
@@ -99,17 +102,19 @@ export const SProfile = (props) => {
                     />
                   </svg>
                 </div>
-                <div className={styles.profile_count}>
-                  <div>{`${t("main.s_profile.foll_ers")} ${
-                    profile.followers
-                  }`}</div>
-                  <div>{`${t("main.s_profile.foll_ing")} ${
-                    profile.followings
-                  }`}</div>
-                  <div>{`${t("main.s_profile.post")} ${
-                    profile.createdPost.length
-                  }`}</div>
-                </div>
+                {!profile.isPrivateUser && (
+                  <div className={styles.profile_count}>
+                    <div>{`${t("main.s_profile.foll_ers")} ${
+                      profile.followers
+                    }`}</div>
+                    <div>{`${t("main.s_profile.foll_ing")} ${
+                      profile.followings
+                    }`}</div>
+                    <div>{`${t("main.s_profile.post")} ${
+                      profile.createdPost.length
+                    }`}</div>
+                  </div>
+                )}
                 {profile.description && !profile.isPrivateUser && (
                   <div className={styles.profile_description}>
                     {profile.description}
@@ -141,29 +146,202 @@ export const SProfile = (props) => {
                   {t("main.s_profile.is_not_follow")}
                 </button>
               )}
-              <button>{t("main.s_profile.notif_btn")}</button>
+              {!profile.isPrivateUser && (
+                <button>{t("main.s_profile.notif_btn")}</button>
+              )}
             </div>
           </div>
         </div>
       </div>
-      <div className={styles.profile_data}>
-        <div className={styles.selection}>
-          <div
-            className={selector === 1 ? styles.select : ""}
-            onClick={() => setSelector(1)}
+      {profile.isPrivateUser ? (
+        <div className={styles.private_user}>
+          <svg
+            width="136"
+            height="180"
+            viewBox="0 0 136 180"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            {t("main.s_profile.post2")}
-          </div>
-          <div
-            className={selector === 2 ? styles.select : ""}
-            onClick={() => setSelector(2)}
-          >
-            flipers
+            <mask id="path-1-inside-1_1463_8555" fill="white">
+              <path d="M136 112C136 93.9653 128.836 76.6692 116.083 63.9167C103.331 51.1643 86.0347 44 68 44C49.9653 44 32.6692 51.1643 19.9167 63.9167C7.16427 76.6692 2.72317e-06 93.9653 0 112L5.80242 112C5.80242 95.5042 12.3554 79.684 24.0197 68.0197C35.684 56.3554 51.5042 49.8024 68 49.8024C84.4958 49.8024 100.316 56.3554 111.98 68.0197C123.645 79.684 130.198 95.5042 130.198 112H136Z" />
+            </mask>
+            <path
+              d="M136 112C136 93.9653 128.836 76.6692 116.083 63.9167C103.331 51.1643 86.0347 44 68 44C49.9653 44 32.6692 51.1643 19.9167 63.9167C7.16427 76.6692 2.72317e-06 93.9653 0 112L5.80242 112C5.80242 95.5042 12.3554 79.684 24.0197 68.0197C35.684 56.3554 51.5042 49.8024 68 49.8024C84.4958 49.8024 100.316 56.3554 111.98 68.0197C123.645 79.684 130.198 95.5042 130.198 112H136Z"
+              stroke="#2F2F2F"
+              strokeWidth="150"
+              strokeLinejoin="round"
+              mask="url(#path-1-inside-1_1463_8555)"
+            />
+            <circle cx="17.5" cy="17.5" r="17.5" fill="#2F2F2F" />
+            <circle cx="118.5" cy="17.5" r="17.5" fill="#2F2F2F" />
+          </svg>
+
+          <div className={styles.private_header}>Це закритий акаунт</div>
+
+          <div className={styles.private_description}>
+            Стежте за користувачем, щоб бачити його дописи та flipers
           </div>
         </div>
-        <div className={styles.profile_data_imgs}>
-          {profile.createdPost && selector === 1 && !profile.isPrivateUser && (
-            <>
+      ) : (
+        <div className={styles.profile_data}>
+          <div className={styles.selection}>
+            <div
+              className={selector === 1 ? styles.select : ""}
+              onClick={() => setSelector(1)}
+            >
+              {t("main.s_profile.post2")}
+            </div>
+            <div
+              className={selector === 2 ? styles.select : ""}
+              onClick={() => setSelector(2)}
+            >
+              flipers
+            </div>
+          </div>
+
+          {profile.createdPost.length === 0 && selector === 1 && (
+            <div className={styles.not_find}>
+              <div className={styles.nf_question}>?</div>
+
+              <svg
+                width="165"
+                height="165"
+                viewBox="0 0 165 165"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="82.3532"
+                  cy="82.3532"
+                  r="79.8826"
+                  stroke="#2F2F2F"
+                  strokeOpacity="0.5"
+                  strokeWidth="4.94119"
+                />
+                <circle
+                  cx="110.353"
+                  cy="52.7058"
+                  r="13.1765"
+                  fill="#2F2F2F"
+                  fillOpacity="0.5"
+                />
+                <circle
+                  cx="51.0603"
+                  cy="52.7058"
+                  r="13.1765"
+                  fill="#2F2F2F"
+                  fillOpacity="0.5"
+                />
+                <path
+                  d="M64 119H96.5"
+                  stroke="#8D8D8D"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+
+              <div className={styles.nf_text}>
+                {t("main.s_profile.nf_post")}
+              </div>
+            </div>
+          )}
+
+          {profile.createdPost.length === 0 && selector === 2 && (
+            <div className={styles.not_find}>
+              <div className={styles.nf_question}>?</div>
+
+              <svg
+                width="165"
+                height="165"
+                viewBox="0 0 165 165"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="82.3532"
+                  cy="82.3532"
+                  r="79.8826"
+                  stroke="#2F2F2F"
+                  strokeOpacity="0.5"
+                  strokeWidth="4.94119"
+                />
+                <circle
+                  cx="110.353"
+                  cy="52.7058"
+                  r="13.1765"
+                  fill="#2F2F2F"
+                  fillOpacity="0.5"
+                />
+                <circle
+                  cx="51.0603"
+                  cy="52.7058"
+                  r="13.1765"
+                  fill="#2F2F2F"
+                  fillOpacity="0.5"
+                />
+                <path
+                  d="M64 119H96.5"
+                  stroke="#8D8D8D"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+
+              <div className={styles.nf_text}>
+                {t("main.s_profile.nf_fliper")}
+              </div>
+            </div>
+          )}
+
+          {profile.createdPost.length === 0 && selector === 3 && (
+            <div className={styles.not_find}>
+              <div className={styles.nf_question}>?</div>
+
+              <svg
+                width="165"
+                height="165"
+                viewBox="0 0 165 165"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="82.3532"
+                  cy="82.3532"
+                  r="79.8826"
+                  stroke="#2F2F2F"
+                  strokeOpacity="0.5"
+                  strokeWidth="4.94119"
+                />
+                <circle
+                  cx="110.353"
+                  cy="52.7058"
+                  r="13.1765"
+                  fill="#2F2F2F"
+                  fillOpacity="0.5"
+                />
+                <circle
+                  cx="51.0603"
+                  cy="52.7058"
+                  r="13.1765"
+                  fill="#2F2F2F"
+                  fillOpacity="0.5"
+                />
+                <path
+                  d="M64 119H96.5"
+                  stroke="#8D8D8D"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+
+              <div className={styles.nf_text}>
+                {t("main.s_profile.nf_save_pf")}
+              </div>
+            </div>
+          )}
+
+          {profile.createdPost.length > 0 && selector === 1 && (
+            <div className={styles.profile_data_imgs}>
               {profile.createdPost.map((item: CreatedPost) => (
                 <img
                   key={item.id}
@@ -171,11 +349,11 @@ export const SProfile = (props) => {
                   alt=""
                 />
               ))}
-            </>
+            </div>
           )}
 
-          {profile.createdPost && selector === 2 && !profile.isPrivateUser && (
-            <>
+          {profile.createdPost.length > 0 && selector === 2 && (
+            <div className={styles.profile_data_imgs}>
               {profile.createdPost.map((item: CreatedPost) => (
                 <div className={styles.flipers} key={item.id}>
                   <img
@@ -219,10 +397,10 @@ export const SProfile = (props) => {
                   </svg>
                 </div>
               ))}
-            </>
+            </div>
           )}
         </div>
-      </div>
+      )}
     </>
   );
 };

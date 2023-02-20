@@ -9,13 +9,6 @@ export const LeftMenu = () => {
   const [t] = useTranslation("translation");
   const navigator = useNavigate();
 
-  // useEffect(() => {
-  //   if (profile?.userImage)
-  //     getBase64FromUrl(
-  //       `http://localhost:5170/resources/userimages/${profile.id}/${profile.userImage}`
-  //     ).then((res) => setImage(res));
-  // }, []);
-
   const Logout = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
     await axios
@@ -76,12 +69,7 @@ export const LeftMenu = () => {
                 <div
                   className={styles.profile_img}
                   style={{
-                    background: `url(${
-                      process.env.PUBLIC_URL +
-                      "/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
-                    }})`,
-                    backgroundPosition: "center",
-                    backgroundSize: "148px",
+                    background: `url(${process.env.PUBLIC_URL}/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg), #d9d9d9`,
                   }}
                 ></div>
               )}
