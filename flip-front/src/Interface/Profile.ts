@@ -14,6 +14,14 @@ export interface IUser {
   createdPost: CreatedPost[];
 }
 
+export interface GetUsers {
+  id: string;
+  userImage: string;
+  name: string;
+  userName: string;
+  isVerified: boolean;
+}
+
 export interface CreatedPost {
   id: string;
   file: string;

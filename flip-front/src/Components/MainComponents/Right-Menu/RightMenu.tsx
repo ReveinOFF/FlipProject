@@ -1,8 +1,33 @@
 import { useTranslation } from "react-i18next";
 import styles from "./RightMenu.module.scss";
+import lodash from "lodash";
+import { useCallback, useEffect, useState } from "react";
+import { GetUsers } from "../../../Interface/Profile";
+import axios from "axios";
 
 export const RightMenu = () => {
   const [t] = useTranslation("translation");
+
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchUser, setSearchUser] = useState<GetUsers[]>();
+
+  const debouncedSearch = useCallback(
+    lodash.debounce((query) => {
+      axios.get(`user/search-users/${query}`).then((res) => {
+        setSearchUser(res.data);
+      });
+    }, 500),
+    []
+  );
+
+  useEffect(() => {
+    if (searchQuery !== "") debouncedSearch(searchQuery);
+  }, [searchQuery, debouncedSearch]);
+
+  const handleSearch = (e) => {
+    const { value } = e.target;
+    setSearchQuery(value);
+  };
 
   return (
     <div className={styles.right_menu}>
@@ -28,6 +53,7 @@ export const RightMenu = () => {
           <input
             type="text"
             placeholder={t("main.right_menu.search_ph").toString()}
+            onChange={handleSearch}
           />
         </label>
 
@@ -154,6 +180,35 @@ export const RightMenu = () => {
             </clipPath>
           </defs>
         </svg>
+      </div>
+
+      <div
+        className={`${styles.user_search} ${
+          searchQuery.length > 0 ? styles.show_search : styles.not_show_search
+        }`}
+      >
+        {searchUser &&
+          searchUser.map((item) => (
+            <div className={styles.find_user} key={item.id}>
+              {item.userImage ? (
+                <img
+                  src={`http://localhost:5170/resources/userimages/${item.id}/${item.userImage}`}
+                  alt=""
+                />
+              ) : (
+                <img
+                  src="/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
+                  alt=""
+                />
+              )}
+              <div className={styles.find_user_inf}>
+                <div className={styles.find_user_name}>{item.name}</div>
+                <div className={styles.find_user_username}>
+                  @{item.userName}
+                </div>
+              </div>
+            </div>
+          ))}
       </div>
 
       <div className={styles.bottom_menu}>

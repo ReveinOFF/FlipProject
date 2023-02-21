@@ -106,6 +106,18 @@ namespace FlipBack.Controllers
             return Ok(getUser);
         }
 
+        [HttpGet("search-users/{name}")]
+        public async Task<IActionResult> SearchUsers(string name)
+        {
+            var user = await _userManager.Users
+                .Where(x => x.Name.ToLower().Contains(name.ToLower()) || x.UserName.ToLower().Contains(name.ToLower()))
+                .ToListAsync();
+
+            var getUser = _mapper.Map<List<GetUsersDTO>>(user);
+
+            return Ok(getUser);
+        }
+
         [HttpPost("follow")]
         public async Task<IActionResult> FollowUser([FromBody] FollowDTO followDTO)
         {

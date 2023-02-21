@@ -8,13 +8,80 @@
   position: sticky;
   top: 40px;
 
+  .show_search {
+    transform: scaleY(1);
+    opacity: 1;
+
+    transition: all 0.5s ease-out;
+  }
+
+  .not_show_search {
+    transform: scaleY(0);
+    opacity: 0;
+
+    transition: all 0.5s ease-out;
+  }
+
+  .user_search {
+    position: absolute;
+
+    background: #f8f8f8;
+    border-radius: 9px;
+
+    transform-origin: top;
+
+    width: 394px;
+    height: 725px;
+
+    transition: all 0.5s ease-out;
+
+    .find_user {
+      display: flex;
+      align-items: center;
+
+      margin-left: 33px;
+      margin-top: 24px;
+      margin-bottom: 15px;
+
+      img {
+        width: 59px;
+        height: 59px;
+
+        margin-right: 7px;
+
+        border-radius: 50%;
+      }
+
+      .find_user_name {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 150%;
+
+        letter-spacing: -0.011em;
+
+        color: #000000;
+      }
+
+      .find_user_username {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 150%;
+
+        letter-spacing: -0.011em;
+
+        color: #a3a3a3;
+      }
+    }
+  }
+
   .top_menu {
     display: flex;
     align-items: center;
     justify-content: space-between;
 
     padding: 7px 9px;
-    margin-bottom: 20px;
 
     width: 394px;
     height: 49px;
@@ -80,6 +147,8 @@
     width: 394px;
 
     border-radius: 15px;
+
+    margin-top: 20px;
 
     padding-left: 22px;
     padding-right: 12px;
