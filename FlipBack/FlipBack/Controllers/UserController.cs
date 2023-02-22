@@ -89,23 +89,6 @@ namespace FlipBack.Controllers
             return Ok(getUser);
         }
 
-        [HttpGet("get-users")]
-        public async Task<IActionResult> GetUsers()
-        {
-            var user = await _userManager.Users
-                .Include(x => x.Followers)
-                .ThenInclude(x => x.Follower)
-                .OrderByDescending(x => x.Followers.Count)
-                .ToListAsync();
-
-            if (user == null)
-                return BadRequest("User not found!");
-
-            var getUser = _mapper.Map<List<GetUsersDTO>>(user);
-
-            return Ok(getUser);
-        }
-
         [HttpGet("search-users/{name}")]
         public async Task<IActionResult> SearchUsers(string name)
         {

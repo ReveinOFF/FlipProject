@@ -259,7 +259,11 @@
       padding-right: 41px;
       padding-top: 27px;
 
-      background: rgba(47, 47, 47, 0.7);
+      background: linear-gradient(
+        359.44deg,
+        rgba(47, 47, 47, 0.7) 46.88%,
+        rgba(47, 47, 47, 0) 100%
+      );
       border-radius: 15px;
 
       display: flex;
