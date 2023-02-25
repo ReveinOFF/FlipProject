@@ -190,6 +190,7 @@ export const RightMenu = () => {
         }`}
       >
         {searchUser &&
+          searchQuery.length > 0 &&
           searchUser.map((item) => (
             <div
               className={styles.find_user}

@@ -39,6 +39,39 @@ namespace FlipBack.Controllers
             _captchaValidator = captchaValidator;
         }
 
+        [HttpGet("check-email/{email}")]
+        public async Task<IActionResult> CheckEmail(string email) 
+        {
+            var findUser = await _userManager.FindByEmailAsync(email);
+
+            if (findUser != null && findUser.EmailConfirmed)
+                return BadRequest("This email is already exists");
+
+            return Ok();
+        }
+
+        [HttpGet("check-login/{login}")]
+        public async Task<IActionResult> CheckLogin(string userName)
+        {
+            var findUser = await _userManager.FindByNameAsync(userName);
+
+            if (findUser != null)
+                return BadRequest("This login is already exists");
+
+            return Ok();
+        }
+
+        [HttpGet("check-name/{name}")]
+        public async Task<IActionResult> CheckName(string name)
+        {
+            var findUser = await _userManager.Users.Where(x => x.Name == name).FirstOrDefaultAsync();
+
+            if (findUser != null)
+                return BadRequest("This login is already exists");
+
+            return Ok();
+        }
+
         [HttpPost("registration")]
         public async Task<IActionResult> Register([FromForm] RegisterDTO register)
         {

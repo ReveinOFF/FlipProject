@@ -67,6 +67,10 @@ export const RegPhaseTwo = () => {
                 phase: SelectPhase.confrim,
               },
             });
+          else {
+            errors.Email = t("auht.signup.reg_p2.yup.error").toString();
+            errors.UserName = t("auht.signup.reg_p2.yup.error").toString();
+          }
         })
         .catch(() => {
           alert(
@@ -95,10 +99,38 @@ export const RegPhaseTwo = () => {
         loginMatches,
         t("auht.signup.reg_p2.yup.username.mat").toString()
       )
+      .test(
+        "check-login",
+        t("auht.signup.reg_p2.yup.username.exist").toString(),
+        async (value) => {
+          try {
+            const response = await axios.get(`account/check-login/${value}`);
+
+            if (response.status === 200) return true;
+            else return false;
+          } catch (error) {
+            return false;
+          }
+        }
+      )
       .required(t("auht.signup.reg_p2.yup.username.req").toString()),
     Email: yup
       .string()
       .email(t("auht.signup.reg_p2.yup.email.mat").toString())
+      .test(
+        "check-email",
+        t("auht.signup.reg_p2.yup.email.exist").toString(),
+        async (value) => {
+          try {
+            const response = await axios.get(`account/check-email/${value}`);
+
+            if (response.status === 200) return true;
+            else return false;
+          } catch (error) {
+            return false;
+          }
+        }
+      )
       .required(t("auht.signup.reg_p2.yup.email.req").toString()),
     Password: yup
       .string()

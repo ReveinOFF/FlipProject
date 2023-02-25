@@ -46,19 +46,18 @@ export const SignIn = () => {
 
     value.RecaptchaToken = await executeRecaptcha();
 
-    await axios
-      .post("account/login", value)
-      .then((res) => {
-        if (res.status === 200) {
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("refreshToken", res.data.refreshToken);
+    await axios.post("account/login", value).then((res) => {
+      if (res.status === 200) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("refreshToken", res.data.refreshToken);
 
-          navigate("/");
-          window.location.reload();
-        }
-      })
-      .catch()
-      .finally(() => navigate("/"));
+        navigate("/");
+        window.location.reload();
+      } else {
+        errors.Name = t("auht.signin.yup.error").toString();
+        errors.Password = t("auht.signin.yup.error").toString();
+      }
+    });
   };
 
   const formik = useFormik({

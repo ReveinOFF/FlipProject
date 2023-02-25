@@ -15,6 +15,8 @@ import { getAge } from "../../../Convertor/convertDate";
 import { parse } from "date-fns";
 import { useTypedSelector } from "../../../../Hooks/useTypedSelector";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
+import lodash from "lodash";
 
 export const RegPhaseOne = () => {
   const dispatch = useDispatch();
@@ -39,6 +41,20 @@ export const RegPhaseOne = () => {
       .string()
       .min(5, t("auht.signup.reg_p1.yup.name.min").toString())
       .max(15, t("auht.signup.reg_p1.yup.name.max").toString())
+      .test(
+        "check-name",
+        t("auht.signup.reg_p1.yup.name.exist").toString(),
+        async (value) => {
+          try {
+            const response = await axios.get(`account/check-name/${value}`);
+
+            if (response.status === 200) return true;
+            else return false;
+          } catch (error) {
+            return false;
+          }
+        }
+      )
       .required(t("auht.signup.reg_p1.yup.name.req").toString()),
     Phone: yup
       .string()
@@ -85,6 +101,7 @@ export const RegPhaseOne = () => {
     initialValues: initialValues,
     validationSchema: Reg1Schema,
     onSubmit: PhaseOne,
+    validateOnChange: true,
   });
 
   const {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 
 export const ConfirmEmail = () => {
   const [searchParams] = useSearchParams();
@@ -13,22 +13,20 @@ export const ConfirmEmail = () => {
       axios
         .post("account/email-confirm", { email, token })
         .then((res) => {
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("refreshToken", res.data.refreshToken);
+          if (res.status === 200) {
+            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("refreshToken", res.data.refreshToken);
+
+            navigate("/");
+            window.location.reload();
+          }
         })
         .catch((err) => {
           alert("Помилка у підтвердженні пошти!");
-        })
-        .finally(() => navigate("/"));
+        });
       return true;
     } else return false;
   };
 
-  return (
-    <div>
-      {!CheckToken() && (
-        <>Щось пішло не так! Можливо, помилка в неправильній силі!</>
-      )}
-    </div>
-  );
+  return <div>{!CheckToken() && <Navigate to="error/404" />}</div>;
 };
