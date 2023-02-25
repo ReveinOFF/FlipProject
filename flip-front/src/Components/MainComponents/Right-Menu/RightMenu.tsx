@@ -4,9 +4,11 @@ import lodash from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import { GetUsers } from "../../../Interface/Profile";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const RightMenu = () => {
   const [t] = useTranslation("translation");
+  const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchUser, setSearchUser] = useState<GetUsers[]>();
@@ -189,7 +191,11 @@ export const RightMenu = () => {
       >
         {searchUser &&
           searchUser.map((item) => (
-            <div className={styles.find_user} key={item.id}>
+            <div
+              className={styles.find_user}
+              key={item.id}
+              onClick={() => navigate(item.name)}
+            >
               {item.userImage ? (
                 <img
                   src={`http://localhost:5170/resources/userimages/${item.id}/${item.userImage}`}

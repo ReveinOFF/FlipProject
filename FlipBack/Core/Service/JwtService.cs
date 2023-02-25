@@ -53,41 +53,17 @@ namespace Core.Service
 
         public async Task<TokenDTO> RefreshTokens(string refreshToken)
         {
-            var userRefreshToken = _userManager.Users.SingleOrDefaultAsync(x => x.RefreshTokens.Any(t => t.Token == refreshToken)).Result;
+            var userRefreshToken = _userManager.Users.Include((x) => x.RefreshTokens).SingleOrDefaultAsync(x => x.RefreshTokens.Any(t => t.Token == refreshToken)).Result;
 
             if (userRefreshToken == null)
             {
                 return null;
             }
 
-            var refToken = userRefreshToken.RefreshTokens.Single(x => x.Token == refreshToken);
+            var refToken = userRefreshToken.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken);
 
             if (DateTime.UtcNow > refToken.Expires)
                 return null;
-
-            var newJwtToken = CreateToken(userRefreshToken);
-            var newRefreshToken = GenerateRefreshToken();
-
-            userRefreshToken.RefreshTokens.Add(newRefreshToken);
-            await _userManager.UpdateAsync(userRefreshToken);
-
-            return new TokenDTO
-            {
-                Token = newJwtToken,
-                RefreshToken = newRefreshToken.Token
-            };
-        }
-
-        public async Task<TokenDTO> RenewTokens(string refreshToken)
-        {
-            var userRefreshToken = _userManager.Users.SingleOrDefaultAsync(x => x.RefreshTokens.Any(t => t.Token == refreshToken)).Result;
-
-            if (userRefreshToken == null)
-            {
-                return null;
-            }
-
-            var refToken = userRefreshToken.RefreshTokens.Single(x => x.Token == refreshToken);
 
             var newJwtToken = CreateToken(userRefreshToken);
             var newRefreshToken = GenerateRefreshToken();
@@ -112,7 +88,7 @@ namespace Core.Service
                 return new RefreshToken 
                 { 
                     Token = Convert.ToBase64String(refToken),
-                    Expires = DateTime.UtcNow.AddDays(7)
+                    Expires = DateTime.UtcNow.AddDays(30)
                 };
             }
         }

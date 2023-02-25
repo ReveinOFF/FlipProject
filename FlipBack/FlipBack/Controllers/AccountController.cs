@@ -292,25 +292,12 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshTokens(string refreshToken)
+        public async Task<IActionResult> RefreshTokens([FromBody] string refreshToken)
         {
             var tokens = await _jwtService.RefreshTokens(refreshToken);
 
             if (tokens == null)
                 return Unauthorized("Invalid Refresh Token!");
-
-            await RevokeToken(refreshToken);
-
-            return Ok(tokens);
-        }
-
-        [HttpPost("renew-token")]
-        public async Task<IActionResult> RenewTokens(string refreshToken)
-        {
-            var tokens = await _jwtService.RenewTokens(refreshToken);
-
-            if (tokens == null)
-                return ValidationProblem("Invalid Renew Token!");
 
             await RevokeToken(refreshToken);
 

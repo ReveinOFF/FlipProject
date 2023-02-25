@@ -147,9 +147,6 @@
     }
 
     .profile_description {
-      width: 645px;
-      height: 38px;
-
       font-style: normal;
       font-weight: 300;
       font-size: 16px;
@@ -292,8 +289,8 @@
     width: 100vh;
 
     img {
-      height: 301px;
-      width: 301px;
+      height: auto;
+      width: 100%;
 
       margin-bottom: 29px;
 

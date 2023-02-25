@@ -11,7 +11,7 @@ export const UProfile = (props) => {
   const [t] = useTranslation("translation");
 
   useEffect(() => {
-    document.title = `${profile.name} - Flip`;
+    document.title = profile.name;
   }, []);
 
   return (

@@ -15,7 +15,7 @@ export const SProfile = (props) => {
   const [selector, setSelector] = useState(1);
 
   useEffect(() => {
-    document.title = `${profile.name} - Flip`;
+    document.title = profile.name;
   }, []);
 
   useEffect(() => {

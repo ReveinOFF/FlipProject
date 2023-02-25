@@ -8,7 +8,6 @@ namespace Core.Interface
     {
         string CreateToken(User user);
         Task<TokenDTO> RefreshTokens(string refreshToken);
-        Task<TokenDTO> RenewTokens(string refreshToken);
         RefreshToken GenerateRefreshToken();
     }
 }
