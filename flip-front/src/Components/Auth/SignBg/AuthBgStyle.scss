@@ -138,12 +138,21 @@
   width: 176.69px;
   height: 214px;
 
-  left: 5.64%;
+  left: 1%;
   top: 12.61%;
-  right: 85.36%;
-  bottom: 69.48%;
 
   animation: 20s linear 0s infinite alternate anim-bi1;
+
+  div {
+    position: absolute;
+
+    background: linear-gradient(-50deg, transparent -60%, #ffffff 100%);
+
+    border-radius: 20px;
+
+    width: 100%;
+    height: 100%;
+  }
 
   img {
     width: 166.69px;
@@ -160,10 +169,20 @@
   height: 184.07px;
 
   left: 20.5%;
-  right: 71.75%;
   top: 0%;
-  bottom: 84.6%;
+
   animation: 20s linear 0s infinite alternate anim-bi2;
+
+  div {
+    position: absolute;
+
+    background: linear-gradient(-50deg, transparent -60%, #ffffff 100%);
+
+    border-radius: 20px;
+
+    width: 100%;
+    height: 100%;
+  }
 
   img {
     width: 141.98px;
@@ -179,12 +198,21 @@
   width: 119.28px;
   height: 144.46px;
 
-  left: 13.89%;
-  right: 80.03%;
-  top: 26.52%;
-  bottom: 61.4%;
+  left: 10%;
+  top: 39.52%;
 
   animation: 20s linear 0s infinite alternate anim-bi3;
+
+  div {
+    position: absolute;
+
+    background: linear-gradient(-50deg, transparent -60%, #ffffff 100%);
+
+    border-radius: 20px;
+
+    width: 100%;
+    height: 100%;
+  }
 
   img {
     width: 109.28px;
@@ -200,12 +228,21 @@
   width: 100.51px;
   height: 121.74px;
 
-  left: 17.46%;
-  right: 77.42%;
+  left: 4.46%;
   top: 65.5%;
-  bottom: 24.32%;
 
   animation: 20s linear 0s infinite alternate anim-bi4;
+
+  div {
+    position: absolute;
+
+    background: linear-gradient(-50deg, transparent -60%, #ffffff 100%);
+
+    border-radius: 20px;
+
+    width: 100%;
+    height: 100%;
+  }
 
   img {
     width: 90.51px;
@@ -221,12 +258,21 @@
   width: 65.38px;
   height: 79.19px;
 
-  left: 22.62%;
-  right: 74.05%;
-  top: 76.34%;
-  bottom: 17.04%;
+  left: 13.62%;
+  bottom: -1%;
 
   animation: 20s linear 0s infinite alternate anim-bi5;
+
+  div {
+    position: absolute;
+
+    background: linear-gradient(-50deg, transparent -60%, #ffffff 100%);
+
+    border-radius: 20px;
+
+    width: 100%;
+    height: 100%;
+  }
 
   img {
     width: 55.38px;
@@ -242,21 +288,20 @@
   width: 124.85px;
   height: 151.21px;
 
-  left: 84.04%;
   right: 9.61%;
-  top: 11.88%;
-  bottom: 75.47%;
+  top: 0%;
 
   animation: 20s linear 0s infinite alternate anim-bi6;
 
   div {
     position: absolute;
-    width: 114.85px;
-    height: 141.21px;
 
-    filter: drop-shadow(16px 16px 20px blue);
+    background: linear-gradient(-50deg, transparent -60%, #ffffff 100%);
 
     border-radius: 20px;
+
+    width: 100%;
+    height: 100%;
   }
 
   img {
@@ -273,11 +318,21 @@
   width: 103.81px;
   height: 127.84px;
 
-  left: 86.54%;
   right: 7.67%;
-  top: 56.71%;
-  bottom: 31.76%;
+  bottom: 45.76%;
+
   animation: 20s linear 0s infinite alternate anim-bi7;
+
+  div {
+    position: absolute;
+
+    background: linear-gradient(-50deg, transparent -60%, #ffffff 100%);
+
+    border-radius: 20px;
+
+    width: 100%;
+    height: 100%;
+  }
 
   img {
     width: 93.81px;
@@ -293,12 +348,21 @@
   width: 119.28px;
   height: 144.46px;
 
-  left: 93.98%;
-  right: -0.05%;
-  top: 70.41%;
+  right: 5%;
   bottom: 17.51%;
 
   animation: 20s linear 0s infinite alternate anim-bi8;
+
+  div {
+    position: absolute;
+
+    background: linear-gradient(-50deg, transparent -60%, #ffffff 100%);
+
+    border-radius: 20px;
+
+    width: 100%;
+    height: 100%;
+  }
 
   img {
     width: 109.28px;
@@ -314,12 +378,21 @@
   width: 197.76px;
   height: 239.52px;
 
-  left: 84.55%;
-  right: 5.38%;
-  top: 74.59%;
+  right: 15.38%;
   bottom: 5.38%;
 
   animation: 20s linear 0s infinite alternate anim-bi9;
+
+  div {
+    position: absolute;
+
+    background: linear-gradient(-50deg, transparent -60%, #ffffff 100%);
+
+    border-radius: 20px;
+
+    width: 100%;
+    height: 100%;
+  }
 
   img {
     width: 187.76px;
@@ -331,10 +404,8 @@
 
 .super-small-ball {
   position: absolute;
-  left: 5.88%;
-  right: 93.51%;
+  left: 15.88%;
   top: 15.31%;
-  bottom: 83.69%;
 
   width: 12px;
   height: 12px;
@@ -398,50 +469,40 @@
 }
 
 .h1 {
-  left: 27.02%;
-  right: 72.13%;
-  top: 8.2%;
-  bottom: 90.45%;
+  left: 37.02%;
+  top: 5.2%;
 
   transform: rotate(80deg);
   animation: 30s linear 0s infinite alternate anim-h1;
 }
 
 .h2 {
-  left: 7.01%;
-  right: 92.15%;
-  top: 31.54%;
-  bottom: 67.11%;
+  left: 3.01%;
+  top: 41.54%;
 
   transform: rotate(80deg);
   animation: 30s linear 0s infinite alternate anim-h1;
 }
 
 .h3 {
-  left: 89.56%;
-  right: 9.59%;
-  top: 63.91%;
-  bottom: 34.73%;
+  right: 16.59%;
+  bottom: 30.73%;
 
   transform: rotate(10deg);
   animation: 30s linear 0s infinite alternate anim-h2;
 }
 
 .h4 {
-  left: 97.05%;
-  right: 2.1%;
-  top: 81.31%;
-  bottom: 17.33%;
+  right: 7.1%;
+  bottom: 0%;
 
   transform: rotate(10deg);
   animation: 30s linear 0s infinite alternate anim-h2;
 }
 
 .h5 {
-  left: 91.85%;
-  right: 7.3%;
-  top: 12.13%;
-  bottom: 86.51%;
+  right: 4.3%;
+  top: 30.13%;
 
   transform: rotate(10deg);
   animation: 30s linear 0s infinite alternate anim-h2;
@@ -469,16 +530,12 @@
 
 .sb1 {
   left: 22.99%;
-  right: 75.68%;
-  top: 47.18%;
-  bottom: 50.65%;
+  top: 37.18%;
 }
 
 .sb2 {
-  left: 6.59%;
-  right: 92.08%;
-  top: 62.9%;
-  bottom: 34.92%;
+  left: 1.59%;
+  bottom: 38.92%;
 }
 
 .sb3 {
@@ -577,10 +634,8 @@
 }
 
 .bm2 {
-  left: 78.92%;
-  right: 17.77%;
-  top: 75.12%;
-  bottom: 19.45%;
+  right: 24.77%;
+  bottom: 33.45%;
 }
 
 .bm3 {

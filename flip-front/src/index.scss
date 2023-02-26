@@ -24,6 +24,11 @@ body {
   }
 }
 
+button,
+input {
+  outline: none;
+}
+
 * {
   box-sizing: border-box;
 

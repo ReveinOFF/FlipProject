@@ -25,6 +25,8 @@ export const RegPhaseTwo = () => {
   const [preview, setPreview] = useState<any>();
   const [visible, setVisoiblity] = useState(false);
   const [visible2, setVisoiblity2] = useState(false);
+  const [typingTimeout, setTypingTimeout] = useState<any>();
+  const [typingTimeout2, setTypingTimeout2] = useState<any>();
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -103,14 +105,17 @@ export const RegPhaseTwo = () => {
         "check-login",
         t("auht.signup.reg_p2.yup.username.exist").toString(),
         async (value) => {
-          try {
-            const response = await axios.get(`account/check-login/${value}`);
-
-            if (response.status === 200) return true;
-            else return false;
-          } catch (error) {
-            return false;
-          }
+          if (typingTimeout) clearTimeout(typingTimeout);
+          return new Promise((resolve) => {
+            setTypingTimeout(
+              setTimeout(async () => {
+                await axios.get(`account/check-login/${value}`).then((res) => {
+                  if (res.status == 200) return resolve(true);
+                  else return resolve(false);
+                });
+              }, 500)
+            );
+          });
         }
       )
       .required(t("auht.signup.reg_p2.yup.username.req").toString()),
@@ -121,14 +126,17 @@ export const RegPhaseTwo = () => {
         "check-email",
         t("auht.signup.reg_p2.yup.email.exist").toString(),
         async (value) => {
-          try {
-            const response = await axios.get(`account/check-email/${value}`);
-
-            if (response.status === 200) return true;
-            else return false;
-          } catch (error) {
-            return false;
-          }
+          if (typingTimeout) clearTimeout(typingTimeout);
+          return new Promise((resolve) => {
+            setTypingTimeout(
+              setTimeout(async () => {
+                await axios.get(`account/check-email/${value}`).then((res) => {
+                  if (res.status == 200) return resolve(true);
+                  else return resolve(false);
+                });
+              }, 500)
+            );
+          });
         }
       )
       .required(t("auht.signup.reg_p2.yup.email.req").toString()),

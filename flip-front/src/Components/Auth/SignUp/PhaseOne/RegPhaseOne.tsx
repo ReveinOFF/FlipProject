@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RegPhase1Res } from "../../../../Interface/Registration";
 import {
   CustomButtonBG,
@@ -24,6 +24,8 @@ export const RegPhaseOne = () => {
   const reg = useTypedSelector((state) => state.reg);
   const [t] = useTranslation("translation");
 
+  const [typingTimeout, setTypingTimeout] = useState<any>();
+
   useEffect(() => {
     document.title = t("auht.signup.reg_p1.title_page");
   }, []);
@@ -42,17 +44,20 @@ export const RegPhaseOne = () => {
       .min(5, t("auht.signup.reg_p1.yup.name.min").toString())
       .max(15, t("auht.signup.reg_p1.yup.name.max").toString())
       .test(
-        "check-name",
+        "checkName",
         t("auht.signup.reg_p1.yup.name.exist").toString(),
         async (value) => {
-          try {
-            const response = await axios.get(`account/check-name/${value}`);
-
-            if (response.status === 200) return true;
-            else return false;
-          } catch (error) {
-            return false;
-          }
+          if (typingTimeout) clearTimeout(typingTimeout);
+          return new Promise((resolve) => {
+            setTypingTimeout(
+              setTimeout(async () => {
+                await axios.get(`account/check-name/${value}`).then((res) => {
+                  if (res.status == 200) return resolve(true);
+                  else return resolve(false);
+                });
+              }, 500)
+            );
+          });
         }
       )
       .required(t("auht.signup.reg_p1.yup.name.req").toString()),

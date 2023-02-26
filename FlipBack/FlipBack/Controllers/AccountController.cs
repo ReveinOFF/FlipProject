@@ -51,9 +51,9 @@ namespace FlipBack.Controllers
         }
 
         [HttpGet("check-login/{login}")]
-        public async Task<IActionResult> CheckLogin(string userName)
+        public async Task<IActionResult> CheckLogin(string login)
         {
-            var findUser = await _userManager.FindByNameAsync(userName);
+            var findUser = await _userManager.FindByNameAsync(login);
 
             if (findUser != null)
                 return BadRequest("This login is already exists");

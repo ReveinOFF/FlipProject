@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import i18n from "../../i18n/i18n";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import "./AuthBgStyle.scss";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export const AuthBg = () => {
   const [mode, setMode] = useState<string>("light");
@@ -160,61 +161,78 @@ export const AuthBg = () => {
         </div>
       </div>
       <div className="bg-auth">
-        {/* <div className="block-img bi1">
-          <img
-            src={process.env.PUBLIC_URL + "/Assets/Img/Auth/bi1.jpg"}
-            alt=""
-          />
-        </div>
-        <div className="block-img bi2">
-          <img
-            src={process.env.PUBLIC_URL + "/Assets/Img/Auth/bi2.jpg"}
-            alt=""
-          />
-        </div>
-        <div className="block-img bi3">
-          <img
-            src={process.env.PUBLIC_URL + "/Assets/Img/Auth/bi3.jpg"}
-            alt=""
-          />
-        </div>
-        <div className="block-img bi4">
-          <img
-            src={process.env.PUBLIC_URL + "/Assets/Img/Auth/bi4.jpg"}
-            alt=""
-          />
-        </div>
-        <div className="block-img bi5">
-          <img
-            src={process.env.PUBLIC_URL + "/Assets/Img/Auth/bi5.jpg"}
-            alt=""
-          />
-        </div>
-        <div className="block-img bi6">
+        <div className={`block-img bi1`}>
           <div></div>
-          <img
-            src={process.env.PUBLIC_URL + "/Assets/Img/Auth/bi6.jpg"}
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi1.jpg`}
             alt=""
+            loading="lazy"
           />
         </div>
-        <div className="block-img bi7">
-          <img
-            src={process.env.PUBLIC_URL + "/Assets/Img/Auth/bi7.jpg"}
+        <div className={`block-img bi2`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi2.jpg`}
             alt=""
+            loading="lazy"
           />
         </div>
-        <div className="block-img bi8">
-          <img
-            src={process.env.PUBLIC_URL + "/Assets/Img/Auth/bi8.jpg"}
+        <div className={`block-img bi3`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi3.jpg`}
             alt=""
+            loading="lazy"
           />
         </div>
-        <div className="block-img bi9">
-          <img
-            src={process.env.PUBLIC_URL + "/Assets/Img/Auth/bi9.jpg"}
+        <div className={`block-img bi4`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi4.jpg`}
             alt=""
+            loading="lazy"
           />
-        </div> */}
+        </div>
+        <div className={`block-img bi5`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi5.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi6`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi6.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi7`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi7.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi8`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi8.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi9`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi9.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
 
         <div className="super-small-ball" />
 
