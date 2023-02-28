@@ -14,6 +14,7 @@ import { JwtDecoder } from "./Interface/JwtDecoder";
 import "./Components/i18n/i18n";
 import axios from "axios";
 import { Suspense } from "react";
+import { Toast } from "./Components/Toast/Toast";
 
 const ldMode = localStorage.getItem("LightDarkMode");
 const token = localStorage.getItem("token");
@@ -43,6 +44,7 @@ const NotUser = () => {
       <Provider store={store}>
         <BrowserRouter>
           <App />
+          <Toast />
         </BrowserRouter>
       </Provider>
     </Suspense>
@@ -50,15 +52,12 @@ const NotUser = () => {
 };
 
 if (token) {
-  var user;
-  AuthUser(token as string, store.dispatch).then((value) => {
-    user = value;
-  });
+  AuthUser(token as string, store.dispatch);
   const excToken = jwtDecode<JwtDecoder>(token);
   const date = new Date().getTime();
 
   setTimeout(() => {
-    if (excToken.exp < date && user) {
+    if (excToken.exp < date) {
       root.render(
         <Suspense fallback="">
           <Provider store={store}>
@@ -66,6 +65,7 @@ if (token) {
               <div className="root_main">
                 <AuthApp />
               </div>
+              <Toast />
             </BrowserRouter>
           </Provider>
         </Suspense>

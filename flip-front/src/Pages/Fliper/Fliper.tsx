@@ -37,6 +37,10 @@ export const Fliper = () => {
     }
   };
 
+  const handleClick = () => {
+    setShowMenu(false);
+  };
+
   return (
     <div className={styles.fliper}>
       <svg
@@ -64,7 +68,6 @@ export const Fliper = () => {
               loop
               playsInline
               disablePictureInPicture
-              controlsList="nodownload"
               ref={videoRef}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
@@ -402,8 +405,7 @@ export const Fliper = () => {
         />
       </svg>
 
-      {/* <FliperMenu /> */}
-      {/* {showMenu && <FliperMenu/>} */}
+      <FliperMenu show={showMenu} onClick={handleClick} />
     </div>
   );
 };

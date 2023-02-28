@@ -119,11 +119,13 @@ namespace FlipBack.Controllers
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(token);
                 var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
-                var confirmationLink = $"http://localhost:3000/email-confirm?token={codeEncoded}&email={user.Email}";
+
+                string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "ConfirmEmail.html"));
+                Body = Body.Replace("#url#", $"http://localhost:3000/email-confirm?token={codeEncoded}&email={user.Email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
-                    Body = $"Hello {user.Email}. Confirmation email link {confirmationLink}",
+                    Body = Body,
                     To = user.Email,
                     Subject = "Confirmation email"
                 };
@@ -230,12 +232,16 @@ namespace FlipBack.Controllers
                 if (user == null)
                     return BadRequest("Email not found!");
 
-                var token = _userManager.GeneratePasswordResetTokenAsync(user);
-                var confirmationLink = $"http://localhost:3000/recover-password?token={token}&email={email}";
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(token);
+                var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
+
+                string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPassword.html"));
+                Body = Body.Replace("#url#", $"http://localhost:3000/recover-password?token={codeEncoded}&email={email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
-                    Body = $"Hello {user.Email}. If you have forgotten your password, follow this link {confirmationLink}",
+                    Body = Body,
                     To = user.Email,
                     Subject = "Recover Password"
                 };

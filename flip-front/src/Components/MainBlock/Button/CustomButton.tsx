@@ -6,7 +6,7 @@ export const CustomButtonBG = (props) => {
   return (
     <>
       <button
-        className={`${styles.custom_btn} ${error && styles.error_btn}`}
+        className={`${error ? styles.error_btn : styles.custom_btn}`}
         type={type}
         disabled={disabled}
         onClick={onClick}

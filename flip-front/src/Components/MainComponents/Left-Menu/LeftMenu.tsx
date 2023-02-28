@@ -3,11 +3,14 @@ import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./LeftMenu.module.scss";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { ToastActionTypes } from "../../Toast/store/type";
 
 export const LeftMenu = () => {
   const profile = useTypedSelector((state) => state.auth.user);
   const [t] = useTranslation("translation");
   const navigator = useNavigate();
+  const dispatch = useDispatch();
 
   const Logout = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -24,6 +27,14 @@ export const LeftMenu = () => {
 
           navigator("/");
           window.location.reload();
+        } else {
+          dispatch({
+            type: ToastActionTypes.SHOW,
+            payload: {
+              message: t("toast.error.logout"),
+              type: "error",
+            },
+          });
         }
       });
   };

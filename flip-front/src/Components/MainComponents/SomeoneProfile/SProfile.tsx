@@ -4,12 +4,15 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { CreatedPost, FollowUser } from "../../../Interface/Profile";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { ToastActionTypes } from "../../Toast/store/type";
 
 export const SProfile = (props) => {
   const { profile } = props;
 
   const myProfile = useTypedSelector((state) => state.auth.user);
   const [t] = useTranslation("translation");
+  const dispatch = useDispatch();
 
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [selector, setSelector] = useState(1);
@@ -19,27 +22,36 @@ export const SProfile = (props) => {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      axios
-        .get(`user/check/${myProfile?.id}/follow/${profile?.id}`)
-        .then((res) => {
-          if (res.status === 200) setIsFollow(res.data);
-        });
-    }, 400);
+    axios
+      .get(`user/check/${myProfile?.id}/follow/${profile?.id}`)
+      .then((res) => {
+        if (res.status === 200) setIsFollow(res.data);
+      });
   }, [myProfile?.id, profile?.id]);
 
   const Follow = async () => {
     const follow: FollowUser = { UserId: myProfile?.id, FollowId: profile?.id };
 
-    await axios
-      .post("user/follow", follow)
-      .then((res) => {
-        if (res.status === 200) {
-          alert("Followed");
-          setIsFollow(true);
-        }
-      })
-      .catch((err) => alert("Error followed"));
+    await axios.post("user/follow", follow).then((res) => {
+      if (res.status === 200) {
+        setIsFollow(true);
+
+        dispatch({
+          type: ToastActionTypes.SHOW,
+          payload: {
+            message: t("toast.success.follow"),
+            type: "success",
+          },
+        });
+      } else
+        dispatch({
+          type: ToastActionTypes.SHOW,
+          payload: {
+            message: t("toast.error.follow"),
+            type: "error",
+          },
+        });
+    });
   };
 
   const UnFollow = async () => {
@@ -47,11 +59,24 @@ export const SProfile = (props) => {
       .delete(`user/${myProfile?.id}/unfollow/${profile?.id}`)
       .then((res) => {
         if (res.status === 200) {
-          alert("UnFollowed");
           setIsFollow(false);
-        }
-      })
-      .catch((err) => alert("Error unfollowed"));
+
+          dispatch({
+            type: ToastActionTypes.SHOW,
+            payload: {
+              message: t("toast.success.unfollow"),
+              type: "success",
+            },
+          });
+        } else
+          dispatch({
+            type: ToastActionTypes.SHOW,
+            payload: {
+              message: t("toast.error.unfollow"),
+              type: "error",
+            },
+          });
+      });
   };
 
   return (
@@ -85,7 +110,13 @@ export const SProfile = (props) => {
                       navigator.clipboard
                         .writeText(profile.userName)
                         .then(() => {
-                          alert("Copied");
+                          dispatch({
+                            type: ToastActionTypes.SHOW,
+                            payload: {
+                              message: t("toast.success.copy"),
+                              type: "success",
+                            },
+                          });
                         })
                     }
                     width="19"

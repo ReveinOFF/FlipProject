@@ -13,6 +13,7 @@ import { useTypedSelector } from "../../../../Hooks/useTypedSelector";
 import axios from "axios";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useTranslation } from "react-i18next";
+import { ToastActionTypes } from "../../../Toast/store/type";
 
 export const RegPhaseTwo = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -36,7 +37,6 @@ export const RegPhaseTwo = () => {
   };
 
   useEffect(() => {
-    document.title = "Sign Up | Phase Two - Flip";
     document.title = t("auht.signup.reg_p2.title_page");
   }, []);
 
@@ -72,12 +72,15 @@ export const RegPhaseTwo = () => {
           else {
             errors.Email = t("auht.signup.reg_p2.yup.error").toString();
             errors.UserName = t("auht.signup.reg_p2.yup.error").toString();
+
+            dispatch({
+              type: ToastActionTypes.SHOW,
+              payload: {
+                message: t("toast.warning.reg"),
+                type: "warning",
+              },
+            });
           }
-        })
-        .catch(() => {
-          alert(
-            "Ошибка в реєстрації! Можливо ошибка в неправильних введених данних!"
-          );
         });
     }
   }, [reg]);
@@ -126,9 +129,9 @@ export const RegPhaseTwo = () => {
         "check-email",
         t("auht.signup.reg_p2.yup.email.exist").toString(),
         async (value) => {
-          if (typingTimeout) clearTimeout(typingTimeout);
+          if (typingTimeout2) clearTimeout(typingTimeout2);
           return new Promise((resolve) => {
-            setTypingTimeout(
+            setTypingTimeout2(
               setTimeout(async () => {
                 await axios.get(`account/check-email/${value}`).then((res) => {
                   if (res.status == 200) return resolve(true);

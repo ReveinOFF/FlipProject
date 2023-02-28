@@ -2,12 +2,15 @@ import styles from "./UProfile.module.scss";
 import { CreatedPost } from "../../../Interface/Profile";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { ToastActionTypes } from "../../Toast/store/type";
 
 export const UProfile = (props) => {
   const { profile } = props;
 
   const [selector, setSelector] = useState(1);
 
+  const dispatch = useDispatch();
   const [t] = useTranslation("translation");
 
   useEffect(() => {
@@ -26,7 +29,13 @@ export const UProfile = (props) => {
                 <svg
                   onClick={() =>
                     navigator.clipboard.writeText(profile.userName).then(() => {
-                      alert("Copied");
+                      dispatch({
+                        type: ToastActionTypes.SHOW,
+                        payload: {
+                          message: t("toast.success.copy"),
+                          type: "success",
+                        },
+                      });
                     })
                   }
                   width="19"

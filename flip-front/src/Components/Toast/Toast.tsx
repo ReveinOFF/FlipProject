@@ -1,28 +1,33 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useTypedSelector } from "../../Hooks/useTypedSelector";
 import { ToastType } from "../../Interface/ToastType";
+import { ToastActionTypes } from "./store/type";
 import styles from "./Toast.module.scss";
 
-export const Toast = forwardRef((props: any, ref) => {
-  const [show, setShow] = useState(false);
+export const Toast = () => {
+  const toast = useTypedSelector((state) => state.toast);
+  const dispatch = useDispatch();
 
-  useImperativeHandle(ref, () => ({
-    show() {
-      setShow(true);
+  useEffect(() => {
+    if (toast.show) {
       setTimeout(() => {
-        setShow(false);
+        deleteToast();
       }, 5000);
-    },
-  }));
+    } else deleteToast();
+  }, [toast.show]);
 
   const deleteToast = () => {
-    setShow(false);
+    dispatch({
+      type: ToastActionTypes.UNSHOW,
+    });
   };
 
   return (
     <>
-      {show && (
+      {toast.show && (
         <div className={styles.toast}>
-          {props.type === ToastType.error && (
+          {toast.type === ToastType.error && (
             <svg
               className={styles.type}
               width="30"
@@ -49,7 +54,7 @@ export const Toast = forwardRef((props: any, ref) => {
             </svg>
           )}
 
-          {props.type === ToastType.warning && (
+          {toast.type === ToastType.warning && (
             <svg
               className={styles.type}
               width="30"
@@ -71,7 +76,7 @@ export const Toast = forwardRef((props: any, ref) => {
             </svg>
           )}
 
-          {props.type === ToastType.success && (
+          {toast.type === ToastType.success && (
             <svg
               className={styles.type}
               width="30"
@@ -98,7 +103,7 @@ export const Toast = forwardRef((props: any, ref) => {
             </svg>
           )}
 
-          <div className={styles.message}>{props.message}</div>
+          <div className={styles.message}>{toast.message}</div>
 
           <svg
             className={styles.close}
@@ -124,13 +129,13 @@ export const Toast = forwardRef((props: any, ref) => {
 
           <div
             className={`${styles.loadbar} ${
-              props.type === ToastType.error && styles.error
-            } ${props.type === ToastType.warning && styles.warning} ${
-              props.type === ToastType.success && styles.success
+              toast.type === ToastType.error && styles.error
+            } ${toast.type === ToastType.warning && styles.warning} ${
+              toast.type === ToastType.success && styles.success
             }`}
           ></div>
         </div>
       )}
     </>
   );
-});
+};
