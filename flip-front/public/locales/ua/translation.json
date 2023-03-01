@@ -152,7 +152,15 @@
             "btn3": "Копіювати посилання",
             "btn4": "Поскаржитись"
         },
-        "lazy_loading": "Завантажуємо..."
+        "lazy_loading": "Завантажуємо...",
+        "followers": {
+            "header": "Підписники",
+            "delete_user": "Видалити"
+        },
+        "following": {
+            "header": "Підписки",
+            "delete_user": "Підписки"
+        }
     },
 
     "toast": {

@@ -37,10 +37,6 @@ export const Fliper = () => {
     }
   };
 
-  const handleClick = () => {
-    setShowMenu(false);
-  };
-
   return (
     <div className={styles.fliper}>
       <svg
@@ -405,7 +401,7 @@ export const Fliper = () => {
         />
       </svg>
 
-      <FliperMenu show={showMenu} onClick={handleClick} />
+      <FliperMenu show={showMenu} onClick={() => setShowMenu(false)} />
     </div>
   );
 };

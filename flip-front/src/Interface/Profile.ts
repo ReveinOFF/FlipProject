@@ -22,6 +22,13 @@ export interface GetUsers {
   isVerified: boolean;
 }
 
+export interface GetFollow {
+  id: string;
+  userImage: string;
+  name: string;
+  isVerified: boolean;
+}
+
 export interface CreatedPost {
   id: string;
   file: string;

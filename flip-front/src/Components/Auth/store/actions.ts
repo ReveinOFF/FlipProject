@@ -12,7 +12,7 @@ export const AuthUser = async (
   try {
     const user = await axios.get<IUser>(`user/get-user-auth`);
 
-    if (user.status !== 204 && user.status !== 200)
+    if (user.status !== 204)
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {

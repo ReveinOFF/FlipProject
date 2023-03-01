@@ -174,7 +174,7 @@ namespace FlipBack.Controllers
 
             var userFollowers = user.Followers.Where(u => u.FollowingId == id).Select(x => x.Follower);
 
-            var follow = _mapper.Map<List<GetUsersDTO>>(userFollowers);
+            var follow = _mapper.Map<List<GetFollowsDTO>>(userFollowers);
 
             return Ok(follow);
         }
@@ -192,7 +192,7 @@ namespace FlipBack.Controllers
 
             var userFollowers = user.Followings.Where(u => u.FollowingId == id).Select(x => x.Following);
 
-            var follow = _mapper.Map<List<GetUsersDTO>>(userFollowers);
+            var follow = _mapper.Map<List<GetFollowsDTO>>(userFollowers);
 
             return Ok(follow);
         }
