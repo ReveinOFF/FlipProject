@@ -14,21 +14,22 @@ export const AuthUser = async (
 
     if (user.status !== 204)
       dispatch({
-        type: ToastActionTypes.SHOW,
-        payload: {
-          message: i18n.t("toast.error.auth"),
-          type: "error",
-        },
+        type: AuthActionTypes.LOGIN,
+        payload: { user: user.data, token: token },
       });
-
-    dispatch({
-      type: AuthActionTypes.LOGIN,
-      payload: { user: user.data, token: token },
-    });
 
     return Promise.resolve(true);
   } catch {
     dispatch({ type: AuthActionTypes.LOGOUT });
+
+    dispatch({
+      type: ToastActionTypes.SHOW,
+      payload: {
+        message: i18n.t("toast.error.auth"),
+        type: "error",
+      },
+    });
+
     return Promise.resolve(false);
   }
 };

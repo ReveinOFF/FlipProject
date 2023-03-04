@@ -27,6 +27,7 @@ export interface GetFollow {
   userImage: string;
   name: string;
   isVerified: boolean;
+  isFollowed: boolean;
 }
 
 export interface CreatedPost {

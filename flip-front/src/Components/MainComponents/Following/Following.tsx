@@ -1,27 +1,30 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import { GetFollow } from "../../../Interface/Profile";
 import { ToastActionTypes } from "../../Toast/store/type";
 import styles from "./Following.module.scss";
 
-export const Following = ({ userId, show, onClick }) => {
-  const [following, setFollowing] = useState<GetFollow[]>();
-
+export const Following = ({
+  show,
+  onClick,
+  followings,
+  isMyProfile,
+  profileId,
+}) => {
   const myuser = useTypedSelector((state) => state.auth.user);
   const [t] = useTranslation("translation");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    axios.get(`user/get-followers/${userId}`).then((res) => {
-      if (res.status === 204) setFollowing(res.data);
-    });
-  }, [userId]);
+  const [phase, setPhase] = useState(1);
+  const [following, setFollowing] = useState<GetFollow>();
 
-  const deleteUser = (id) => {
-    axios.delete(`user/${id}/unfollow/${myuser?.id}`).then((res) => {
+  const deleteUser = async (id) => {
+    await axios.delete(`user/${profileId}/unfollow/${id}`).then((res) => {
       if (res.status === 200)
         dispatch({
           type: ToastActionTypes.SHOW,
@@ -41,13 +44,42 @@ export const Following = ({ userId, show, onClick }) => {
     });
   };
 
+  const subscribe = async (id) => {
+    await axios
+      .post(`user/follow`, {
+        UserId: profileId,
+        FollowId: id,
+      })
+      .then((res) => {
+        if (res.status === 200)
+          dispatch({
+            type: ToastActionTypes.SHOW,
+            payload: {
+              message: t("toast.success.follow"),
+              type: "success",
+            },
+          });
+        else
+          dispatch({
+            type: ToastActionTypes.SHOW,
+            payload: {
+              message: t("toast.error.follow"),
+              type: "error",
+            },
+          });
+      });
+  };
+
   return (
     <>
       {show && (
         <div className={styles.following_bg}>
           <div className={styles.following_modal}>
             <svg
-              onClick={() => onClick()}
+              onClick={() => {
+                if (phase === 1) onClick();
+                else setPhase(1);
+              }}
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -56,26 +88,92 @@ export const Following = ({ userId, show, onClick }) => {
             >
               <path d="M3 3L21 21M3 21L21 3" stroke="#EAEAEA" strokeWidth="2" />
             </svg>
-            <div className={styles.header}>{t("main.following.header")}</div>
-            <div className={styles.line}></div>
-            <div className={styles.following_list}>
-              {following &&
-                following.map((item) => (
-                  <div key={item.id} className={styles.following}>
-                    <div className={styles.image}>
-                      <img
-                        src="Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
-                        alt=""
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className={styles.name}>{item.name}</div>
-                    <button onClick={() => deleteUser(item.id)}>
-                      {t("main.following.delete_user")}
-                    </button>
-                  </div>
-                ))}
-            </div>
+            {phase === 1 && (
+              <>
+                <div className={styles.header}>
+                  {t("main.following.header")}
+                </div>
+                <div className={styles.line}></div>
+                <div className={styles.following_list}>
+                  {followings &&
+                    followings.map((item) => (
+                      <div key={item.id} className={styles.following}>
+                        <div
+                          className={styles.select}
+                          onClick={() => {
+                            navigate(item.name);
+                            onClick();
+                          }}
+                        >
+                          <div className={styles.image}>
+                            {item.userImage && (
+                              <img
+                                src={`http://localhost:5170/resources/userimages/${item.id}/${item.userImage}`}
+                                alt=""
+                                loading="lazy"
+                              />
+                            )}
+                          </div>
+                          <div className={styles.name}>{item.name}</div>
+                        </div>
+                        {isMyProfile ? (
+                          <>
+                            <button
+                              onClick={() => {
+                                setPhase(2);
+                                setFollowing(item);
+                              }}
+                            >
+                              {t("main.following.delete_user")}
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            {item.isFollowed ? (
+                              <button
+                                onClick={() => {
+                                  setPhase(2);
+                                  setFollowing(item);
+                                }}
+                              >
+                                {t("main.following.unsubscribe")}
+                              </button>
+                            ) : (
+                              <button onClick={() => subscribe(item.id)}>
+                                {t("main.following.subscribe")}
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              </>
+            )}
+            {phase === 2 && (
+              <div className={styles.confirm}>
+                {following?.userImage ? (
+                  <img
+                    src={`http://localhost:5170/resources/userimages/${following?.id}/${following?.userImage}`}
+                    alt=""
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className={styles.confirm_img}></div>
+                )}
+                <div className={styles.confirm_h}>
+                  {t("main.following.confirm.header")} {following?.name}
+                </div>
+                <button
+                  onClick={() => {
+                    deleteUser(following?.id);
+                    setPhase(1);
+                  }}
+                >
+                  {t("main.following.confirm.btn")}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

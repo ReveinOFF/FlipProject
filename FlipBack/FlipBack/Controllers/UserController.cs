@@ -105,8 +105,8 @@ namespace FlipBack.Controllers
         public async Task<IActionResult> FollowUser([FromBody] FollowDTO followDTO)
         {
             var follow = await _context.Follows
-                    .FirstOrDefaultAsync(u => u.FollowerId == followDTO.UserId &&
-                                              u.FollowingId == followDTO.FollowId);
+                    .FirstOrDefaultAsync(u => u.FollowerId == followDTO.FollowId &&
+                                              u.FollowingId == followDTO.UserId);
 
             if (follow != null)
                 return BadRequest("You already followed this user!");
@@ -160,39 +160,50 @@ namespace FlipBack.Controllers
             return Ok(true);
         }
 
-        [HttpGet("get-followers/{id}")]
-        public async Task<IActionResult> GetFollowers(string id)
+        [HttpGet("get-followers/{id}/check/{userId}")]
+        public async Task<IActionResult> GetFollowers(string id, string userId)
         {
-            var user = await _context.Users
-                .Include(x => x.Followers)
-                .ThenInclude(y => y.Follower)
-                .OrderByDescending(o => o.Followers.Count)
-                .FirstOrDefaultAsync(u => u.Id == id);
+            var myUserFollowers = await _context.Follows
+                .Include(i => i.Follower)
+                .ThenInclude(t => t.Followers)
+                .Include(i => i.Following)
+                .ThenInclude(t => t.Followings)
+                .Where(x => x.FollowerId == id)
+                .ToListAsync();
 
-            if (user == null)
+            if (myUserFollowers == null)
                 return BadRequest("The user was not found!");
 
-            var userFollowers = user.Followers.Where(u => u.FollowingId == id).Select(x => x.Follower);
+            var userFollowers = myUserFollowers.Select(s => s.Follower).ToList();
 
             var follow = _mapper.Map<List<GetFollowsDTO>>(userFollowers);
+
+            follow.ForEach(x => x.IsFollowed = userFollowers.Select(s => s.Followers.Any(a => a.FollowingId == userId && a.FollowerId == x.Id)).FirstOrDefault());
 
             return Ok(follow);
         }
 
-        [HttpGet("get-following/{id}")]
-        public async Task<IActionResult> GetFollowing(string id)
+        [HttpGet("get-following/{id}/check/{userId}")]
+        public async Task<IActionResult> GetFollowing(string id, string userId)
         {
-            var user = await _context.Users
-                .Include(x => x.Followings)
-                .ThenInclude(y => y.Following)
-                .FirstOrDefaultAsync(u => u.Id == id);
+            var myUserFollowing = await _userManager.Users
+                .Where(x => x.Id == id)
+                .Include(i => i.Followers)
+                .ThenInclude(t => t.Follower)
+                .ThenInclude(t => t.Followers)
+                .Include(i => i.Followings)
+                .ThenInclude(t => t.Following)
+                .ThenInclude(t => t.Followings)
+                .FirstOrDefaultAsync();
 
-            if (user == null)
+            if (myUserFollowing == null)
                 return BadRequest("The user was not found!");
 
-            var userFollowers = user.Followings.Where(u => u.FollowingId == id).Select(x => x.Following);
+            var userFollowing = myUserFollowing.Followings.Select(s => s.Following).ToList();
 
-            var follow = _mapper.Map<List<GetFollowsDTO>>(userFollowers);
+            var follow = _mapper.Map<List<GetFollowsDTO>>(userFollowing);
+
+            follow.ForEach(x => x.IsFollowed = userFollowing.Select(s => s.Followers.Any(a => a.FollowingId == userId && a.FollowerId == x.Id)).FirstOrDefault());
 
             return Ok(follow);
         }

@@ -8,6 +8,7 @@ import { ToastActionTypes } from "../../Toast/store/type";
 import { useState } from "react";
 import { Followers } from "../Followers/Followers";
 import { Following } from "../Following/Following";
+import { GetFollow } from "../../../Interface/Profile";
 
 export const LeftMenu = () => {
   const profile = useTypedSelector((state) => state.auth.user);
@@ -15,8 +16,30 @@ export const LeftMenu = () => {
   const navigator = useNavigate();
   const dispatch = useDispatch();
 
+  const [followers, setFollowers] = useState<GetFollow[]>();
+  const [following, setFollowing] = useState<GetFollow[]>();
   const [showFollowers, setShowFollowers] = useState<boolean>(false);
   const [showFollowing, setShowFollowing] = useState<boolean>(false);
+
+  const FollowersShow = async () => {
+    await axios
+      .get(`user/get-followers/${profile!.id}/check/${profile!.id}`)
+      .then((res) => {
+        if (res.status === 200) setFollowers(res.data);
+      });
+
+    setShowFollowers(true);
+  };
+
+  const FollowingShow = async () => {
+    await axios
+      .get(`user/get-following/${profile!.id}/check/${profile!.id}`)
+      .then((res) => {
+        if (res.status === 200) setFollowing(res.data);
+      });
+
+    setShowFollowing(true);
+  };
 
   const Logout = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -48,15 +71,19 @@ export const LeftMenu = () => {
   return (
     <>
       <Followers
-        userId={profile?.id}
         onClick={() => setShowFollowers(false)}
         show={showFollowers}
+        followers={followers}
+        isMyProfile={true}
+        profileId={profile?.id}
       />
 
       <Following
-        userId={profile?.id}
         onClick={() => setShowFollowing(false)}
         show={showFollowing}
+        followings={following}
+        isMyProfile={true}
+        profileId={profile?.id}
       />
 
       <div className={styles.left_menu}>
@@ -120,7 +147,7 @@ export const LeftMenu = () => {
 
                 <div
                   className={`${styles.foll_ng} ${styles.inf_btn}`}
-                  onClick={() => setShowFollowers(true)}
+                  onClick={FollowersShow}
                 >
                   <div className={styles.count}>{profile.followers}</div>
                   <div className={styles.inf_text}>
@@ -128,10 +155,7 @@ export const LeftMenu = () => {
                   </div>
                 </div>
 
-                <div
-                  className={styles.inf_btn}
-                  onClick={() => setShowFollowers(true)}
-                >
+                <div className={styles.inf_btn} onClick={FollowingShow}>
                   <div className={styles.count}>{profile.followings}</div>
                   <div className={styles.inf_text}>
                     {t("main.left_menu.foll_ing")}

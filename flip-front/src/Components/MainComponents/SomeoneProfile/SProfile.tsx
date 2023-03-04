@@ -2,10 +2,12 @@ import styles from "./SProfile.module.scss";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { CreatedPost, FollowUser } from "../../../Interface/Profile";
+import { CreatedPost, FollowUser, GetFollow } from "../../../Interface/Profile";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { ToastActionTypes } from "../../Toast/store/type";
+import { Following } from "../Following/Following";
+import { Followers } from "../Followers/Followers";
 
 export const SProfile = (props) => {
   const { profile } = props;
@@ -16,6 +18,10 @@ export const SProfile = (props) => {
 
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [selector, setSelector] = useState(1);
+  const [followers, setFollowers] = useState<GetFollow[]>();
+  const [following, setFollowing] = useState<GetFollow[]>();
+  const [showFollowers, setShowFollowers] = useState<boolean>(false);
+  const [showFollowing, setShowFollowing] = useState<boolean>(false);
 
   useEffect(() => {
     document.title = profile.name;
@@ -28,6 +34,26 @@ export const SProfile = (props) => {
         if (res.status === 200) setIsFollow(res.data);
       });
   }, [myProfile?.id, profile?.id]);
+
+  const FollowersShow = async () => {
+    await axios
+      .get(`user/get-followers/${profile!.id}/check/${myProfile!.id}`)
+      .then((res) => {
+        if (res.status === 200) setFollowers(res.data);
+      });
+
+    setShowFollowers(true);
+  };
+
+  const FollowingShow = async () => {
+    await axios
+      .get(`user/get-following/${profile!.id}/check/${myProfile!.id}`)
+      .then((res) => {
+        if (res.status === 200) setFollowing(res.data);
+      });
+
+    setShowFollowing(true);
+  };
 
   const Follow = async () => {
     const follow: FollowUser = { UserId: myProfile?.id, FollowId: profile?.id };
@@ -81,6 +107,21 @@ export const SProfile = (props) => {
 
   return (
     <>
+      <Followers
+        onClick={() => setShowFollowers(false)}
+        show={showFollowers}
+        followers={followers}
+        isMyProfile={false}
+        profileId={profile!.id}
+      />
+
+      <Following
+        onClick={() => setShowFollowing(false)}
+        show={showFollowing}
+        followings={following}
+        isMyProfile={false}
+        profileId={profile!.id}
+      />
       <div className={styles.profile_inf}>
         <div className={styles.profile_inf_data}>
           {profile.userImage ? (
@@ -135,12 +176,12 @@ export const SProfile = (props) => {
                 </div>
                 {!profile.isPrivateUser && (
                   <div className={styles.profile_count}>
-                    <div>{`${t("main.s_profile.foll_ers")} ${
-                      profile.followers
-                    }`}</div>
-                    <div>{`${t("main.s_profile.foll_ing")} ${
-                      profile.followings
-                    }`}</div>
+                    <div onClick={FollowersShow}>{`${t(
+                      "main.s_profile.foll_ers"
+                    )} ${profile.followers}`}</div>
+                    <div onClick={FollowingShow}>{`${t(
+                      "main.s_profile.foll_ing"
+                    )} ${profile.followings}`}</div>
                     <div>{`${t("main.s_profile.post")} ${
                       profile.createdPost.length
                     }`}</div>
