@@ -55,7 +55,7 @@ namespace FlipBack.Controllers
         {
             var findUser = await _userManager.Users.Where(x => phone == x.PhoneNumber).FirstOrDefaultAsync();
 
-            if (findUser != null)
+            if (findUser != null && findUser.EmailConfirmed)
                 return BadRequest("This phone is already exists");
 
             return Ok();
@@ -66,7 +66,7 @@ namespace FlipBack.Controllers
         {
             var findUser = await _userManager.FindByNameAsync(login);
 
-            if (findUser != null)
+            if (findUser != null && findUser.EmailConfirmed)
                 return BadRequest("This login is already exists");
 
             return Ok();
@@ -77,7 +77,7 @@ namespace FlipBack.Controllers
         {
             var findUser = await _userManager.Users.Where(x => x.Name == name).FirstOrDefaultAsync();
 
-            if (findUser != null)
+            if (findUser != null && findUser.EmailConfirmed)
                 return BadRequest("This login is already exists");
 
             return Ok();

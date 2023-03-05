@@ -14,6 +14,9 @@ import axios from "axios";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useTranslation } from "react-i18next";
 import { ToastActionTypes } from "../../../Toast/store/type";
+import { useMutation } from "react-query";
+import { RegMain } from "../store/types";
+import { LazyLoading } from "../../../LazyLoading/LazyLoading";
 
 export const RegPhaseTwo = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -36,6 +39,34 @@ export const RegPhaseTwo = () => {
     }
   };
 
+  const PostReg = async (data: RegMain) => {
+    const res = await axios.post("account/registration", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    return res;
+  };
+
+  const { isLoading, mutate } = useMutation(PostReg, {
+    onSuccess: () => {
+      dispatch({
+        type: "REG-PHASE",
+        payload: {
+          phase: SelectPhase.confrim,
+        },
+      });
+    },
+    onError: () => {
+      dispatch({
+        type: ToastActionTypes.SHOW,
+        payload: {
+          message: t("toast.warning.reg"),
+          type: "warning",
+        },
+      });
+    },
+  });
+
   useEffect(() => {
     document.title = t("auht.signup.reg_p2.title_page");
   }, []);
@@ -57,31 +88,7 @@ export const RegPhaseTwo = () => {
       const data = reg.data;
       data!.UserImage = selectedFile;
 
-      axios
-        .post("account/registration", data, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
-        .then((res) => {
-          if (res.status === 200)
-            dispatch({
-              type: "REG-PHASE",
-              payload: {
-                phase: SelectPhase.confrim,
-              },
-            });
-        })
-        .catch(() => {
-          errors.Email = t("auht.signup.reg_p2.yup.error").toString();
-          errors.UserName = t("auht.signup.reg_p2.yup.error").toString();
-
-          dispatch({
-            type: ToastActionTypes.SHOW,
-            payload: {
-              message: t("toast.warning.reg"),
-              type: "warning",
-            },
-          });
-        });
+      if (data) mutate(data);
     }
   }, [reg]);
 
@@ -203,6 +210,8 @@ export const RegPhaseTwo = () => {
 
   return (
     <>
+      {isLoading && <LazyLoading />}
+
       <FormikProvider value={formik}>
         <Form className={`${styles.form} dflex-column`} onSubmit={handleSubmit}>
           <div className={styles.form_request}>

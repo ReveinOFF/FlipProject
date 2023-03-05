@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RegPhase1Res } from "../../../../Interface/Registration";
 import {
   CustomButtonBG,
@@ -36,7 +36,7 @@ export const RegPhaseOne = () => {
     DateOfBirth: new Date(new Date()),
   };
 
-  const phoneRegExp = /^([\+][380]{3})[0-9]{9}$/;
+  const phoneRegExp = /^([\+]?[380]{3}?|[0])[0-9]{9}$/;
 
   const Reg1Schema = yup.object({
     Name: yup
@@ -63,12 +63,14 @@ export const RegPhaseOne = () => {
       .required(t("auht.signup.reg_p1.yup.name.req").toString()),
     Phone: yup
       .string()
+      .min(10, t("auht.signup.reg_p1.yup.phone.max_min").toString())
+      .max(13, t("auht.signup.reg_p1.yup.phone.max_min").toString())
       .matches(phoneRegExp, t("auht.signup.reg_p1.yup.phone.bad").toString())
+      .notRequired()
       .test(
         "check-email",
         t("auht.signup.reg_p1.yup.phone.exist").toString(),
         async (value) => {
-          if (!value) return true;
           if (typingTimeout2) clearTimeout(typingTimeout2);
           return new Promise((resolve) => {
             setTypingTimeout2(
