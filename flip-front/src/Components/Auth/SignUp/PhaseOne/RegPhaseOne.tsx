@@ -16,7 +16,6 @@ import { parse } from "date-fns";
 import { useTypedSelector } from "../../../../Hooks/useTypedSelector";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import lodash from "lodash";
 
 export const RegPhaseOne = () => {
   const dispatch = useDispatch();
@@ -25,6 +24,7 @@ export const RegPhaseOne = () => {
   const [t] = useTranslation("translation");
 
   const [typingTimeout, setTypingTimeout] = useState<any>();
+  const [typingTimeout2, setTypingTimeout2] = useState<any>();
 
   useEffect(() => {
     document.title = t("auht.signup.reg_p1.title_page");
@@ -36,7 +36,7 @@ export const RegPhaseOne = () => {
     DateOfBirth: new Date(new Date()),
   };
 
-  const phoneRegExp = /^([\+]?[380]{3}?|[0])[0-9]{9}$/;
+  const phoneRegExp = /^([\+][380]{3})[0-9]{9}$/;
 
   const Reg1Schema = yup.object({
     Name: yup
@@ -63,7 +63,25 @@ export const RegPhaseOne = () => {
       .required(t("auht.signup.reg_p1.yup.name.req").toString()),
     Phone: yup
       .string()
-      .matches(phoneRegExp, t("auht.signup.reg_p1.yup.phone").toString()),
+      .matches(phoneRegExp, t("auht.signup.reg_p1.yup.phone.bad").toString())
+      .test(
+        "check-email",
+        t("auht.signup.reg_p1.yup.phone.exist").toString(),
+        async (value) => {
+          if (!value) return true;
+          if (typingTimeout2) clearTimeout(typingTimeout2);
+          return new Promise((resolve) => {
+            setTypingTimeout2(
+              setTimeout(async () => {
+                await axios.get(`account/check-phone/${value}`).then((res) => {
+                  if (res.status == 200) return resolve(true);
+                  else return resolve(false);
+                });
+              }, 500)
+            );
+          });
+        }
+      ),
     DateOfBirth: yup
       .date()
       .transform(function (value, originalValue) {

@@ -28,15 +28,17 @@ export const UProfile = (props) => {
                 <div>(@{profile.userName})</div>
                 <svg
                   onClick={() =>
-                    navigator.clipboard.writeText(profile.userName).then(() => {
-                      dispatch({
-                        type: ToastActionTypes.SHOW,
-                        payload: {
-                          message: t("toast.success.copy"),
-                          type: "success",
-                        },
-                      });
-                    })
+                    navigator["clipboard"]
+                      .writeText(profile.userName)
+                      .then(() => {
+                        dispatch({
+                          type: ToastActionTypes.SHOW,
+                          payload: {
+                            message: t("toast.success.copy"),
+                            type: "success",
+                          },
+                        });
+                      })
                   }
                   width="19"
                   height="22"

@@ -50,6 +50,17 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
+        [HttpGet("check-phone/{phone}")]
+        public async Task<IActionResult> CheckPhone(string phone)
+        {
+            var findUser = await _userManager.Users.Where(x => phone == x.PhoneNumber).FirstOrDefaultAsync();
+
+            if (findUser != null)
+                return BadRequest("This phone is already exists");
+
+            return Ok();
+        }
+
         [HttpGet("check-login/{login}")]
         public async Task<IActionResult> CheckLogin(string login)
         {
@@ -121,7 +132,7 @@ namespace FlipBack.Controllers
                 var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
 
                 string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "ConfirmEmail.html"));
-                Body = Body.Replace("#url#", $"http://localhost:3000/email-confirm?token={codeEncoded}&email={user.Email}");
+                Body = Body.Replace("#url#", $"http://flip.somee.com/email-confirm?token={codeEncoded}&email={user.Email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
@@ -237,7 +248,7 @@ namespace FlipBack.Controllers
                 var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
 
                 string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPassword.html"));
-                Body = Body.Replace("#url#", $"http://localhost:3000/recover-password?token={codeEncoded}&email={email}");
+                Body = Body.Replace("#url#", $"http://flip.somee.com/recover-password?token={codeEncoded}&email={email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
@@ -298,7 +309,7 @@ namespace FlipBack.Controllers
                 return BadRequest("Email already exists!");
 
             var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailDTO.NewEmail);
-            var confirmationLink = $"http://uniwox.com/changemail?token={token}";
+            var confirmationLink = $"http://flip.somee.com/changemail?token={token}";
 
             MailDataDTO mailData = new MailDataDTO()
             {

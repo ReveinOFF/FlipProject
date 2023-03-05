@@ -15,6 +15,7 @@ import "./Components/i18n/i18n";
 import axios from "axios";
 import { Suspense } from "react";
 import { Toast } from "./Components/Toast/Toast";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const ldMode = localStorage.getItem("LightDarkMode");
 const token = localStorage.getItem("token");
@@ -31,20 +32,23 @@ if (!lng) {
     let data = response.data;
 
     if (data.country_name === "Ukraine") localStorage.setItem("lng", "ua");
-    else if (data.country_name === "Russian") localStorage.setItem("lng", "ru");
     else localStorage.setItem("lng", "en");
   });
 }
 
 ThemeActions(store.dispatch);
 
+const client = new QueryClient();
+
 const NotUser = () => {
   root.render(
     <Suspense fallback="">
       <Provider store={store}>
         <BrowserRouter>
-          <App />
-          <Toast />
+          <QueryClientProvider client={client}>
+            <App />
+            <Toast />
+          </QueryClientProvider>
         </BrowserRouter>
       </Provider>
     </Suspense>
@@ -62,10 +66,12 @@ if (token) {
         <Suspense fallback="">
           <Provider store={store}>
             <BrowserRouter>
-              <div className="root_main">
-                <AuthApp />
-              </div>
-              <Toast />
+              <QueryClientProvider client={client}>
+                <div className="root_main">
+                  <AuthApp />
+                </div>
+                <Toast />
+              </QueryClientProvider>
             </BrowserRouter>
           </Provider>
         </Suspense>

@@ -69,18 +69,18 @@ export const RegPhaseTwo = () => {
                 phase: SelectPhase.confrim,
               },
             });
-          else {
-            errors.Email = t("auht.signup.reg_p2.yup.error").toString();
-            errors.UserName = t("auht.signup.reg_p2.yup.error").toString();
+        })
+        .catch(() => {
+          errors.Email = t("auht.signup.reg_p2.yup.error").toString();
+          errors.UserName = t("auht.signup.reg_p2.yup.error").toString();
 
-            dispatch({
-              type: ToastActionTypes.SHOW,
-              payload: {
-                message: t("toast.warning.reg"),
-                type: "warning",
-              },
-            });
-          }
+          dispatch({
+            type: ToastActionTypes.SHOW,
+            payload: {
+              message: t("toast.warning.reg"),
+              type: "warning",
+            },
+          });
         });
     }
   }, [reg]);

@@ -6,8 +6,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
+    /// <inheritdoc />
     public partial class NewInit : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -274,6 +276,7 @@ namespace Infrastructure.Migrations
                     MessageText = table.Column<string>(type: "text", nullable: true),
                     DateSender = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsEdited = table.Column<bool>(type: "boolean", nullable: false),
+                    IsChanged = table.Column<bool>(type: "boolean", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     MessageBoxId = table.Column<string>(type: "text", nullable: false)
                 },
@@ -455,30 +458,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReelsPost",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    ReelsId = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ReelsPost", x => new { x.UserId, x.ReelsId });
-                    table.ForeignKey(
-                        name: "FK_ReelsPost_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ReelsPost_Reels_ReelsId",
-                        column: x => x.ReelsId,
-                        principalTable: "Reels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ReelsReaction",
                 columns: table => new
                 {
@@ -496,6 +475,30 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ReelsReaction_Reels_ReelsId",
+                        column: x => x.ReelsId,
+                        principalTable: "Reels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserReels",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    ReelsId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserReels", x => new { x.UserId, x.ReelsId });
+                    table.ForeignKey(
+                        name: "FK_UserReels_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserReels_Reels_ReelsId",
                         column: x => x.ReelsId,
                         principalTable: "Reels",
                         principalColumn: "Id",
@@ -735,11 +738,6 @@ namespace Infrastructure.Migrations
                 column: "ReelsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReelsPost_ReelsId",
-                table: "ReelsPost",
-                column: "ReelsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ReelsReaction_ReelsId",
                 table: "ReelsReaction",
                 column: "ReelsId");
@@ -753,8 +751,14 @@ namespace Infrastructure.Migrations
                 name: "IX_UserPost_PostId",
                 table: "UserPost",
                 column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserReels_ReelsId",
+                table: "UserReels",
+                column: "ReelsId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -797,9 +801,6 @@ namespace Infrastructure.Migrations
                 name: "ReelsFiles");
 
             migrationBuilder.DropTable(
-                name: "ReelsPost");
-
-            migrationBuilder.DropTable(
                 name: "ReelsReaction");
 
             migrationBuilder.DropTable(
@@ -807,6 +808,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserPost");
+
+            migrationBuilder.DropTable(
+                name: "UserReels");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

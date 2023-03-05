@@ -138,7 +138,7 @@ export const LeftMenu = () => {
               <div className={styles.profile_inf}>
                 <div className={styles.inf_btn}>
                   <div className={styles.count}>
-                    {profile.createdPost.length}
+                    {profile.createdPost?.length}
                   </div>
                   <div className={styles.inf_text}>
                     {t("main.left_menu.post")}
@@ -149,14 +149,14 @@ export const LeftMenu = () => {
                   className={`${styles.foll_ng} ${styles.inf_btn}`}
                   onClick={FollowersShow}
                 >
-                  <div className={styles.count}>{profile.followers}</div>
+                  <div className={styles.count}>{profile?.followers}</div>
                   <div className={styles.inf_text}>
                     {t("main.left_menu.foll_ers")}
                   </div>
                 </div>
 
                 <div className={styles.inf_btn} onClick={FollowingShow}>
-                  <div className={styles.count}>{profile.followings}</div>
+                  <div className={styles.count}>{profile?.followings}</div>
                   <div className={styles.inf_text}>
                     {t("main.left_menu.foll_ing")}
                   </div>

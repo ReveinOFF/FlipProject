@@ -13,6 +13,8 @@ import {
 } from "../../../Components/MainBlock/Button/CustomButton";
 import { CustomInput } from "../../../Components/MainBlock/Input/CustomInput";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "react-query";
+import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
 
 export const SignIn = () => {
   const [visible, setVisoiblity] = useState(false);
@@ -46,24 +48,41 @@ export const SignIn = () => {
 
     value.RecaptchaToken = await executeRecaptcha();
 
-    await axios.post("account/login", value).then((res) => {
-      if (res.status === 200) {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("refreshToken", res.data.refreshToken);
+    // await axios.post("account/login", value).then((res) => {
+    //   if (res.status === 200) {
+    //     localStorage.setItem("token", res.data.token);
+    //     localStorage.setItem("refreshToken", res.data.refreshToken);
 
-        navigate("/");
-        window.location.reload();
-      } else {
-        errors.Name = t("auht.signin.yup.error").toString();
-        errors.Password = t("auht.signin.yup.error").toString();
-      }
-    });
+    //     navigate("/");
+    //     window.location.reload();
+    //   } else {
+    //     errors.Name = t("auht.signin.yup.error").toString();
+    //     errors.Password = t("auht.signin.yup.error").toString();
+    //   }
+    // });
+
+    const response = await axios.post("account/login", value);
+    return response;
   };
+
+  const { isLoading, mutate } = useMutation(PostLogin, {
+    onSuccess: (res) => {
+      localStorage.setItem("token", res?.data.token);
+      localStorage.setItem("refreshToken", res?.data.refreshToken);
+
+      navigate("/");
+      window.location.reload();
+    },
+    onError: () => {
+      errors.Name = t("auht.signin.yup.error").toString();
+      errors.Password = t("auht.signin.yup.error").toString();
+    },
+  });
 
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: LoginSchema,
-    onSubmit: PostLogin,
+    onSubmit: (values) => mutate(values),
   });
 
   const {
@@ -79,6 +98,8 @@ export const SignIn = () => {
 
   return (
     <>
+      {isLoading && <LazyLoading />}
+
       <div className={styles.log_header}>{t("auht.signin.header")}</div>
 
       <FormikProvider value={formik}>

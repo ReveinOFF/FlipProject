@@ -148,7 +148,7 @@ export const SProfile = (props) => {
                   </div>
                   <svg
                     onClick={() =>
-                      navigator.clipboard
+                      navigator["clipboard"]
                         .writeText(profile.userName)
                         .then(() => {
                           dispatch({
