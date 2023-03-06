@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RegPhase2Res, SelectPhase } from "../../../../Interface/Registration";
 import {
   CustomButtonBG,
@@ -17,6 +17,11 @@ import { ToastActionTypes } from "../../../Toast/store/type";
 import { useMutation } from "react-query";
 import { RegMain } from "../store/types";
 import { LazyLoading } from "../../../LazyLoading/LazyLoading";
+import Cropper from "react-easy-crop";
+import {
+  base64StringtoFile,
+  image64toCanvasRef,
+} from "../../../Convertor/cropperConvert";
 
 export const RegPhaseTwo = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -31,7 +36,12 @@ export const RegPhaseTwo = () => {
   const [visible2, setVisoiblity2] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState<any>();
   const [typingTimeout2, setTypingTimeout2] = useState<any>();
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+
   const hiddenFileInput = useRef<HTMLInputElement>(null);
+  const editImage = useRef<any>(null);
+  const imagePreviewCanvasRef = useRef<any>(null);
 
   const handleClick = () => {
     if (hiddenFileInput.current !== null) {
@@ -86,7 +96,18 @@ export const RegPhaseTwo = () => {
   useEffect(() => {
     if (reg.succses) {
       const data = reg.data;
-      data!.UserImage = selectedFile;
+
+      if (selectedFile) {
+        const canvasRef = imagePreviewCanvasRef.current;
+
+        const imageData64 = canvasRef.toDataURL("image/jpeg");
+
+        const myFilename = "previewFile.jpeg";
+
+        const myNewCroppedFile = base64StringtoFile(imageData64, myFilename);
+
+        data!.UserImage = myNewCroppedFile;
+      }
 
       if (data) mutate(data);
     }
@@ -154,10 +175,6 @@ export const RegPhaseTwo = () => {
       .string()
       .min(8, t("auht.signup.reg_p2.yup.password.min").toString())
       .max(20, t("auht.signup.reg_p2.yup.password.max").toString())
-      .oneOf(
-        [yup.ref("ConfirmPassword"), null],
-        t("auht.signup.reg_p2.yup.password.one").toString()
-      )
       .required(t("auht.signup.reg_p2.yup.password.req").toString()),
     ConfirmPassword: yup
       .string()
@@ -208,6 +225,20 @@ export const RegPhaseTwo = () => {
     dirty,
   } = formik;
 
+  const handleOnCropComplete = async (crop, pixelCrop) => {
+    const canvasRef = imagePreviewCanvasRef.current;
+    await image64toCanvasRef(canvasRef, selectedFile, pixelCrop);
+  };
+
+  const style = {
+    containerStyle: {
+      borderRadius: "15px",
+    },
+    cropAreaStyle: {
+      color: "rgba(106, 106, 106, 0.5)",
+    },
+  };
+
   return (
     <>
       {isLoading && <LazyLoading />}
@@ -227,45 +258,72 @@ export const RegPhaseTwo = () => {
               accept=".jpg, .jpeg"
               name="UserImage"
             />
+
             {selectedFile ? (
-              <div className={styles.upload} onClick={handleClick}>
-                <div className={styles.upload_text}>
-                  {t("auht.signup.reg_p2.file")}
-                </div>
-
-                <svg
-                  width="445"
-                  height="298"
-                  viewBox="0 0 445 298"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={styles.upload_svg}
+              <>
+                <div
+                  className={styles.upload}
+                  style={{
+                    width: "445px",
+                    height: "298px",
+                    position: "relative",
+                    borderRadius: "15px",
+                    marginTop: "15px",
+                    marginRight: "25px",
+                    background: "#ffffff",
+                  }}
                 >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M15 0C6.71573 0 0 6.71573 0 15V283C0 291.284 6.71573 298 15 298H430C438.284 298 445 291.284 445 283V15C445 6.71573 438.284 0 430 0H15ZM222.5 280.089C294.898 280.089 353.589 221.398 353.589 149C353.589 76.6017 294.898 17.9113 222.5 17.9113C150.102 17.9113 91.4111 76.6017 91.4111 149C91.4111 221.398 150.102 280.089 222.5 280.089Z"
-                    fill="#6A6A6A"
-                    fill-opacity="0.5"
+                  <Cropper
+                    ref={editImage}
+                    image={preview}
+                    crop={crop}
+                    aspect={4 / 4}
+                    cropShape="round"
+                    zoom={zoom}
+                    zoomSpeed={0.5}
+                    maxZoom={3}
+                    style={style}
+                    zoomWithScroll={true}
+                    showGrid={false}
+                    onCropComplete={handleOnCropComplete}
+                    onCropChange={setCrop}
+                    onZoomChange={setZoom}
                   />
-                  <path
-                    d="M114.787 65.9882C124.235 47.8997 149.208 24.3923 184.314 17.8799"
-                    stroke="white"
-                  />
-                  <path
-                    d="M337.031 219.81C329.31 238.7 306.638 264.433 272.292 274.19"
-                    stroke="white"
-                  />
-                </svg>
-
-                <img
-                  alt=""
-                  width="445"
-                  height="298"
-                  className={styles.upload_img}
-                  src={preview}
-                />
-              </div>
+                  <canvas
+                    style={{ zIndex: -100, display: "none" }}
+                    ref={imagePreviewCanvasRef}
+                  ></canvas>
+                  <svg
+                    className={`${styles.upload_svg} ${styles.first}`}
+                    width="71"
+                    height="50"
+                    viewBox="0 0 71 50"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0.787141 48.9881C10.2351 30.8996 35.2082 7.39222 70.314 0.879738"
+                      stroke="white"
+                    />
+                  </svg>
+                  <svg
+                    className={`${styles.upload_svg} ${styles.second}`}
+                    width="66"
+                    height="56"
+                    viewBox="0 0 66 56"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M65.0311 0.809794C57.3105 19.7003 34.6376 45.4334 0.291836 55.1902"
+                      stroke="white"
+                    />
+                  </svg>
+                  <div className={styles.upload_text} onClick={handleClick}>
+                    {t("auht.signup.reg_p2.file")}
+                  </div>
+                </div>
+              </>
             ) : (
               <svg
                 width="479"
