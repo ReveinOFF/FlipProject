@@ -36,6 +36,22 @@ const PNFComponent = React.lazy(() =>
   }))
 );
 
+const RPComponent = React.lazy(() =>
+  import("../../Pages/Auth/RecoverPassword/SendEmail/RecoverPassword").then(
+    (module) => ({
+      default: module.RecoverPassword,
+    })
+  )
+);
+
+const CPComponent = React.lazy(() =>
+  import("../../Pages/Auth/RecoverPassword/ChangePassword/ChangePassword").then(
+    (module) => ({
+      default: module.ChangePassword,
+    })
+  )
+);
+
 const App = () => {
   return (
     <GoogleReCaptchaProvider reCaptchaKey="6Le0YTQkAAAAAHftYF71fIFvFCyVdwfIlI5aLGDK">
@@ -45,6 +61,8 @@ const App = () => {
           <Route path="signin" element={<SignInComponent />} />
           <Route path="signup" element={<SignUpComponent />} />
           <Route path="email-confirm" element={<ConfirmEmailComponent />} />
+          <Route path="recover-password" element={<RPComponent />} />
+          <Route path="change-password" element={<CPComponent />} />
         </Route>
         <Route path="*" element={<PNFComponent />} />
       </Routes>

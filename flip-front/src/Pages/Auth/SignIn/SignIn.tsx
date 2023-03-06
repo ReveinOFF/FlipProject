@@ -148,7 +148,7 @@ export const SignIn = () => {
 
       <div className={`dflex-column ${styles.form_btn}`}>
         <CustomMiniBTN
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/recover-password")}
           content={t("auht.signin.btn_rec_psw")}
         />
 
