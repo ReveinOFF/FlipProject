@@ -36,7 +36,7 @@ export const RegPhaseOne = () => {
     DateOfBirth: new Date(new Date()),
   };
 
-  const phoneRegExp = /^([\+]?[380]{3}?|[0])[0-9]{9}$/;
+  const phoneRegExp = /^([\+]{1}[0-9]{1,3}?)[0-9]{9}$/;
 
   const Reg1Schema = yup.object({
     Name: yup
