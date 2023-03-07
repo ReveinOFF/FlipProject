@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CustomMiniBTN } from "../../../MainBlock/Button/CustomButton";
 import styles from "./EmailFound.module.scss";
@@ -5,15 +6,19 @@ import styles from "./EmailFound.module.scss";
 export const EmailFound = () => {
   const navigate = useNavigate();
 
+  const [t] = useTranslation("translation");
+
   return (
     <>
-      <div className={styles.header}>Пошту знайдено</div>
+      <div className={styles.header}>
+        {t("auht.recoverPass.emailFound.header")}
+      </div>
       <div className={styles.description}>
-        Перегляньте свою пошту, для зміни паролю
+        {t("auht.recoverPass.emailFound.description")}
       </div>
       <CustomMiniBTN
         onClick={() => navigate("/signin")}
-        content="Повернутися на сторінку входу"
+        content={t("auht.recoverPass.emailFound.btn")}
       />
     </>
   );

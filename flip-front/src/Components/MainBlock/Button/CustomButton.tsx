@@ -23,7 +23,7 @@ export const CustomButton = (props) => {
   return (
     <>
       <button
-        className={`${styles.custom_btn2} ${error && styles.error_btn}`}
+        className={`${error ? styles.error_btn : styles.custom_btn2}`}
         type={type}
         disabled={disabled}
         onClick={onClick}

@@ -234,7 +234,7 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("recover-password")]
-        public async Task<IActionResult> RecoverPassword(string email)
+        public async Task<IActionResult> RecoverPassword([FromBody] string email)
         {
             try
             {
@@ -248,7 +248,7 @@ namespace FlipBack.Controllers
                 var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
 
                 string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPassword.html"));
-                Body = Body.Replace("#url#", $"http://localhost:3000/recover-password?token={codeEncoded}&email={email}");
+                Body = Body.Replace("#url#", $"http://localhost:3000/change-password?token={codeEncoded}&email={email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
@@ -277,7 +277,10 @@ namespace FlipBack.Controllers
             if (user == null)
                 return BadRequest("Email not found!");
 
-            var result = await _userManager.ResetPasswordAsync(user, confirmPass.Token, confirmPass.NewPassword);
+            var codeDecodedBytes = WebEncoders.Base64UrlDecode(confirmPass.Token);
+            var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
+
+            var result = await _userManager.ResetPasswordAsync(user, codeDecoded, confirmPass.NewPassword);
 
             if (!result.Succeeded)
                 return BadRequest("There is a problem resetting the password!");

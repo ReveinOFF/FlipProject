@@ -22,9 +22,25 @@
 }
 
 .form {
-  display: contents;
+  input,
+  button,
+  a {
+    align-self: center;
+  }
 
-  input {
-    margin-bottom: 50px;
+  button {
+    margin-top: 50px;
+  }
+
+  .error {
+    margin-left: 22px;
+    margin-top: 10px;
+
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #9d3535;
   }
 }
