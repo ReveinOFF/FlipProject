@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import styles from "./MessageSelection.module.scss";
 
 export const MessageSelection = () => {
   const [t] = useTranslation("translation");
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = t("main.message_selection.title_page");
@@ -36,7 +38,10 @@ export const MessageSelection = () => {
       </div>
 
       <div className={styles.messages_box}>
-        <div className={`${styles.message_user} ${styles.message_active}`}>
+        <div
+          onClick={() => navigate("/chat")}
+          className={`${styles.message_user} ${styles.message_active}`}
+        >
           <div className={styles.img}>
             <img
               src={
@@ -85,7 +90,10 @@ export const MessageSelection = () => {
           </div>
         </div>
 
-        <div className={`${styles.message_user} ${styles.message_inactive}`}>
+        <div
+          className={`${styles.message_user} ${styles.message_inactive}`}
+          onClick={() => navigate("/chat")}
+        >
           <div className={styles.img}>
             <img
               src={

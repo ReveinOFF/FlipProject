@@ -54,7 +54,7 @@ const AuthApp = () => {
         <Route path="fliper" element={<FliperComponent />} />
         <Route path="settings" element={<SettingsComponent />} />
         <Route path="messages" element={<MessagesSelectionComponent />} />
-        <Route path="testmessages" element={<MessagesRoomComponent />} />
+        <Route path="chat" element={<MessagesRoomComponent />} />
       </Route>
       <Route path="*" element={<PNFComponent />} />
     </Routes>

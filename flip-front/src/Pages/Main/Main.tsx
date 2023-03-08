@@ -10,11 +10,5 @@ export const Main = () => {
     document.title = t("main.main.title_page");
   }, []);
 
-  // return (
-  //   <>
-  //     <History />
-  //   </>
-  // );
-
   return <></>;
 };

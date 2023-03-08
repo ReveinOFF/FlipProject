@@ -133,6 +133,7 @@ namespace FlipBack.Controllers
 
                 string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "ConfirmEmail.html"));
                 Body = Body.Replace("#url#", $"http://localhost:3000/email-confirm?token={codeEncoded}&email={user.Email}");
+                //Body = Body.Replace("#url#", $"http://92.119.231.127/email-confirm?token={codeEncoded}&email={user.Email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
@@ -249,6 +250,7 @@ namespace FlipBack.Controllers
 
                 string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPassword.html"));
                 Body = Body.Replace("#url#", $"http://localhost:3000/change-password?token={codeEncoded}&email={email}");
+                //Body = Body.Replace("#url#", $"http://92.119.231.127/change-password?token={codeEncoded}&email={email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
