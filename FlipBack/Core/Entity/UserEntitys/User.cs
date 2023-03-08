@@ -20,7 +20,7 @@ namespace Core.Entity.UserEntitys
         public string UserImage { get; set; }
         public string UserImagePath { get; set; }
         [Required]
-        [MinLength(5), MaxLength(15)]
+        [MaxLength(15)]
         public string Name { get; set; }
         public string Description { get; set; }
         [Required]
