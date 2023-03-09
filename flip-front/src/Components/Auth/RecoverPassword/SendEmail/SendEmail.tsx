@@ -76,7 +76,7 @@ export const SendEmail = ({ onClick }) => {
       <FormikProvider value={formik}>
         <Form className={`${styles.form} dflex-column`} onSubmit={handleSubmit}>
           <CustomInput
-            type="text"
+            type="email"
             placeholder={t("auht.recoverPass.sendEmail.email")}
             value={values.Email}
             onChange={handleChange}

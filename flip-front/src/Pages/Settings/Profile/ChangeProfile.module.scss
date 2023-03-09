@@ -1,0 +1,165 @@
+.back {
+  display: flex;
+  align-items: center;
+
+  margin-top: 46px;
+  margin-bottom: 28px;
+
+  width: 200px;
+
+  cursor: pointer;
+
+  div {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+
+    color: #2f2f2f;
+  }
+}
+
+.profile {
+  width: 100vh;
+
+  padding-top: 20px;
+  padding-left: 50px;
+  padding-right: 200px;
+  padding-bottom: 220px;
+
+  background: rgba(248, 248, 248, 0.8);
+  border-radius: 15px;
+
+  .curr {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 20px;
+
+    .image {
+      position: relative;
+
+      margin-right: 60px;
+
+      img {
+        height: 112px;
+        width: 112px;
+
+        border-radius: 50%;
+      }
+
+      svg {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+    }
+
+    .curr_name {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 30px;
+      line-height: 150%;
+
+      letter-spacing: -0.011em;
+
+      color: #2f2f2f;
+    }
+  }
+
+  .change_data {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    div {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 150%;
+      letter-spacing: -0.011em;
+
+      color: #2f2f2f;
+    }
+
+    input {
+      height: 40px;
+    }
+
+    input[type="date"] {
+      user-select: none;
+    }
+
+    textarea {
+      height: 120px;
+      resize: none;
+    }
+
+    input,
+    textarea {
+      background: #ebebeb;
+      border-radius: 15px;
+
+      width: 507px;
+
+      border: 0;
+
+      padding: 8px 10px;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    a {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 19px;
+      text-decoration: none;
+
+      cursor: pointer;
+
+      color: #575757;
+
+      margin-right: 190px;
+    }
+
+    button {
+      cursor: pointer;
+
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 19px;
+
+      color: #f5f5f5;
+
+      width: 180px;
+      height: 40px;
+      left: 1008px;
+      top: 835px;
+
+      border: 0;
+      border-radius: 15px;
+
+      background: #48d824;
+      box-shadow: -210px 0 150px -120px #10d0ea inset;
+
+      transition: 0.3s ease-out;
+
+      &:hover {
+        background: #31ab3a;
+        box-shadow: -210px 0 150px -120px #0ea6b6 inset;
+      }
+    }
+  }
+}

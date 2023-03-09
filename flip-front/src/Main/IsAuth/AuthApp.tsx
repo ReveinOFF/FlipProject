@@ -23,7 +23,7 @@ const FliperComponent = React.lazy(() =>
   }))
 );
 const SettingsComponent = React.lazy(() =>
-  import("../../Pages/Settings/Settings").then((module) => ({
+  import("../../Pages/Settings/Main/Settings").then((module) => ({
     default: module.Settings,
   }))
 );
@@ -45,6 +45,32 @@ const PNFComponent = React.lazy(() =>
   }))
 );
 
+const ChangeEmailComponent = React.lazy(() =>
+  import("../../Pages/Settings/Email/ChangeEmail").then((module) => ({
+    default: module.ChangeEmail,
+  }))
+);
+
+const ChangePassComponent = React.lazy(() =>
+  import("../../Pages/Settings/Password/ChangePassword").then((module) => ({
+    default: module.ChangePassword,
+  }))
+);
+
+const ForgotPassComponent = React.lazy(() =>
+  import("../../Pages/Settings/ForgotPassword/ForgotPassword").then(
+    (module) => ({
+      default: module.ForgotPassword,
+    })
+  )
+);
+
+const ChangeProfileComponent = React.lazy(() =>
+  import("../../Pages/Settings/Profile/ChangeProfile").then((module) => ({
+    default: module.ChangeProfile,
+  }))
+);
+
 const AuthApp = () => {
   return (
     <Routes>
@@ -52,7 +78,13 @@ const AuthApp = () => {
         <Route index element={<MainComponent />} />
         <Route path=":profile" element={<ProfileComponent />} />
         <Route path="fliper" element={<FliperComponent />} />
-        <Route path="settings" element={<SettingsComponent />} />
+        <Route path="settings">
+          <Route index element={<SettingsComponent />} />
+          <Route path="edit-profile" element={<ChangeProfileComponent />} />
+          <Route path="change-email" element={<ChangeEmailComponent />} />
+          <Route path="change-password" element={<ChangePassComponent />} />
+          <Route path="forgot-password" element={<ForgotPassComponent />} />
+        </Route>
         <Route path="messages" element={<MessagesSelectionComponent />} />
         <Route path="chat" element={<MessagesRoomComponent />} />
       </Route>
