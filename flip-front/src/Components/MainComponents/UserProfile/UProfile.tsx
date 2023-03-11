@@ -296,7 +296,6 @@ export const UProfile = (props) => {
           <div className={styles.profile_data_imgs}>
             {profile.createdPost.map((item: CreatedPost) => (
               <img
-                className={styles.profile_data_img}
                 key={item.id}
                 src={`http://localhost:5170/resources/postfiles/default/${item.file[0]}`}
                 alt=""

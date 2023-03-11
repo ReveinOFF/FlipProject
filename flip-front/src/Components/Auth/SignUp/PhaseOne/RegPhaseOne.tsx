@@ -26,6 +26,14 @@ export const RegPhaseOne = () => {
   const [typingTimeout, setTypingTimeout] = useState<any>();
   const [typingTimeout2, setTypingTimeout2] = useState<any>();
 
+  const theme = useTypedSelector((state) => state.theme.mode);
+  const [mode, setMode] = useState<string>("light");
+
+  useEffect(() => {
+    if (theme === "light") setMode("light");
+    else setMode("dark");
+  }, [theme]);
+
   useEffect(() => {
     document.title = t("auht.signup.reg_p1.title_page");
   }, []);
@@ -142,7 +150,11 @@ export const RegPhaseOne = () => {
 
   return (
     <>
-      <div className={styles.reg_label}>Реєстрація</div>
+      <div
+        className={mode === "light" ? styles.reg_label_l : styles.reg_label_d}
+      >
+        Реєстрація
+      </div>
 
       <FormikProvider value={formik}>
         <Form className={`${styles.form} dflex-column`} onSubmit={handleSubmit}>
@@ -153,6 +165,7 @@ export const RegPhaseOne = () => {
               value={values.Name}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={errors.Name && true}
               name="Name"
             />
             {touched.Name && errors.Name && (
@@ -165,6 +178,7 @@ export const RegPhaseOne = () => {
               value={values.Phone}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={errors.Phone && true}
               name="Phone"
             />
             {touched.Phone && errors.Phone && (
@@ -177,6 +191,7 @@ export const RegPhaseOne = () => {
               value={values.DateOfBirth}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={errors.DateOfBirth && true}
               name="DateOfBirth"
             />
             {touched.DateOfBirth && errors.DateOfBirth && (
@@ -187,24 +202,67 @@ export const RegPhaseOne = () => {
           </div>
 
           <div className={styles.selector}>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="9" cy="9" r="9" fill="#575757" />
-            </svg>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="9" cy="9" r="9" fill="#D9D9D9" />
-            </svg>
+            {mode === "light" ? (
+              <>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="9" cy="9" r="9" fill="#575757" />
+                </svg>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="9" cy="9" r="9" fill="#D9D9D9" />
+                </svg>
+              </>
+            ) : (
+              <>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="9"
+                    cy="9"
+                    r="9"
+                    fill="url(#paint0_linear_1649_9365)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_1649_9365"
+                      x1="-3.49103"
+                      y1="16.2"
+                      x2="18.3145"
+                      y2="15.7189"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="#48D824" />
+                      <stop offset="1" stopColor="#10D0EA" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="9" cy="9" r="9" fill="#D9D9D9" />
+                </svg>
+              </>
+            )}
           </div>
 
           <CustomButtonBG

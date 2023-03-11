@@ -10,7 +10,6 @@ i18n
   .init({
     lng: localStorage.getItem("lng")?.toString(),
     fallbackLng: "ua",
-    debug: false,
     saveMissing: false,
     detection: {
       order: ["queryString", "cookie"],

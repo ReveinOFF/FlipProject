@@ -18,22 +18,8 @@ export const AuthBg = () => {
     else setMode("dark");
   }, [theme]);
 
-  useEffect(() => {
-    const lng = localStorage.getItem("lng");
-
-    if (lng === "ua") {
-      i18n.changeLanguage("ua");
-      localStorage.setItem("lng", "ua");
-      setTrans("UA");
-    } else {
-      i18n.changeLanguage("en");
-      localStorage.setItem("lng", "en");
-      setTrans("EN");
-    }
-  }, []);
-
   const changeLanguageOnClick = () => {
-    const lng = localStorage.getItem("lng");
+    const lng = i18n.language;
 
     if (lng === "ua") {
       i18n.changeLanguage("en");
@@ -152,8 +138,8 @@ export const AuthBg = () => {
               <path
                 d="M6.51494 6.23987C5.26284 7.59096 4.50467 9.32596 4.36366 11.1629C4.22264 12.9998 4.70708 14.8306 5.73823 16.3577C6.76937 17.8848 8.28661 19.0185 10.0433 19.5744C11.8 20.1304 13.6929 20.0759 15.4143 19.4199C10.0437 14.4493 9.8451 9.32084 14.8135 3.9527C13.3542 3.52316 11.8041 3.50968 10.3379 3.91379C8.87168 4.3179 7.54762 5.12352 6.51494 6.23987Z"
                 stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>

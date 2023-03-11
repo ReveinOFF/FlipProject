@@ -3,3 +3,8 @@ export const ToastType = {
   error: "error",
   warning: "warning",
 };
+
+export interface Toast {
+  message: string;
+  type: string;
+}

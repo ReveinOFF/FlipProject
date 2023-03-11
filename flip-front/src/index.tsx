@@ -12,10 +12,9 @@ import { AuthUser } from "./Components/Auth/store/actions";
 import jwtDecode from "jwt-decode";
 import { JwtDecoder } from "./Interface/JwtDecoder";
 import "./Components/i18n/i18n";
-import axios from "axios";
 import { Suspense } from "react";
-import { Toast } from "./Components/Toast/Toast";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Toast from "./Components/Toast/Toast";
 
 const ldMode = localStorage.getItem("LightDarkMode");
 const token = localStorage.getItem("token");
@@ -27,14 +26,7 @@ const root = ReactDOM.createRoot(
 
 if (!ldMode) localStorage.setItem("LightDarkMode", "light");
 
-if (!lng) {
-  axios.get("https://ipapi.co/json/").then((response) => {
-    let data = response.data;
-
-    if (data.country_name === "Ukraine") localStorage.setItem("lng", "ua");
-    else localStorage.setItem("lng", "en");
-  });
-}
+if (!lng) localStorage.setItem("lng", navigator.language);
 
 ThemeActions(store.dispatch);
 

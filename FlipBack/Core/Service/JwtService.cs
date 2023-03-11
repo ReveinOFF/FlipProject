@@ -51,16 +51,16 @@ namespace Core.Service
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        public async Task<TokenDTO> RefreshTokens(string refreshToken)
+        public async Task<TokenDataDTO> RefreshTokens(string refreshToken)
         {
-            var userRefreshToken = _userManager.Users.Include((x) => x.RefreshTokens).SingleOrDefaultAsync(x => x.RefreshTokens.Any(t => t.Token == refreshToken)).Result;
+            var userRefreshToken = await _userManager.Users.Include((x) => x.RefreshTokens).Where(x => x.RefreshTokens.Any(t => t.Token == refreshToken)).FirstOrDefaultAsync();
 
             if (userRefreshToken == null)
             {
                 return null;
             }
 
-            var refToken = userRefreshToken.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken);
+            var refToken = userRefreshToken.RefreshTokens.Where(x => x.Token == refreshToken).FirstOrDefault();
 
             if (DateTime.UtcNow > refToken.Expires)
                 return null;
@@ -68,11 +68,11 @@ namespace Core.Service
             var newJwtToken = CreateToken(userRefreshToken);
             var newRefreshToken = GenerateRefreshToken();
 
-            userRefreshToken.RefreshTokens.Add(newRefreshToken);
-            await _userManager.UpdateAsync(userRefreshToken);
+            newRefreshToken.UserId = userRefreshToken.Id;
 
-            return new TokenDTO
+            return new TokenDataDTO
             {
+                TokensData = newRefreshToken,
                 Token = newJwtToken,
                 RefreshToken = newRefreshToken.Token
             };

@@ -7,7 +7,7 @@ namespace Core.Interface
     public interface IJwtService
     {
         string CreateToken(User user);
-        Task<TokenDTO> RefreshTokens(string refreshToken);
+        Task<TokenDataDTO> RefreshTokens(string refreshToken);
         RefreshToken GenerateRefreshToken();
     }
 }

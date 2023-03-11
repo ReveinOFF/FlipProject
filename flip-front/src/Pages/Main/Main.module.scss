@@ -57,6 +57,7 @@
 }
 
 .posts {
+  width: 100vh;
   .post {
     display: flex;
 
@@ -67,7 +68,9 @@
 
       img {
         width: 528px;
-        height: 755px;
+        height: 100%;
+
+        object-fit: fill;
 
         border-radius: 15px 0px 0px 15px;
       }
@@ -112,6 +115,8 @@
 
     .post_data {
       background: #f8f8f8;
+
+      max-width: 420px;
 
       border-radius: 0 15px 15px 0;
 

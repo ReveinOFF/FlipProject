@@ -133,7 +133,7 @@ namespace FlipBack.Controllers
 
                 string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "ConfirmEmail.html"));
                 Body = Body.Replace("#url#", $"http://localhost:3000/email-confirm?token={codeEncoded}&email={user.Email}");
-                //Body = Body.Replace("#url#", $"http://92.119.231.127/email-confirm?token={codeEncoded}&email={user.Email}");
+                //Body = Body.Replace("#url#", $"https://solido.tk/email-confirm?token={codeEncoded}&email={user.Email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
@@ -250,7 +250,7 @@ namespace FlipBack.Controllers
 
                 string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPassword.html"));
                 Body = Body.Replace("#url#", $"http://localhost:3000/change-password?token={codeEncoded}&email={email}");
-                //Body = Body.Replace("#url#", $"http://92.119.231.127/change-password?token={codeEncoded}&email={email}");
+                //Body = Body.Replace("#url#", $"https://solido.tk/change-password?token={codeEncoded}&email={email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
@@ -352,7 +352,10 @@ namespace FlipBack.Controllers
             var tokens = await _jwtService.RefreshTokens(refreshToken);
 
             if (tokens == null)
-                return Unauthorized("Invalid Refresh Token!");
+                return BadRequest("Invalid Refresh Token!");
+
+            await _context.RefreshTokens.AddAsync(tokens.TokensData);
+            await _context.SaveChangesAsync();
 
             await RevokeToken(refreshToken);
 
@@ -373,7 +376,8 @@ namespace FlipBack.Controllers
             if (DateTime.UtcNow > refToken.Expires)
                 return BadRequest("The Refresh Token has expired!");
 
-            _context.RefreshTokens.Remove(refToken);
+            //_context.RefreshTokens.Remove(refToken);
+            _context.Entry(refToken).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
 
             return Ok();

@@ -40,24 +40,24 @@
     &:hover .header {
       opacity: 1;
 
-      transform: scaleY(1) matrix(1, 0, 0, -1, 0, 0);
+      transform: scaleY(1);
     }
 
     .header {
       position: absolute;
-      top: -152px;
+      top: 0;
       left: 0;
       right: 0;
 
       opacity: 0;
 
-      transform: scaleY(0) matrix(1, 0, 0, -1, 0, 0);
-      transform-origin: bottom;
+      transform: scaleY(0);
+      transform-origin: top;
 
       height: 152px;
 
       background: linear-gradient(
-        360deg,
+        180deg,
         rgba(47, 47, 47, 0.7) 40.63%,
         rgba(47, 47, 47, 0) 100%
       );
@@ -68,7 +68,7 @@
 
     .progress_bar {
       position: absolute;
-      top: 0px;
+      top: 0;
       left: 0;
       right: 0;
 

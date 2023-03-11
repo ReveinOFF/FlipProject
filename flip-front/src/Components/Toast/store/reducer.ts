@@ -18,7 +18,6 @@ export const toastReducer = (
   switch (action.type) {
     case ToastActionTypes.SHOW:
       return {
-        ...state,
         show: true,
         message: action.payload.message,
         type: action.payload.type,

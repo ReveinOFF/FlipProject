@@ -17,6 +17,16 @@ axios.interceptors.response.use(
   (resp) => resp,
   async (error) => {
     if (error.response.status === 401) {
+      if (
+        !localStorage.getItem("refreshToken") ||
+        !localStorage.getItem("token")
+      ) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+
+        window.location.reload();
+      }
+
       const response = await axios.post(
         "account/refresh-token",
         localStorage.getItem("refreshToken"),
@@ -35,10 +45,14 @@ axios.interceptors.response.use(
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("refreshToken", response.data.refreshToken);
 
+        window.location.reload();
+
         return axios(error.config);
-      } else if (response.status === 401) {
+      } else if (response.status === 400) {
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
+
+        window.location.reload();
 
         return axios(error.config);
       }

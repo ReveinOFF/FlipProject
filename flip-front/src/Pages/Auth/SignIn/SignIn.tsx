@@ -15,6 +15,7 @@ import { CustomInput } from "../../../Components/MainBlock/Input/CustomInput";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
+import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 
 export const SignIn = () => {
   const [visible, setVisoiblity] = useState(false);
@@ -23,6 +24,14 @@ export const SignIn = () => {
   const navigate = useNavigate();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [t] = useTranslation("translation");
+
+  const [mode, setMode] = useState<string>("light");
+  const theme = useTypedSelector((state) => state.theme.mode);
+
+  useEffect(() => {
+    if (theme === "light") setMode("light");
+    else setMode("dark");
+  }, [theme]);
 
   useEffect(() => {
     document.title = t("auht.signin.title_page");
@@ -87,7 +96,13 @@ export const SignIn = () => {
     <>
       {isLoading && <LazyLoading />}
 
-      <div className={styles.log_header}>{t("auht.signin.header")}</div>
+      <div
+        className={`${styles.log_header} ${
+          mode === "light" ? styles.header_l : styles.header_d
+        }`}
+      >
+        {t("auht.signin.header")}
+      </div>
 
       <FormikProvider value={formik}>
         <Form
@@ -127,11 +142,23 @@ export const SignIn = () => {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M12 21C7 21 1 16 1 12C1 8 7 3 12 3C17 3 23 8 23 12C23 16 17 21 12 21ZM12 7C10.6739 7 9.40215 7.52678 8.46447 8.46447C7.52678 9.40215 7 10.6739 7 12C7 13.3261 7.52678 14.5979 8.46447 15.5355C9.40215 16.4732 10.6739 17 12 17C13.3261 17 14.5979 16.4732 15.5355 15.5355C16.4732 14.5979 17 13.3261 17 12C17 10.6739 16.4732 9.40215 15.5355 8.46447C14.5979 7.52678 13.3261 7 12 7Z"
-                  stroke="#939292"
-                  strokeWidth="2"
-                />
+                {mode === "light" ? (
+                  <>
+                    <path
+                      d="M12 21C7 21 1 16 1 12C1 8 7 3 12 3C17 3 23 8 23 12C23 16 17 21 12 21ZM12 7C10.6739 7 9.40215 7.52678 8.46447 8.46447C7.52678 9.40215 7 10.6739 7 12C7 13.3261 7.52678 14.5979 8.46447 15.5355C9.40215 16.4732 10.6739 17 12 17C13.3261 17 14.5979 16.4732 15.5355 15.5355C16.4732 14.5979 17 13.3261 17 12C17 10.6739 16.4732 9.40215 15.5355 8.46447C14.5979 7.52678 13.3261 7 12 7Z"
+                      stroke="#939292"
+                      strokeWidth="2"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <path
+                      d="M12 21C7 21 1 16 1 12C1 8 7 3 12 3C17 3 23 8 23 12C23 16 17 21 12 21ZM12 7C10.6739 7 9.40215 7.52678 8.46447 8.46447C7.52678 9.40215 7 10.6739 7 12C7 13.3261 7.52678 14.5979 8.46447 15.5355C9.40215 16.4732 10.6739 17 12 17C13.3261 17 14.5979 16.4732 15.5355 15.5355C16.4732 14.5979 17 13.3261 17 12C17 10.6739 16.4732 9.40215 15.5355 8.46447C14.5979 7.52678 13.3261 7 12 7Z"
+                      stroke="#f8f8f8"
+                      strokeWidth="2"
+                    />
+                  </>
+                )}
               </svg>
             ) : (
               <svg
@@ -142,19 +169,39 @@ export const SignIn = () => {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M12 21C7 21 1 16 1 12C1 8 7 3 12 3C17 3 23 8 23 12C23 16 17 21 12 21ZM12 7C10.6739 7 9.40215 7.52678 8.46447 8.46447C7.52678 9.40215 7 10.6739 7 12C7 13.3261 7.52678 14.5979 8.46447 15.5355C9.40215 16.4732 10.6739 17 12 17C13.3261 17 14.5979 16.4732 15.5355 15.5355C16.4732 14.5979 17 13.3261 17 12C17 10.6739 16.4732 9.40215 15.5355 8.46447C14.5979 7.52678 13.3261 7 12 7Z"
-                  stroke="#939292"
-                  strokeWidth="2"
-                />
-                <line
-                  x1="24"
-                  y1="1"
-                  x2="1"
-                  y2="24"
-                  stroke="#939292"
-                  strokeWidth="2"
-                />
+                {mode === "light" ? (
+                  <>
+                    <path
+                      d="M12 21C7 21 1 16 1 12C1 8 7 3 12 3C17 3 23 8 23 12C23 16 17 21 12 21ZM12 7C10.6739 7 9.40215 7.52678 8.46447 8.46447C7.52678 9.40215 7 10.6739 7 12C7 13.3261 7.52678 14.5979 8.46447 15.5355C9.40215 16.4732 10.6739 17 12 17C13.3261 17 14.5979 16.4732 15.5355 15.5355C16.4732 14.5979 17 13.3261 17 12C17 10.6739 16.4732 9.40215 15.5355 8.46447C14.5979 7.52678 13.3261 7 12 7Z"
+                      stroke="#939292"
+                      strokeWidth="2"
+                    />
+                    <line
+                      x1="24"
+                      y1="1"
+                      x2="1"
+                      y2="24"
+                      stroke="#939292"
+                      strokeWidth="2"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <path
+                      d="M12 21C7 21 1 16 1 12C1 8 7 3 12 3C17 3 23 8 23 12C23 16 17 21 12 21ZM12 7C10.6739 7 9.40215 7.52678 8.46447 8.46447C7.52678 9.40215 7 10.6739 7 12C7 13.3261 7.52678 14.5979 8.46447 15.5355C9.40215 16.4732 10.6739 17 12 17C13.3261 17 14.5979 16.4732 15.5355 15.5355C16.4732 14.5979 17 13.3261 17 12C17 10.6739 16.4732 9.40215 15.5355 8.46447C14.5979 7.52678 13.3261 7 12 7Z"
+                      stroke="#f8f8f8"
+                      strokeWidth="2"
+                    />
+                    <line
+                      x1="24"
+                      y1="1"
+                      x2="1"
+                      y2="24"
+                      stroke="#f8f8f8"
+                      strokeWidth="2"
+                    />
+                  </>
+                )}
               </svg>
             )}
           </div>
@@ -185,16 +232,33 @@ export const SignIn = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="0.5"
-              y1="1"
-              x2="180.5"
-              y2="1"
-              stroke="black"
-              strokeLinecap="square"
-            />
+            {mode === "light" ? (
+              <>
+                <line
+                  x1="0.5"
+                  y1="1"
+                  x2="180.5"
+                  y2="1"
+                  stroke="black"
+                  strokeLinecap="square"
+                />
+              </>
+            ) : (
+              <>
+                <line
+                  x1="0.5"
+                  y1="1"
+                  x2="180.5"
+                  y2="1"
+                  stroke="#f8f8f8"
+                  strokeLinecap="square"
+                />
+              </>
+            )}
           </svg>
-          <div>{t("auht.signin.or")}</div>
+          <div className={mode === "light" ? styles.or_l : styles.or_d}>
+            {t("auht.signin.or")}
+          </div>
           <svg
             width="230"
             height="2"
@@ -202,14 +266,29 @@ export const SignIn = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="0.5"
-              y1="1"
-              x2="180.5"
-              y2="1"
-              stroke="black"
-              strokeLinecap="square"
-            />
+            {mode === "light" ? (
+              <>
+                <line
+                  x1="0.5"
+                  y1="1"
+                  x2="180.5"
+                  y2="1"
+                  stroke="black"
+                  strokeLinecap="square"
+                />
+              </>
+            ) : (
+              <>
+                <line
+                  x1="0.5"
+                  y1="1"
+                  x2="180.5"
+                  y2="1"
+                  stroke="#f8f8f8"
+                  strokeLinecap="square"
+                />
+              </>
+            )}
           </svg>
         </div>
 
