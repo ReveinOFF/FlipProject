@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./ChangeProfile.module.scss";
@@ -6,6 +7,7 @@ import styles from "./ChangeProfile.module.scss";
 export const ChangeProfile = () => {
   const profile = useTypedSelector((state) => state.auth.user);
   const navigate = useNavigate();
+  const [t] = useTranslation("translation");
 
   const [nameValue, setNameValue] = useState(profile?.name);
   const [loginValue, setLoginValue] = useState(profile?.userName);
@@ -46,7 +48,7 @@ export const ChangeProfile = () => {
           />
         </svg>
 
-        <div>Редагувати профіль</div>
+        <div>{t("main.settings.change_profile.back")}</div>
       </div>
 
       <div className={styles.profile}>
@@ -115,33 +117,33 @@ export const ChangeProfile = () => {
           <div className={styles.curr_name}>{profile?.name}</div>
         </div>
         <div className={styles.change_data}>
-          <div>Ім'я</div>
+          <div>{t("main.settings.change_profile.name")}</div>
           <input type="text" value={nameValue} onChange={nameInputChange} />
         </div>
         <div className={styles.change_data}>
-          <div>Ім'я користувача</div>
+          <div>{t("main.settings.change_profile.login")}</div>
           <input type="text" value={loginValue} onChange={loginInputChange} />
         </div>
         <div className={styles.change_data}>
-          <div>Дата народження</div>
+          <div>{t("main.settings.change_profile.date")}</div>
           <input type="date" />
         </div>
         <div className={styles.change_data}>
-          <div>Біографія</div>
+          <div>{t("main.settings.change_profile.description")}</div>
           <textarea
             value={descriptionValue}
             onChange={descriptionInputChange}
           />
         </div>
         <div className={styles.change_data}>
-          <div>Номер телефону</div>
+          <div>{t("main.settings.change_profile.phone")}</div>
           <input type="text" value={phoneValue} onChange={phoneInputChange} />
         </div>
         <div className={styles.buttons}>
           <a href="#" onClick={() => navigate(-1)}>
-            Скасувати зміни
+            {t("main.settings.change_profile.cancel")}
           </a>
-          <button>Зберегти</button>
+          <button>{t("main.settings.change_profile.save")}</button>
         </div>
       </div>
     </>

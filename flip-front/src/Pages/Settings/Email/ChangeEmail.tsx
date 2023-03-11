@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import styles from "./ChangeEmail.module.scss";
 
 export const ChangeEmail = () => {
   const navigate = useNavigate();
+  const [t] = useTranslation("translation");
 
   return (
     <>
@@ -20,7 +22,7 @@ export const ChangeEmail = () => {
           />
         </svg>
 
-        <div>Змінити пошту</div>
+        <div>{t("main.settings.change_email.back")}</div>
       </div>
 
       <div className={styles.setting}>
@@ -33,13 +35,15 @@ export const ChangeEmail = () => {
         </div>
 
         <div className={styles.email}>
-          <div>Нова пошта</div>
+          <div>{t("main.settings.change_email.email")}</div>
           <input type="email" />
         </div>
 
         <div className={styles.buttons}>
-          <a onClick={() => navigate(-1)}>Скасувати зміни</a>
-          <button>Змінити пошту</button>
+          <a onClick={() => navigate(-1)}>
+            {t("main.settings.change_email.cancel")}
+          </a>
+          <button>{t("main.settings.change_email.btn")}</button>
         </div>
       </div>
     </>

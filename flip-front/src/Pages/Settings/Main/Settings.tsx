@@ -69,7 +69,10 @@ export const Settings = () => {
           />
         </svg>
 
-        <input type="text" placeholder="Пошук" />
+        <input
+          type="text"
+          placeholder={t("main.settings.main.search").toString()}
+        />
       </div>
 
       <div className={styles.settings_list}>
@@ -93,7 +96,7 @@ export const Settings = () => {
               fill="#2F2F2F"
             />
           </svg>
-          <div>Редагувати профіль</div>
+          <div>{t("main.settings.main.edit_profile")}</div>
         </div>
 
         <div
@@ -117,7 +120,7 @@ export const Settings = () => {
             />
           </svg>
 
-          <div>Змінити пошту</div>
+          <div>{t("main.settings.main.change_email")}</div>
         </div>
 
         <div
@@ -141,7 +144,7 @@ export const Settings = () => {
             />
           </svg>
 
-          <div>Змінити пароль</div>
+          <div>{t("main.settings.main.change_pass")}</div>
         </div>
 
         <div className={styles.setting}>
@@ -166,7 +169,7 @@ export const Settings = () => {
             />
           </svg>
 
-          <div>Мова</div>
+          <div>{t("main.settings.main.lng")}</div>
         </div>
 
         <div className={styles.setting}>
@@ -195,7 +198,7 @@ export const Settings = () => {
             />
           </svg>
 
-          <div>Реклама</div>
+          <div>{t("main.settings.main.advertising")}</div>
         </div>
 
         <div className={styles.setting}>
@@ -218,7 +221,7 @@ export const Settings = () => {
             />
           </svg>
 
-          <div>Зміна теми</div>
+          <div>{t("main.settings.main.theme")}</div>
         </div>
 
         <div className={styles.setting}>
@@ -243,7 +246,7 @@ export const Settings = () => {
             />
           </svg>
 
-          <div>Входи в обліковий запис</div>
+          <div>{t("main.settings.main.joined")}</div>
         </div>
 
         <div className={styles.setting}>
@@ -264,7 +267,7 @@ export const Settings = () => {
             />
           </svg>
 
-          <div>Інформація сайта</div>
+          <div>{t("main.settings.main.info")}</div>
         </div>
 
         <div className={styles.setting}>
@@ -289,12 +292,12 @@ export const Settings = () => {
             />
           </svg>
 
-          <div>Допомога</div>
+          <div>{t("main.settings.main.help")}</div>
         </div>
       </div>
 
       <a className={styles.logout} onClick={async () => await mutateAsync()}>
-        Вийти з обікового запису
+        {t("main.settings.main.logout")}
       </a>
     </>
   );

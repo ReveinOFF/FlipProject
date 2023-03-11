@@ -165,7 +165,7 @@ export const RegPhaseOne = () => {
               value={values.Name}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={errors.Name && true}
+              error={touched.Name && errors.Name ? true : false}
               name="Name"
             />
             {touched.Name && errors.Name && (
@@ -178,7 +178,7 @@ export const RegPhaseOne = () => {
               value={values.Phone}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={errors.Phone && true}
+              error={touched.Phone && errors.Phone ? true : false}
               name="Phone"
             />
             {touched.Phone && errors.Phone && (
@@ -191,7 +191,7 @@ export const RegPhaseOne = () => {
               value={values.DateOfBirth}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={errors.DateOfBirth && true}
+              error={touched.DateOfBirth && errors.DateOfBirth ? true : false}
               name="DateOfBirth"
             />
             {touched.DateOfBirth && errors.DateOfBirth && (

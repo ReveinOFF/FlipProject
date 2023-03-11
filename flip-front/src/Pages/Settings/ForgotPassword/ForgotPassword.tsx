@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import styles from "./ForgotPassword.module.scss";
 
 export const ForgotPassword = () => {
   const navigate = useNavigate();
+  const [t] = useTranslation("translation");
 
   return (
     <>
@@ -20,7 +22,7 @@ export const ForgotPassword = () => {
           />
         </svg>
 
-        <div>Змінити пароль</div>
+        <div>{t("main.settings.forgot_pass.back")}</div>
       </div>
 
       <div className={styles.forgot_pass}>
@@ -45,17 +47,18 @@ export const ForgotPassword = () => {
           <circle cx="118.5" cy="17.5" r="17.5" fill="#2F2F2F" />
         </svg>
 
-        <div className={styles.header}>Забули пароль?</div>
+        <div className={styles.header}>
+          {t("main.settings.forgot_pass.header")}
+        </div>
 
         <div className={styles.description}>
-          Укажіть електронну адресу, і вам прийде посилання для зміни паролю до
-          облікового запису.
+          {t("main.settings.forgot_pass.description")}
         </div>
 
         <div className={styles.form}>
           <input type="email" placeholder="fliper@gmail.com" />
 
-          <button>Надіслати повідомлення</button>
+          <button>{t("main.settings.forgot_pass.btn")}</button>
         </div>
       </div>
     </>

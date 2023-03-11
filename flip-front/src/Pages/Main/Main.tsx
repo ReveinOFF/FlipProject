@@ -255,7 +255,7 @@ export const Main = () => {
                 <div className={styles.name}>Розняк Чоник</div>
                 <div className={styles.time}>8 год.</div>
               </div>
-              <button>Відстежується</button>
+              <button>{t("main.main.following")}</button>
               <svg
                 className={styles.save}
                 width="24"
@@ -296,7 +296,7 @@ export const Main = () => {
                 Довіряючи беззастережно людині, ти в результаті отримуєш одне з
                 двох: або людину на все життя, або урок на все життя.
               </div>
-              <div className={styles.more}>Показати більше...</div>
+              <div className={styles.more}>{t("main.main.show_more")}</div>
             </div>
 
             <div className={styles.commentarys}>
@@ -376,8 +376,12 @@ export const Main = () => {
 
                 <div className={styles.info_comm}>
                   <div className={styles.time_comm}>3 год</div>
-                  <div className={styles.count_like}>1 вподобань</div>
-                  <div className={styles.answer_comm}>відповісти</div>
+                  <div className={styles.count_like}>
+                    1 {t("main.main.like")}
+                  </div>
+                  <div className={styles.answer_comm}>
+                    {t("main.main.answ")}
+                  </div>
                 </div>
               </div>
 
@@ -407,8 +411,12 @@ export const Main = () => {
 
                 <div className={styles.info_comm}>
                   <div className={styles.time_comm}>3 год</div>
-                  <div className={styles.count_like}>1 вподобань</div>
-                  <div className={styles.answer_comm}>відповісти</div>
+                  <div className={styles.count_like}>
+                    1 {t("main.main.like")}
+                  </div>
+                  <div className={styles.answer_comm}>
+                    {t("main.main.answ")}
+                  </div>
                 </div>
 
                 <div className={styles.answers}>
@@ -425,7 +433,7 @@ export const Main = () => {
                     </div>
                     <div className={styles.info_answ}>
                       <div className={styles.time_answ}>3 год</div>
-                      <div className={styles.answ}>відповісти</div>
+                      <div className={styles.answ}>{t("main.main.answ")}</div>
                     </div>
                   </div>
                 </div>
@@ -435,7 +443,7 @@ export const Main = () => {
             <div className={styles.send_comment}>
               <textarea
                 rows={1}
-                placeholder="Додати коментар"
+                placeholder={t("main.main.input").toString()}
                 ref={textAreaRef}
                 value={currentValue}
                 onChange={(e) => {

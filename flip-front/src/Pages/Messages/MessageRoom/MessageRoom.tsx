@@ -51,7 +51,7 @@ export const MessageRoom = () => {
           </div>
           <div className={styles.info}>
             <div className={styles.name}>
-              <div className={styles.text}>Рома Чорт</div>
+              <div className={styles.text}>Рома Бобер</div>
               <svg
                 className={styles.online}
                 width="17"

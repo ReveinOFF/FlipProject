@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import styles from "./ChangePassword.module.scss";
 
 export const ChangePassword = () => {
   const navigate = useNavigate();
+  const [t] = useTranslation("translation");
 
   const [visible, setVisible] = useState<boolean>(false);
   const [visible2, setVisible2] = useState<boolean>(false);
@@ -25,7 +27,7 @@ export const ChangePassword = () => {
           />
         </svg>
 
-        <div>Змінити пароль</div>
+        <div>{t("main.settings.change_pass.back")}</div>
       </div>
 
       <div className={styles.setting}>
@@ -39,7 +41,9 @@ export const ChangePassword = () => {
 
         <div className={styles.passwords}>
           <div className={styles.password}>
-            <div className={styles.text}>Старий пароль</div>
+            <div className={styles.text}>
+              {t("main.settings.change_pass.old_pass")}
+            </div>
             <div className={styles.input}>
               <input type={visible ? "text" : "password"} />
               <svg
@@ -71,7 +75,9 @@ export const ChangePassword = () => {
             </div>
           </div>
           <div className={styles.password}>
-            <div className={styles.text}>Новий пароль</div>
+            <div className={styles.text}>
+              {t("main.settings.change_pass.new_pass")}
+            </div>
             <div className={styles.input}>
               <input type={visible2 ? "text" : "password"} />
               <svg
@@ -103,7 +109,9 @@ export const ChangePassword = () => {
             </div>
           </div>
           <div className={styles.password}>
-            <div className={styles.text}>Підтвердження паролю</div>
+            <div className={styles.text}>
+              {t("main.settings.change_pass.conf_new_pass")}
+            </div>
             <div className={styles.input}>
               <input type={visible3 ? "text" : "password"} />
               <svg
@@ -138,9 +146,9 @@ export const ChangePassword = () => {
 
         <div className={styles.buttons}>
           <a onClick={() => navigate("/settings/forgot-password")}>
-            Забули пароль?
+            {t("main.settings.change_pass.forgot_pass")}
           </a>
-          <button>Змінити пароль</button>
+          <button>{t("main.settings.change_pass.btn")}</button>
         </div>
       </div>
     </>

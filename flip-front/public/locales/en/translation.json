@@ -172,10 +172,58 @@
             "nf_text": "Fliper not found"
         },
         "main": {
-            "title_page": "Home"
+            "title_page": "Home",
+            "following": "Followed",
+            "show_more": "Show more...",
+            "like": "preferences",
+            "answ": "reply",
+            "input": "Add a comment"
         },
         "settings": {
-            "title_page": "Settings"
+            "title_page": "Settings",
+            "change_email": {
+                "back": "Change email",
+                "email": "New email",
+                "cancel": "Cancel changes",
+                "btn" : "Change email"
+            },
+            "forgot_pass": {
+                "back": "Change password",
+                "header": "Forgot your password?",
+                "description": "Enter your email address and you will receive a link to change your account password.",
+                "btn": "Send a message"
+            },
+            "main": {
+                "search": "Search",
+                "edit_profile": "Edit profile",
+                "change_email": "Змінити пошту",
+                "change_pass": "Change password",
+                "lng": "Language",
+                "advertising": "Advertising",
+                "theme": "Change of topic",
+                "joined": "Log in to your account",
+                "info": "Site information",
+                "help": "Help",
+                "logout": "Exit the account"
+            },
+            "change_pass": {
+                "back": "Change password",
+                "old_pass": "Old password",
+                "new_pass": "New password",
+                "conf_new_pass": "New password",
+                "forgot_pass": "Forgot your password?",
+                "btn": "Change password"
+            },
+            "change_profile": {
+                "back": "Edit profile",
+                "name": "Name",
+                "login": "User name",
+                "date": "Date of birth",
+                "description": "Biography",
+                "phone": "Phone number",
+                "cancel": "Cancel changes",
+                "save": "Save"
+            }
         },
         "message_selection": {
             "title_page": "Message",
