@@ -127,7 +127,7 @@ export const SProfile = (props) => {
           {profile.userImage ? (
             <img
               className={styles.profile_img}
-              src={`http://localhost:5170/resources/userimages/${profile.id}/${profile.userImage}`}
+              src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${profile.id}/${profile.userImage}`}
               alt=""
             />
           ) : (
@@ -456,7 +456,7 @@ export const SProfile = (props) => {
               {profile.createdPost.map((item: CreatedPost) => (
                 <img
                   key={item.id}
-                  src={`http://localhost:5170/resources/postfiles/default/${item.file[0]}`}
+                  src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/Default/${item.file[0]}`}
                   alt=""
                 />
               ))}
@@ -468,7 +468,7 @@ export const SProfile = (props) => {
               {profile.createdPost.map((item: CreatedPost) => (
                 <div className={styles.flipers} key={item.id}>
                   <img
-                    src={`http://localhost:5170/resources/postfiles/default/${item.file[0]}`}
+                    src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/Default/${item.file[0]}`}
                     alt=""
                   />
 

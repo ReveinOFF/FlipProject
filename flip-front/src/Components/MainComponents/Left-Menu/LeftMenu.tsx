@@ -3,8 +3,6 @@ import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./LeftMenu.module.scss";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
-import { ToastActionTypes } from "../../Toast/store/type";
 import { useState } from "react";
 import { Followers } from "../Followers/Followers";
 import { Following } from "../Following/Following";
@@ -13,8 +11,6 @@ import { GetFollow } from "../../../Interface/Profile";
 export const LeftMenu = () => {
   const profile = useTypedSelector((state) => state.auth.user);
   const [t] = useTranslation("translation");
-  const navigator = useNavigate();
-  const dispatch = useDispatch();
 
   const [followers, setFollowers] = useState<GetFollow[]>();
   const [following, setFollowing] = useState<GetFollow[]>();
@@ -92,7 +88,7 @@ export const LeftMenu = () => {
                 {profile.userImage ? (
                   <img
                     className={styles.profile_img}
-                    src={`http://localhost:5170/resources/userimages/${profile.id}/${profile.userImage}`}
+                    src={`${process.env.REACT_APP_BASE_RESOURCES}userimages/${profile.id}/${profile.userImage}`}
                     alt=""
                   />
                 ) : (

@@ -15,6 +15,8 @@ import "./Components/i18n/i18n";
 import { Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Toast from "./Components/Toast/Toast";
+import { I18nextProvider } from "react-i18next";
+import i18n from "./Components/i18n/i18n";
 
 const ldMode = localStorage.getItem("LightDarkMode");
 const token = localStorage.getItem("token");
@@ -35,14 +37,16 @@ const client = new QueryClient();
 const NotUser = () => {
   root.render(
     <Suspense fallback="">
-      <Provider store={store}>
-        <BrowserRouter>
-          <QueryClientProvider client={client}>
-            <App />
-            <Toast />
-          </QueryClientProvider>
-        </BrowserRouter>
-      </Provider>
+      <I18nextProvider i18n={i18n}>
+        <Provider store={store}>
+          <BrowserRouter>
+            <QueryClientProvider client={client}>
+              <App />
+              <Toast />
+            </QueryClientProvider>
+          </BrowserRouter>
+        </Provider>
+      </I18nextProvider>
     </Suspense>
   );
 };
@@ -56,16 +60,18 @@ if (token) {
     if (excToken.exp < date) {
       root.render(
         <Suspense fallback="">
-          <Provider store={store}>
-            <BrowserRouter>
-              <QueryClientProvider client={client}>
-                <div className="root_main">
-                  <AuthApp />
-                </div>
-                <Toast />
-              </QueryClientProvider>
-            </BrowserRouter>
-          </Provider>
+          <I18nextProvider i18n={i18n}>
+            <Provider store={store}>
+              <BrowserRouter>
+                <QueryClientProvider client={client}>
+                  <div className="root_main">
+                    <AuthApp />
+                  </div>
+                  <Toast />
+                </QueryClientProvider>
+              </BrowserRouter>
+            </Provider>
+          </I18nextProvider>
         </Suspense>
       );
     } else {

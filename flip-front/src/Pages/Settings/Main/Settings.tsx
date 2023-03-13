@@ -1,21 +1,30 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
 import { ToastActionTypes } from "../../../Components/Toast/store/type";
+import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./Settings.module.scss";
 
 export const Settings = () => {
+  const theme = useTypedSelector((state) => state.theme.mode);
   const [t] = useTranslation("translation");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [mode, setMode] = useState<string>("light");
+
   useEffect(() => {
     document.title = t("main.settings.title_page");
   }, []);
+
+  useEffect(() => {
+    if (theme === "light") setMode("light");
+    else setMode("dark");
+  }, [theme]);
 
   const Logout = async () => {
     const refreshToken = await localStorage.getItem("refreshToken");
@@ -46,6 +55,18 @@ export const Settings = () => {
       });
     },
   });
+
+  const LightOrDarkMode = () => {
+    if (mode === "light") {
+      localStorage.setItem("LightDarkMode", "dark");
+      setMode("dark");
+      dispatch({ type: "Theme", payload: { mode: "dark" } });
+    } else {
+      localStorage.setItem("LightDarkMode", "light");
+      setMode("light");
+      dispatch({ type: "Theme", payload: { mode: "light" } });
+    }
+  };
 
   return (
     <>
@@ -147,7 +168,7 @@ export const Settings = () => {
           <div>{t("main.settings.main.change_pass")}</div>
         </div>
 
-        <div className={styles.setting}>
+        <div className={styles.setting} onClick={() => navigate("language")}>
           <svg
             width="31"
             height="31"
@@ -172,7 +193,7 @@ export const Settings = () => {
           <div>{t("main.settings.main.lng")}</div>
         </div>
 
-        <div className={styles.setting}>
+        <div className={styles.setting} onClick={() => navigate("advertising")}>
           <svg
             width="31"
             height="31"
@@ -201,7 +222,7 @@ export const Settings = () => {
           <div>{t("main.settings.main.advertising")}</div>
         </div>
 
-        <div className={styles.setting}>
+        <div className={styles.setting} onClick={LightOrDarkMode}>
           <svg
             width="31"
             height="31"
@@ -224,7 +245,7 @@ export const Settings = () => {
           <div>{t("main.settings.main.theme")}</div>
         </div>
 
-        <div className={styles.setting}>
+        <div className={styles.setting} onClick={() => navigate("entrances")}>
           <svg
             width="31"
             height="31"
@@ -249,7 +270,7 @@ export const Settings = () => {
           <div>{t("main.settings.main.joined")}</div>
         </div>
 
-        <div className={styles.setting}>
+        <div className={styles.setting} onClick={() => navigate("information")}>
           <svg
             width="31"
             height="31"
@@ -270,7 +291,7 @@ export const Settings = () => {
           <div>{t("main.settings.main.info")}</div>
         </div>
 
-        <div className={styles.setting}>
+        <div className={styles.setting} onClick={() => navigate("help")}>
           <svg
             width="31"
             height="31"

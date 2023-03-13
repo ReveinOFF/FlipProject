@@ -127,7 +127,7 @@ export const Followers = ({
                           <div className={styles.image}>
                             {item.userImage && (
                               <img
-                                src={`http://localhost:5170/resources/userimages/${item.id}/${item.userImage}`}
+                                src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${item.id}/${item.userImage}`}
                                 alt=""
                                 loading="lazy"
                               />
@@ -171,7 +171,7 @@ export const Followers = ({
               <div className={styles.confirm}>
                 {follower?.userImage ? (
                   <img
-                    src={`http://localhost:5170/resources/userimages/${follower?.id}/${follower?.userImage}`}
+                    src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${follower?.id}/${follower?.userImage}`}
                     alt=""
                     loading="lazy"
                   />
@@ -198,7 +198,7 @@ export const Followers = ({
               <div className={styles.confirm}>
                 {follower?.userImage ? (
                   <img
-                    src={`http://localhost:5170/resources/userimages/${follower?.id}/${follower?.userImage}`}
+                    src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${follower?.id}/${follower?.userImage}`}
                     alt=""
                     loading="lazy"
                   />

@@ -108,7 +108,7 @@ export const Following = ({
                           <div className={styles.image}>
                             {item.userImage && (
                               <img
-                                src={`http://localhost:5170/resources/userimages/${item.id}/${item.userImage}`}
+                                src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${item.id}/${item.userImage}`}
                                 alt=""
                                 loading="lazy"
                               />
@@ -154,7 +154,7 @@ export const Following = ({
               <div className={styles.confirm}>
                 {following?.userImage ? (
                   <img
-                    src={`http://localhost:5170/resources/userimages/${following?.id}/${following?.userImage}`}
+                    src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${following?.id}/${following?.userImage}`}
                     alt=""
                     loading="lazy"
                   />

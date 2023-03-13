@@ -5,11 +5,16 @@ import { useCallback, useEffect, useState } from "react";
 import { GetUsers } from "../../../Interface/Profile";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useTypedSelector } from "../../../Hooks/useTypedSelector";
+import { useDispatch } from "react-redux";
 
 export const RightMenu = () => {
   const [t] = useTranslation("translation");
+  const theme = useTypedSelector((state) => state.theme.mode);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const [mode, setMode] = useState<string>("light");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchUser, setSearchUser] = useState<GetUsers[]>();
 
@@ -23,12 +28,38 @@ export const RightMenu = () => {
   );
 
   useEffect(() => {
-    if (searchQuery !== "") debouncedSearch(searchQuery);
+    if (theme === "light") setMode("light");
+    else setMode("dark");
+  }, [theme]);
+
+  useEffect(() => {
+    if (searchQuery !== "" || searchQuery !== null)
+      debouncedSearch(searchQuery);
+    else setSearchUser(undefined);
   }, [searchQuery, debouncedSearch]);
+
+  const sendSearch = async () => {
+    if (searchQuery !== "" || searchQuery !== null)
+      await axios.get(`user/search-users/${searchQuery}`).then((res) => {
+        setSearchUser(res.data);
+      });
+  };
 
   const handleSearch = (e) => {
     const { value } = e.target;
     setSearchQuery(value);
+  };
+
+  const LightOrDarkMode = () => {
+    if (mode === "light") {
+      localStorage.setItem("LightDarkMode", "dark");
+      setMode("dark");
+      dispatch({ type: "Theme", payload: { mode: "dark" } });
+    } else {
+      localStorage.setItem("LightDarkMode", "light");
+      setMode("light");
+      dispatch({ type: "Theme", payload: { mode: "light" } });
+    }
   };
 
   return (
@@ -36,6 +67,7 @@ export const RightMenu = () => {
       <div className={styles.top_menu}>
         <label>
           <svg
+            onClick={sendSearch}
             className={styles.icon}
             width="21"
             height="21"
@@ -53,7 +85,7 @@ export const RightMenu = () => {
             />
           </svg>
           <input
-            type="text"
+            type="search"
             placeholder={t("main.right_menu.search_ph").toString()}
             onChange={handleSearch}
           />
@@ -115,6 +147,7 @@ export const RightMenu = () => {
         </svg>
 
         <svg
+          onClick={LightOrDarkMode}
           width="33"
           height="33"
           viewBox="0 0 33 33"

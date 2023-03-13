@@ -1,0 +1,20 @@
+.back {
+  display: flex;
+  align-items: center;
+
+  margin-top: 46px;
+  margin-bottom: 28px;
+
+  width: 200px;
+
+  cursor: pointer;
+
+  div {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+
+    color: #2f2f2f;
+  }
+}

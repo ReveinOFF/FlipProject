@@ -71,6 +71,36 @@ const ChangeProfileComponent = React.lazy(() =>
   }))
 );
 
+const LanguageComponent = React.lazy(() =>
+  import("../../Pages/Settings/Language/Language").then((module) => ({
+    default: module.Language,
+  }))
+);
+
+const AdvertisingComponent = React.lazy(() =>
+  import("../../Pages/Settings/Advertising/Advertising").then((module) => ({
+    default: module.Advertising,
+  }))
+);
+
+const EntrancesComponent = React.lazy(() =>
+  import("../../Pages/Settings/Entrances/Entrances").then((module) => ({
+    default: module.Entrances,
+  }))
+);
+
+const InformationComponent = React.lazy(() =>
+  import("../../Pages/Settings/Information/Information").then((module) => ({
+    default: module.Information,
+  }))
+);
+
+const HelpComponent = React.lazy(() =>
+  import("../../Pages/Settings/Help/Help").then((module) => ({
+    default: module.Help,
+  }))
+);
+
 const AuthApp = () => {
   return (
     <Routes>
@@ -84,6 +114,11 @@ const AuthApp = () => {
           <Route path="change-email" element={<ChangeEmailComponent />} />
           <Route path="change-password" element={<ChangePassComponent />} />
           <Route path="forgot-password" element={<ForgotPassComponent />} />
+          <Route path="language" element={<LanguageComponent />} />
+          <Route path="advertising" element={<AdvertisingComponent />} />
+          <Route path="entrances" element={<EntrancesComponent />} />
+          <Route path="information" element={<InformationComponent />} />
+          <Route path="help" element={<HelpComponent />} />
         </Route>
         <Route path="messages" element={<MessagesSelectionComponent />} />
         <Route path="chat" element={<MessagesRoomComponent />} />

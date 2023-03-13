@@ -22,12 +22,12 @@ export const AuthBg = () => {
     const lng = i18n.language;
 
     if (lng === "ua") {
-      i18n.changeLanguage("en");
       localStorage.setItem("lng", "en");
+      i18n.changeLanguage("en");
       setTrans("EN");
     } else {
-      i18n.changeLanguage("ua");
       localStorage.setItem("lng", "ua");
+      i18n.changeLanguage("ua");
       setTrans("UA");
     }
   };
