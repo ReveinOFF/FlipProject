@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { ToastActionTypes } from "../../Toast/store/type";
 import { Following } from "../Following/Following";
 import { Followers } from "../Followers/Followers";
+import { BlockedPage } from "../BlockedPage/BlockedPage";
+import { FliperModal } from "../FliperModal/FliperModal";
 
 export const SProfile = (props) => {
   const { profile } = props;
@@ -22,6 +24,7 @@ export const SProfile = (props) => {
   const [following, setFollowing] = useState<GetFollow[]>();
   const [showFollowers, setShowFollowers] = useState<boolean>(false);
   const [showFollowing, setShowFollowing] = useState<boolean>(false);
+  const [showFliper, setShowFliper] = useState<boolean>(false);
 
   useEffect(() => {
     document.title = profile.name;
@@ -105,6 +108,12 @@ export const SProfile = (props) => {
       });
   };
 
+  // return (
+  //   <>
+  //     <BlockedPage isMyProfile={false} />
+  //   </>
+  // );
+
   return (
     <>
       <Followers
@@ -122,6 +131,8 @@ export const SProfile = (props) => {
         isMyProfile={false}
         profileId={profile!.id}
       />
+
+      <FliperModal show={showFliper} onClick={() => setShowFliper(false)} />
 
       <div className={styles.profile_inf}>
         <div className={styles.profile_inf_data}>
@@ -496,7 +507,11 @@ export const SProfile = (props) => {
           {profile.createdPost.length > 0 && selector === 2 && (
             <div className={styles.profile_data_imgs}>
               {profile.createdPost.map((item: CreatedPost) => (
-                <div className={styles.flipers} key={item.id}>
+                <div
+                  className={styles.flipers}
+                  key={item.id}
+                  onClick={() => setShowFliper(true)}
+                >
                   <img
                     src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/Default/${item.file[0]}`}
                     alt=""

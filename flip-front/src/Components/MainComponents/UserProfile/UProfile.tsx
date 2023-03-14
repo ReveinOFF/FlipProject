@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { ToastActionTypes } from "../../Toast/store/type";
+import { FliperModal } from "../FliperModal/FliperModal";
+import { PostModal } from "../PostModal/PostModal";
 
 export const UProfile = (props) => {
   const { profile } = props;
 
   const [selector, setSelector] = useState(1);
+  const [showFliper, setShowFliper] = useState<boolean>(false);
+  const [showPost, setShowPost] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const [t] = useTranslation("translation");
@@ -19,6 +23,10 @@ export const UProfile = (props) => {
 
   return (
     <>
+      <FliperModal show={showFliper} onClick={() => setShowFliper(false)} />
+
+      <PostModal show={showPost} onClick={() => setShowPost(false)} />
+
       <div className={styles.my_profile_inf}>
         <div className={styles.information}>
           <div className={styles.inf_profile}>
@@ -325,6 +333,7 @@ export const UProfile = (props) => {
           <div className={styles.profile_data_imgs}>
             {profile.createdPost.map((item: CreatedPost) => (
               <img
+                onClick={() => setShowPost(true)}
                 key={item.id}
                 src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/Default/${item.file[0]}`}
                 alt=""
@@ -336,7 +345,11 @@ export const UProfile = (props) => {
         {profile.createdPost.length > 0 && selector === 2 && (
           <div className={styles.profile_data_imgs}>
             {profile.createdPost.map((item: CreatedPost) => (
-              <div className={styles.flipers} key={item.id}>
+              <div
+                className={styles.flipers}
+                key={item.id}
+                onClick={() => setShowFliper(true)}
+              >
                 <img
                   src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/Default/${item.file[0]}`}
                   alt=""

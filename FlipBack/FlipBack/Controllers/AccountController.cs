@@ -169,9 +169,11 @@ namespace FlipBack.Controllers
             if (!result.Succeeded)
                 return BadRequest("There is a problem with password confirmation!");
 
+            string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "ConfirmEmailTHX.html"));
+
             MailDataDTO mailData = new MailDataDTO()
             {
-                Body = $"Hello {user.Email}. Email confirmed!",
+                Body = Body,
                 To = user.Email,
                 Subject = "Confirmation email"
             };
@@ -286,6 +288,8 @@ namespace FlipBack.Controllers
 
             if (!result.Succeeded)
                 return BadRequest("There is a problem resetting the password!");
+
+            string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPasswordTHX.html"));
 
             MailDataDTO mailData = new MailDataDTO()
             {
