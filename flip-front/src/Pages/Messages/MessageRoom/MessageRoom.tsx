@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import styles from "./MessageRoom.module.scss";
+import EmojiPicker, { Theme, EmojiStyle } from "emoji-picker-react";
 
 export const MessageRoom = () => {
   const [t] = useTranslation("translation");
   const navigate = useNavigate();
 
   const textAreaRef = useRef<any>(null);
+  const [emojiShow, setEmojiShow] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState<string>("");
   const [icon, setIcon] = useState(66);
 
@@ -213,6 +215,20 @@ export const MessageRoom = () => {
             setCurrentValue(e.target.value);
           }}
         ></textarea>
+        {emojiShow && (
+          <div className={styles.emoji_picker}>
+            <EmojiPicker
+              lazyLoadEmojis={true}
+              emojiStyle={EmojiStyle.NATIVE}
+              onEmojiClick={(e) => {
+                setEmojiShow(false);
+                setCurrentValue(currentValue + e.emoji);
+              }}
+              theme={Theme.LIGHT}
+              width="400px"
+            />
+          </div>
+        )}
         <div className={styles.icon} style={{ height: icon }}>
           <svg
             className={styles.file}
@@ -231,6 +247,7 @@ export const MessageRoom = () => {
           </svg>
           <svg
             className={styles.emoji}
+            onClick={() => setEmojiShow(!emojiShow)}
             width="30"
             height="29"
             viewBox="0 0 30 29"

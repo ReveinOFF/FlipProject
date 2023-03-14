@@ -27,7 +27,6 @@
 
     .profile_btn {
       display: flex;
-      justify-content: center;
 
       margin-top: 29px;
       margin-bottom: 25px;
@@ -94,8 +93,6 @@
       margin-bottom: 25px;
 
       .profile_name {
-        margin-right: 30px;
-
         font-style: normal;
         font-weight: 300;
         font-size: 36px;
@@ -110,8 +107,13 @@
         background-clip: text;
       }
 
+      .verify {
+        margin-left: 12px;
+      }
+
       .profile_username {
         margin-right: 5px;
+        margin-left: 30px;
 
         font-style: normal;
         font-weight: 300;
@@ -122,6 +124,10 @@
         letter-spacing: -0.011em;
 
         color: #0b0303;
+      }
+
+      .copy_btn {
+        cursor: pointer;
       }
     }
 
