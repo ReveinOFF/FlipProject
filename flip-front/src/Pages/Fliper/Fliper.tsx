@@ -2,7 +2,7 @@ import styles from "./Fliper.module.scss";
 import { useEffect, useRef, useState } from "react";
 import video from "./video.mp4";
 import { useTranslation } from "react-i18next";
-import { FliperMenu } from "../../Components/MainComponents/FliperMenu/FliperMenu";
+import { FPMenu } from "../../Components/MainComponents/FPMenu/FPMenu";
 
 export const Fliper = () => {
   const [isMuted, setIsMuted] = useState<boolean>(true);
@@ -401,7 +401,7 @@ export const Fliper = () => {
         />
       </svg>
 
-      <FliperMenu show={showMenu} onClick={() => setShowMenu(false)} />
+      <FPMenu show={showMenu} onClick={() => setShowMenu(false)} />
     </div>
   );
 };

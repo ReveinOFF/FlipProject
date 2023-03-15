@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FliperMenu } from "../FliperMenu/FliperMenu";
+import { FPMenu } from "../FPMenu/FPMenu";
 import styles from "./FliperModal.module.scss";
 import video from "./video.mp4";
 
@@ -424,7 +424,7 @@ export const FliperModal = ({ show, onClick }) => {
             />
           </svg>
 
-          <FliperMenu show={showMenu} onClick={() => setShowMenu(false)} />
+          <FPMenu show={showMenu} onClick={() => setShowMenu(false)} />
         </div>
       )}
     </>

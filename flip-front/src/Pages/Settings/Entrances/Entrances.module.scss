@@ -5,7 +5,7 @@
   margin-top: 46px;
   margin-bottom: 28px;
 
-  width: 200px;
+  width: 300px;
 
   cursor: pointer;
 
@@ -16,5 +16,112 @@
     line-height: 22px;
 
     color: #2f2f2f;
+  }
+}
+
+.entrances {
+  width: 100vh;
+
+  background: rgba(248, 248, 248, 0.8);
+  border-radius: 15px;
+
+  padding-left: 50px;
+  padding-top: 35px;
+  padding-bottom: 60px;
+  padding-right: 280px;
+
+  .header {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 150%;
+
+    letter-spacing: -0.011em;
+
+    color: #2f2f2f;
+    margin-bottom: 20px;
+  }
+
+  .container {
+    border-bottom: 1px solid rgba(47, 47, 47, 0.5);
+
+    cursor: pointer;
+
+    padding-top: 20px;
+    padding-bottom: 15px;
+
+    .top {
+      display: flex;
+      align-items: center;
+
+      svg {
+        margin-right: 15px;
+      }
+
+      div {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 18px;
+        line-height: 150%;
+        letter-spacing: -0.011em;
+
+        color: #2f2f2f;
+      }
+    }
+
+    .bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-left: 45px;
+
+      .info {
+        display: flex;
+        align-items: center;
+
+        .left {
+          font-style: normal;
+          font-weight: 300;
+          font-size: 16px;
+          line-height: 150%;
+          letter-spacing: -0.011em;
+
+          color: rgba(47, 47, 47, 0.7);
+        }
+
+        .left_active {
+          font-style: normal;
+          font-weight: 300;
+          font-size: 16px;
+          line-height: 150%;
+          letter-spacing: -0.011em;
+
+          background: linear-gradient(
+            88.74deg,
+            #48d824 -18.76%,
+            #10d0ea 99.82%
+          );
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .right {
+          margin-left: 3px;
+
+          font-style: normal;
+          font-weight: 300;
+          font-size: 16px;
+          line-height: 150%;
+          letter-spacing: -0.011em;
+
+          color: rgba(47, 47, 47, 0.7);
+        }
+      }
+
+      svg {
+      }
+    }
   }
 }

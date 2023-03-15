@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { FPMenu } from "../FPMenu/FPMenu";
 import styles from "./PostModal.module.scss";
 
 export const PostModal = ({ show, onClick }) => {
@@ -7,6 +8,8 @@ export const PostModal = ({ show, onClick }) => {
 
   const textAreaRef = useRef<any>(null);
   const [currentValue, setCurrentValue] = useState<string>("");
+
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -19,8 +22,10 @@ export const PostModal = ({ show, onClick }) => {
 
   return (
     <>
+      <FPMenu show={showMenu} onClick={() => setShowMenu(false)} />
+
       {show && (
-        <div className={styles.post_modal} onClick={onClick}>
+        <div className={styles.post_modal}>
           <div className={styles.post}>
             <svg
               className={styles.closed}
@@ -198,6 +203,7 @@ export const PostModal = ({ show, onClick }) => {
                   />
                 </svg>
                 <svg
+                  onClick={() => setShowMenu(true)}
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"

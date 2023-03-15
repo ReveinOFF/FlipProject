@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { FPMenu } from "../../Components/MainComponents/FPMenu/FPMenu";
 import { History } from "../../Components/MainComponents/History/History";
 import styles from "./Main.module.scss";
 
@@ -9,6 +10,8 @@ export const Main = () => {
   const textAreaRef = useRef<any>(null);
   const [show, setShow] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState<string>("");
+
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     document.title = t("main.main.title_page");
@@ -28,6 +31,8 @@ export const Main = () => {
   return (
     <>
       <History show={show} onClick={closeHistory} />
+
+      <FPMenu show={showMenu} onClick={() => setShowMenu(false)} />
 
       <div className={styles.header}>
         <div className={styles.history}>
@@ -278,6 +283,7 @@ export const Main = () => {
                 />
               </svg>
               <svg
+                onClick={() => setShowMenu(true)}
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -601,6 +607,7 @@ export const Main = () => {
                 />
               </svg>
               <svg
+                onClick={() => setShowMenu(true)}
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"

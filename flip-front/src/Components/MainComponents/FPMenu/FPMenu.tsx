@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { ToastActionTypes } from "../../Toast/store/type";
-import styles from "./FliperMenu.module.scss";
+import styles from "./FPMenu.module.scss";
 
-export const FliperMenu = ({ show, onClick }) => {
+export const FPMenu = ({ show, onClick }) => {
   const [t] = useTranslation("translation");
   const dispatch = useDispatch();
 

@@ -27,6 +27,12 @@ body {
 button,
 input {
   outline: none;
+  user-select: none;
+}
+
+a {
+  user-select: none;
+  text-decoration: none;
 }
 
 * {

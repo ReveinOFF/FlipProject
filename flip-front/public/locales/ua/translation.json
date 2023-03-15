@@ -158,7 +158,9 @@
             "post2": "дописи",
             "nf_post": "Немає Постів",
             "nf_fliper": "Немає Fliper",
-            "nf_save_pf": "Немає Збережених Постів/Fliper"
+            "nf_save_pf": "Немає Збережених Постів/Fliper",
+            "private_header": "Це закритий акаунт",
+            "private_description": "Стежте за користувачем, щоб бачити його дописи та flipers"
         },
         "u_profile": {
             "post": "дописи",

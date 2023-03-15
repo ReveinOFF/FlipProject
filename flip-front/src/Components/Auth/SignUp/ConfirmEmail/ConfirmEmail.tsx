@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { SendToken } from "../../../../Interface/Login";
 import { LazyLoading } from "../../../LazyLoading/LazyLoading";
 import { ToastActionTypes } from "../../../Toast/store/type";
 
@@ -23,7 +22,7 @@ export const ConfirmEmail = () => {
     return res;
   };
 
-  const { isLoading, isError, mutate } = useMutation(PostConfirm, {
+  const { isLoading, isError, mutateAsync } = useMutation(PostConfirm, {
     onSuccess: (res) => {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("refreshToken", res.data.refreshToken);
@@ -56,7 +55,7 @@ export const ConfirmEmail = () => {
     const token = searchParams.get("token");
     const email = searchParams.get("email");
 
-    if (token && email) mutate({ email: email, token: token });
+    if (token && email) mutateAsync({ email: email, token: token });
   }, []);
 
   return (

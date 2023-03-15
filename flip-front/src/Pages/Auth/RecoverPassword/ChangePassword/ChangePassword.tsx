@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { LazyLoading } from "../../../../Components/LazyLoading/LazyLoading";
 import { ToastActionTypes } from "../../../../Components/Toast/store/type";
 import { useTranslation } from "react-i18next";
+import { useTypedSelector } from "../../../../Hooks/useTypedSelector";
 
 export const ChangePassword = () => {
   const navigate = useNavigate();
@@ -26,6 +27,14 @@ export const ChangePassword = () => {
   const [token, setToken] = useState<string>();
   const [visible, setVisoiblity] = useState(false);
   const [visible2, setVisoiblity2] = useState(false);
+
+  const [mode, setMode] = useState<string>("light");
+  const theme = useTypedSelector((state) => state.theme.mode);
+
+  useEffect(() => {
+    if (theme === "light") setMode("light");
+    else setMode("dark");
+  }, [theme]);
 
   useEffect(() => {
     document.title = t("auht.recoverPass.changePass.title");
@@ -74,7 +83,7 @@ export const ChangePassword = () => {
     return res;
   };
 
-  const { isLoading, mutate } = useMutation(PostPassword, {
+  const { isLoading, mutateAsync } = useMutation(PostPassword, {
     onSuccess: () => {
       navigate("/signin");
     },
@@ -92,7 +101,7 @@ export const ChangePassword = () => {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: PasswordSchema,
-    onSubmit: (values) => mutate(values),
+    onSubmit: (values) => mutateAsync(values),
   });
 
   const {
@@ -110,7 +119,7 @@ export const ChangePassword = () => {
     <>
       {isLoading && <LazyLoading />}
 
-      <div className={styles.header}>
+      <div className={mode === "light" ? styles.header : styles.header_dark}>
         {t("auht.recoverPass.changePass.header")}
       </div>
       <FormikProvider value={formik}>

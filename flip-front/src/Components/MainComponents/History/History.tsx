@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { HistoryMenu } from "../HistoryMenu/HistoryMenu";
 import styles from "./History.module.scss";
 import video from "./video.mp4";
 
@@ -7,6 +8,8 @@ export const History = ({ show, onClick }) => {
   const [progress, setProgress] = useState(0);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+  const [showMenu, setShowMenu] = useState(false);
 
   const [t] = useTranslation("translation");
 
@@ -42,6 +45,12 @@ export const History = ({ show, onClick }) => {
 
   return (
     <>
+      <HistoryMenu
+        show={showMenu}
+        onClick={() => setShowMenu(false)}
+        isFollowing={false}
+      />
+
       {show && (
         <div className={styles.history}>
           <div className={styles.video_zone}>
@@ -97,6 +106,7 @@ export const History = ({ show, onClick }) => {
               <div className={styles.other_menu}>
                 <div className={styles.settings}>
                   <svg
+                    onClick={() => setShowMenu(true)}
                     width="31"
                     height="30"
                     viewBox="0 0 31 30"

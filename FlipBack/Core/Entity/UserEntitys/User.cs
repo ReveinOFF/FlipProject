@@ -56,5 +56,6 @@ namespace Core.Entity.UserEntitys
         public virtual ICollection<UserRole> UserRoles { get; set; }
         public virtual ICollection<Follow> Followers { get; set; }
         public virtual ICollection<Follow> Followings { get; set; }
+        //public virtual ICollection<User> Blocked { get; set; }
     }
 }

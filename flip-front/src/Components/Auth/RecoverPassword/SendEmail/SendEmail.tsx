@@ -11,10 +11,20 @@ import { useMutation } from "react-query";
 import { LazyLoading } from "../../../LazyLoading/LazyLoading";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+import { useTypedSelector } from "../../../../Hooks/useTypedSelector";
 
 export const SendEmail = ({ onClick }) => {
   const navigate = useNavigate();
   const [t] = useTranslation("translation");
+
+  const [mode, setMode] = useState<string>("light");
+  const theme = useTypedSelector((state) => state.theme.mode);
+
+  useEffect(() => {
+    if (theme === "light") setMode("light");
+    else setMode("dark");
+  }, [theme]);
 
   const initialValues = {
     Email: "",
@@ -37,7 +47,7 @@ export const SendEmail = ({ onClick }) => {
     return res;
   };
 
-  const { isLoading, mutate } = useMutation(PostEmail, {
+  const { isLoading, mutateAsync } = useMutation(PostEmail, {
     onSuccess: () => {
       onClick();
     },
@@ -49,7 +59,7 @@ export const SendEmail = ({ onClick }) => {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: RecoverySchema,
-    onSubmit: (values) => mutate(values.Email),
+    onSubmit: (values) => mutateAsync(values.Email),
   });
 
   const {
@@ -67,10 +77,14 @@ export const SendEmail = ({ onClick }) => {
     <>
       {isLoading && <LazyLoading />}
 
-      <div className={styles.header}>
+      <div className={mode === "light" ? styles.header : styles.header_dark}>
         {t("auht.recoverPass.sendEmail.header")}
       </div>
-      <div className={styles.description}>
+      <div
+        className={
+          mode === "light" ? styles.description : styles.description_dark
+        }
+      >
         {t("auht.recoverPass.sendEmail.description")}
       </div>
       <FormikProvider value={formik}>

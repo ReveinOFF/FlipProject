@@ -10,6 +10,8 @@ import { Following } from "../Following/Following";
 import { Followers } from "../Followers/Followers";
 import { BlockedPage } from "../BlockedPage/BlockedPage";
 import { FliperModal } from "../FliperModal/FliperModal";
+import { PostModal } from "../PostModal/PostModal";
+import { SUserMenu } from "../SUserMenu/SUserMenu";
 
 export const SProfile = (props) => {
   const { profile } = props;
@@ -20,11 +22,16 @@ export const SProfile = (props) => {
 
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [selector, setSelector] = useState(1);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+
   const [followers, setFollowers] = useState<GetFollow[]>();
   const [following, setFollowing] = useState<GetFollow[]>();
+
   const [showFollowers, setShowFollowers] = useState<boolean>(false);
   const [showFollowing, setShowFollowing] = useState<boolean>(false);
+
   const [showFliper, setShowFliper] = useState<boolean>(false);
+  const [showPost, setShowPost] = useState<boolean>(false);
 
   useEffect(() => {
     document.title = profile.name;
@@ -133,6 +140,14 @@ export const SProfile = (props) => {
       />
 
       <FliperModal show={showFliper} onClick={() => setShowFliper(false)} />
+
+      <PostModal show={showPost} onClick={() => setShowPost(false)} />
+
+      <SUserMenu
+        show={showMenu}
+        onClick={() => setShowMenu(false)}
+        isFollowing={isFollow}
+      />
 
       <div className={styles.profile_inf}>
         <div className={styles.profile_inf_data}>
@@ -275,6 +290,7 @@ export const SProfile = (props) => {
               </div>
               <div className={styles.settings}>
                 <svg
+                  onClick={() => setShowMenu(true)}
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
@@ -328,10 +344,12 @@ export const SProfile = (props) => {
             <circle cx="118.5" cy="17.5" r="17.5" fill="#2F2F2F" />
           </svg>
 
-          <div className={styles.private_header}>Це закритий акаунт</div>
+          <div className={styles.private_header}>
+            {t("main.s_profile.private_header")}
+          </div>
 
           <div className={styles.private_description}>
-            Стежте за користувачем, щоб бачити його дописи та flipers
+            {t("main.s_profile.private_description")}
           </div>
         </div>
       ) : (
@@ -496,6 +514,7 @@ export const SProfile = (props) => {
             <div className={styles.profile_data_imgs}>
               {profile.createdPost.map((item: CreatedPost) => (
                 <img
+                  onClick={() => setShowPost(true)}
                   key={item.id}
                   src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/Default/${item.file[0]}`}
                   alt=""

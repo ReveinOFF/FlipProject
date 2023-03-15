@@ -61,7 +61,7 @@ export const SignIn = () => {
     return response;
   };
 
-  const { isLoading, mutate } = useMutation(PostLogin, {
+  const { isLoading, mutateAsync } = useMutation(PostLogin, {
     onSuccess: (res) => {
       localStorage.setItem("token", res?.data.token);
       localStorage.setItem("refreshToken", res?.data.refreshToken);
@@ -78,7 +78,7 @@ export const SignIn = () => {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: LoginSchema,
-    onSubmit: (values) => mutate(values),
+    onSubmit: (values) => mutateAsync(values),
   });
 
   const {

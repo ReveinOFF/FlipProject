@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RegPhase2Res, SelectPhase } from "../../../../Interface/Registration";
 import {
   CustomButtonBG,
@@ -65,7 +65,7 @@ export const RegPhaseTwo = () => {
     return res;
   };
 
-  const { isLoading, mutate } = useMutation(PostReg, {
+  const { isLoading, mutateAsync } = useMutation(PostReg, {
     onSuccess: () => {
       dispatch({
         type: "REG-PHASE",
@@ -117,7 +117,7 @@ export const RegPhaseTwo = () => {
         data!.UserImage = myNewCroppedFile;
       }
 
-      if (data) mutate(data);
+      if (data) mutateAsync(data);
     }
   }, [reg]);
 

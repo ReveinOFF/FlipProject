@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EmailFound } from "../../../../Components/Auth/RecoverPassword/EmailFound/EmailFound";
 import { SendEmail } from "../../../../Components/Auth/RecoverPassword/SendEmail/SendEmail";
+import { ChangePassword } from "../ChangePassword/ChangePassword";
 import styles from "./RecoverPassword.module.scss";
 
 export const RecoverPassword = () => {

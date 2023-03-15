@@ -158,7 +158,9 @@
             "post2": "posts",
             "nf_post": "No Posts",
             "nf_fliper": "No Fliper",
-            "nf_save_pf": "No Saved Posts/Fliper"
+            "nf_save_pf": "No Saved Posts/Fliper",
+            "private_header": "This is a closed account",
+            "private_description": "Follow a user to see their posts and flipers"
         },
         "u_profile": {
             "post": "posts",

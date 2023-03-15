@@ -1,0 +1,83 @@
+.fliper_menu {
+  background: rgba(154, 154, 154, 0.4);
+  backdrop-filter: blur(18.5px);
+
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+
+  .fliper {
+    position: relative;
+
+    svg {
+      position: absolute;
+
+      right: -25px;
+      top: -25px;
+
+      cursor: pointer;
+    }
+
+    .menu {
+      background: #ffffff;
+      box-shadow: 0px -1.15839px 26.6429px rgba(0, 0, 0, 0.25);
+      border-radius: 17.3758px;
+      text-align: center;
+
+      .btn {
+        padding: 32.56px 132.42px;
+
+        cursor: pointer;
+
+        border-bottom: 0.231677px solid #c8c8c8;
+
+        font-style: normal;
+        font-weight: 300;
+        font-size: 23.1677px;
+        line-height: 28px;
+
+        color: #2f2f2f;
+
+        transition: 0.5s;
+
+        &:first-child {
+          border-top-left-radius: 17.3758px;
+          border-top-right-radius: 17.3758px;
+        }
+
+        &:hover {
+          background: #e8e8e8;
+        }
+      }
+
+      .last_btn {
+        padding: 32.56px 132.42px;
+
+        cursor: pointer;
+
+        font-style: normal;
+        font-weight: 300;
+        font-size: 23.1677px;
+        line-height: 28px;
+
+        color: #9d3535;
+
+        transition: 0.5s;
+
+        border-bottom-left-radius: 17.3758px;
+        border-bottom-right-radius: 17.3758px;
+
+        &:hover {
+          background: #e8e8e8;
+        }
+      }
+    }
+  }
+}
