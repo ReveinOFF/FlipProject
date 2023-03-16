@@ -64,8 +64,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Image = table.Column<string>(type: "text", nullable: true)
+                    LastSendMessage = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -298,24 +297,24 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MessageBoxUsers",
+                name: "MessageBoxUser",
                 columns: table => new
                 {
-                    MessageBoxId = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false)
+                    MessageBoxsId = table.Column<string>(type: "text", nullable: false),
+                    UsersId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MessageBoxUsers", x => new { x.UserId, x.MessageBoxId });
+                    table.PrimaryKey("PK_MessageBoxUser", x => new { x.MessageBoxsId, x.UsersId });
                     table.ForeignKey(
-                        name: "FK_MessageBoxUsers_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_MessageBoxUser_AspNetUsers_UsersId",
+                        column: x => x.UsersId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MessageBoxUsers_MessageBox_MessageBoxId",
-                        column: x => x.MessageBoxId,
+                        name: "FK_MessageBoxUser_MessageBox_MessageBoxsId",
+                        column: x => x.MessageBoxsId,
                         principalTable: "MessageBox",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -657,15 +656,9 @@ namespace Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageBox_Image",
-                table: "MessageBox",
-                column: "Image",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MessageBoxUsers_MessageBoxId",
-                table: "MessageBoxUsers",
-                column: "MessageBoxId");
+                name: "IX_MessageBoxUser_UsersId",
+                table: "MessageBoxUser",
+                column: "UsersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MessageFiles_MessageId",
@@ -780,7 +773,7 @@ namespace Infrastructure.Migrations
                 name: "Follows");
 
             migrationBuilder.DropTable(
-                name: "MessageBoxUsers");
+                name: "MessageBoxUser");
 
             migrationBuilder.DropTable(
                 name: "MessageFiles");

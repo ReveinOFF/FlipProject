@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Core.DTO.Account;
+using Core.DTO.Message;
 using Core.DTO.Reels;
 using Core.DTO.User;
+using Core.Entity.MessageEntitys;
 using Core.Entity.PostEntitys;
 using Core.Entity.ReelsEntity;
 using Core.Entity.UserEntitys;
@@ -30,6 +32,11 @@ namespace Core.Mapper
                 .ForMember(x => x.AnswerCount, y => y.MapFrom(x => x.Commentary.Select(s => s.ReelsAnswers).Count()))
                 .ForMember(x => x.ReactionCount, y => y.MapFrom(x => x.Reactions.Count))
                 .ForMember(x => x.Files, y => y.MapFrom(x => x.Files.Select(y => y.FileName).ToList()));
+
+            CreateMap<MessageBox, GetMessageBoxDTO>()
+                .ForMember(x => x.LastMessage, y => y.MapFrom(x => x.Messages.LastOrDefault()))
+                .ForMember(x => x.UserImage, y => y.MapFrom(x => x.Users.LastOrDefault().UserImage))
+                .ForMember(x => x.Name, y => y.MapFrom(x => x.Users.LastOrDefault().Name));
         }
     }
 }

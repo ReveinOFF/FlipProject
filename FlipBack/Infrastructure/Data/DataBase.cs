@@ -92,19 +92,6 @@ namespace Infrastructure.Data
                     .WithMany(y => y.Reactions)
                     .HasForeignKey(z => z.ReelsId);
             });
-
-            modelBuilder.Entity<MessageBoxUser>(reaction =>
-            {
-                reaction.HasKey(x => new { x.UserId, x.MessageBoxId });
-
-                reaction.HasOne(x => x.User)
-                    .WithMany(y => y.MessageBoxs)
-                    .HasForeignKey(z => z.UserId);
-
-                reaction.HasOne(x => x.MessageBox)
-                    .WithMany(y => y.Users)
-                    .HasForeignKey(z => z.MessageBoxId);
-            });
         }
 
         /* Post */
@@ -131,6 +118,5 @@ namespace Infrastructure.Data
         public virtual DbSet<Message> Message { get; set; }
         public virtual DbSet<MessageFiles> MessageFiles { get; set; }
         public virtual DbSet<MessageBox> MessageBox { get; set; }
-        public virtual DbSet<MessageBoxUser> MessageBoxUsers { get; set; }
     }
 }

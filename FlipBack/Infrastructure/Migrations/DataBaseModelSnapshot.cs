@@ -67,33 +67,12 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("LastSendMessage")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Image")
-                        .IsUnique();
-
                     b.ToTable("MessageBox");
-                });
-
-            modelBuilder.Entity("Core.Entity.MessageEntitys.MessageBoxUser", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("MessageBoxId")
-                        .HasColumnType("text");
-
-                    b.HasKey("UserId", "MessageBoxId");
-
-                    b.HasIndex("MessageBoxId");
-
-                    b.ToTable("MessageBoxUsers");
                 });
 
             modelBuilder.Entity("Core.Entity.MessageEntitys.MessageFiles", b =>
@@ -595,6 +574,21 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("MessageBoxUser", b =>
+                {
+                    b.Property<string>("MessageBoxsId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("text");
+
+                    b.HasKey("MessageBoxsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("MessageBoxUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -696,25 +690,6 @@ namespace Infrastructure.Migrations
 
                     b.HasOne("Core.Entity.UserEntitys.User", "User")
                         .WithMany("Message")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MessageBox");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Core.Entity.MessageEntitys.MessageBoxUser", b =>
-                {
-                    b.HasOne("Core.Entity.MessageEntitys.MessageBox", "MessageBox")
-                        .WithMany("Users")
-                        .HasForeignKey("MessageBoxId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Entity.UserEntitys.User", "User")
-                        .WithMany("MessageBoxs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -956,6 +931,21 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MessageBoxUser", b =>
+                {
+                    b.HasOne("Core.Entity.MessageEntitys.MessageBox", null)
+                        .WithMany()
+                        .HasForeignKey("MessageBoxsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entity.UserEntitys.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Core.Entity.UserEntitys.Role", null)
@@ -1000,8 +990,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entity.MessageEntitys.MessageBox", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Core.Entity.PostEntitys.Post", b =>
@@ -1052,8 +1040,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Followings");
 
                     b.Navigation("Message");
-
-                    b.Navigation("MessageBoxs");
 
                     b.Navigation("PostAnswer");
 

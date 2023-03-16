@@ -34,7 +34,7 @@ namespace Core.Entity.UserEntitys
 
 
         /* Messages */
-        public virtual ICollection<MessageBoxUser> MessageBoxs { get; set; }
+        public virtual ICollection<MessageBox> MessageBoxs { get; set; }
         public virtual ICollection<Message> Message { get; set; }
 
         /* Post */
