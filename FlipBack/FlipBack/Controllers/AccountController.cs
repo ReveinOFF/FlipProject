@@ -101,7 +101,7 @@ namespace FlipBack.Controllers
                         return BadRequest("Email already exists!");
                     else
                     {
-                        StaticFiles.DeleteImageAsync(user.UserImagePath);
+                        StaticFiles.DeleteFileAsync(user.UserImagePath);
                         await _userManager.DeleteAsync(findEmail);
                     }
                 }
@@ -115,7 +115,7 @@ namespace FlipBack.Controllers
                 user.IsPrivateUser = false;
 
                 string fileDestDir = Path.Combine("Resources", "UserImages", user.Id);
-                var createImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, register.UserImage);
+                var createImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, register.UserImage, 209, 209);
                 user.UserImage = createImage.FileName;
                 user.UserImagePath = createImage.FilePath;
 

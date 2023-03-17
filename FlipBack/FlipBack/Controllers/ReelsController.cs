@@ -31,7 +31,7 @@ namespace FlipBack.Controllers
         public async Task<IActionResult> GetReels()
         {
             var reels = await _context.Reels
-                .Include(i => i.Files)
+                .Include(i => i.File)
 
                 .Include(i => i.Commentary)
                 .ThenInclude(t => t.User)
@@ -60,7 +60,7 @@ namespace FlipBack.Controllers
         {
             var reels = await _context.Reels
                 .Where(i => i.Id == id)
-                .Include(i => i.Files)
+                .Include(i => i.File)
 
                 .Include(i => i.Commentary)
                 .ThenInclude(t => t.User)
@@ -87,13 +87,14 @@ namespace FlipBack.Controllers
             var reels = _mapper.Map<Reels>(reelsDTO);
 
             string fileDestDir = Path.Combine("Resources", "ReelsFiles", reels.Id);
-            var file = await StaticFiles.CreateReelsAsync(_env, fileDestDir, reelsDTO.file);
+            var file = await StaticFiles.CreateFileAsync(_env, fileDestDir, reelsDTO.file);
 
-            reels.Files.Add(new ReelsFiles
-            {
-                PathName = file.FilePath,
-                FileName = file.FileName
-            });
+            reels.File.PathName = file.FilePath;
+            reels.File.FileName = file.FileName;
+            reels.DatePosted = DateTime.UtcNow;
+            reels.Views = 0;
+            reels.IsBlocked = false;
+            reels.IsPremium = false;
 
             await _context.Reels.AddAsync(reels);
             await _context.SaveChangesAsync();
@@ -115,7 +116,7 @@ namespace FlipBack.Controllers
                 return BadRequest("This reels was not found!");
 
             if (reelsFiles != null)
-                reelsFiles.ForEach(item => StaticFiles.DeleteImageAsync(item.PathName));
+                reelsFiles.ForEach(item => StaticFiles.DeleteFileAsync(item.PathName));
 
             _context.Reels.Remove(reels);
             _context.UserReels.RemoveRange(reelsSave);

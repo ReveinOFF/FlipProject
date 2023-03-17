@@ -45,7 +45,7 @@ namespace FlipBack.Services
                         Name = "Roman",
                         UserName = "ronnieplay",
                         DateCreate = DateOnly.FromDateTime(DateTime.Now.Date),
-                        Email = "ronnieplayyt@gmail.com",
+                        Email = "ronnieplayyt2@gmail.com",
                         PhoneNumber = "+380977852315",
                         IsVerified = true,
                         IsPrivateUser = false,

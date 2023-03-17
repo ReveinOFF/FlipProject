@@ -31,9 +31,6 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("DateSender")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsChanged")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("IsEdited")
                         .HasColumnType("boolean");
 
@@ -42,10 +39,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("MessageText")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SenderName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
@@ -522,6 +515,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
                     b.Property<string>("UserImage")
                         .HasColumnType("text");
 
@@ -549,6 +545,8 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("UserImage")
                         .IsUnique();
@@ -912,6 +910,13 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Core.Entity.UserEntitys.User", b =>
+                {
+                    b.HasOne("Core.Entity.UserEntitys.User", null)
+                        .WithMany("Blocked")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Core.Entity.UserEntitys.UserRole", b =>
                 {
                     b.HasOne("Core.Entity.UserEntitys.Role", "Role")
@@ -1031,6 +1036,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Entity.UserEntitys.User", b =>
                 {
+                    b.Navigation("Blocked");
+
                     b.Navigation("CreatedPosts");
 
                     b.Navigation("CreatedReels");

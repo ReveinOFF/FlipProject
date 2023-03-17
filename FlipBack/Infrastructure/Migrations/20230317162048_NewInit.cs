@@ -39,6 +39,7 @@ namespace Infrastructure.Migrations
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     IsVerified = table.Column<bool>(type: "boolean", nullable: false),
                     IsPrivateUser = table.Column<bool>(type: "boolean", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -57,6 +58,11 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -271,11 +277,9 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    SenderName = table.Column<string>(type: "text", nullable: false),
                     MessageText = table.Column<string>(type: "text", nullable: true),
                     DateSender = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsEdited = table.Column<bool>(type: "boolean", nullable: false),
-                    IsChanged = table.Column<bool>(type: "boolean", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     MessageBoxId = table.Column<string>(type: "text", nullable: false)
                 },
@@ -621,6 +625,11 @@ namespace Infrastructure.Migrations
                 table: "AspNetUsers",
                 column: "PhoneNumber",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UserId",
+                table: "AspNetUsers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_UserImage",

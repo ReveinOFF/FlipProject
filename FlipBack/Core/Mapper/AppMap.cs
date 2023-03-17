@@ -37,6 +37,9 @@ namespace Core.Mapper
                 .ForMember(x => x.LastMessage, y => y.MapFrom(x => x.Messages.LastOrDefault()))
                 .ForMember(x => x.UserImage, y => y.MapFrom(x => x.Users.LastOrDefault().UserImage))
                 .ForMember(x => x.Name, y => y.MapFrom(x => x.Users.LastOrDefault().Name));
+
+            CreateMap<Message, GetMessageDTO>()
+                .ForMember(x => x.Files, y => y.MapFrom(x => x.Files.Select(s => s.FileName).ToList()));
         }
     }
 }

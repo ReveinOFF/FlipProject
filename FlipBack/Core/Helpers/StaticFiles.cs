@@ -4,14 +4,16 @@ using Microsoft.AspNetCore.Http;
 using MimeTypes;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using System.Xml.Linq;
 
 namespace Core.Helpers
 {
     public class StaticFiles
     {
-        public async static Task<(string FilePath, string FileName)> CreateImageAsync(IWebHostEnvironment env,
+        public async static Task<FilesDTO> CreateImageAsync(IWebHostEnvironment env,
                                          string pathFolder,
-                                         IFormFile file)
+                                         IFormFile file,
+                                         int width, int height)
         {
             try
             {
@@ -32,22 +34,30 @@ namespace Core.Helpers
                     string uploadFile = Path.Combine(fileDestDir, newFileName);
 
                     using var image = Image.Load(file.OpenReadStream());
-                    image.Mutate(x => x.Resize(148, 148));
+                    image.Mutate(x => x.Resize(width, height));
                     await image.SaveAsync(uploadFile);
 
-                    return (FilePath: uploadFile, FileName: newFileName);
+                    FilesDTO filesDTOs = new FilesDTO()
+                    {
+                        FileName = newFileName,
+                        FilePath = uploadFile
+                    };
+
+                    image.Dispose();
+
+                    return filesDTOs;
                 }
                 else
-                    return (null, null);
+                    return null;
             }
             catch (Exception exc)
             {
                 Console.WriteLine(exc);
-                return (null, null);
+                return null;
             }
         }
 
-        public async static Task<FilesDTO> CreateReelsAsync(IWebHostEnvironment env,
+        public async static Task<FilesDTO> CreateFileAsync(IWebHostEnvironment env,
                                          string pathFolder,
                                          IFormFile file)
         {
@@ -58,7 +68,7 @@ namespace Core.Helpers
                     string fileDestDir = env.ContentRootPath;
                     Guid fileName = Guid.NewGuid();
 
-                    string extention = MimeTypeMap.GetExtension(file.ContentType);
+                    string extention = Path.GetExtension(file.FileName);
 
                     string name = fileName.ToString() + extention;
 
@@ -79,53 +89,7 @@ namespace Core.Helpers
                     var stream = new FileStream(uploadFile, FileMode.Create);
                     await file.CopyToAsync(stream);
 
-                    return filesDTOs;
-                }
-                else
-                    return null;
-            }
-            catch (Exception exc)
-            {
-                Console.WriteLine(exc);
-                return null;
-            }
-        }
-
-        public static List<FilesDTO> CreatePostsAsync(IWebHostEnvironment env,
-                                         string pathFolder,
-                                         IFormFileCollection files)
-        {
-            try
-            {
-                if (files != null)
-                {
-                    string fileDestDir = env.ContentRootPath;
-                    Guid fileName = Guid.NewGuid();
-
-                    List<FilesDTO> filesDTOs = new List<FilesDTO>();
-
-                    fileDestDir = Path.Combine(fileDestDir, pathFolder);
-                    if (!Directory.Exists(fileDestDir))
-                    {
-                        Directory.CreateDirectory(fileDestDir);
-                    }
-
-                    foreach (var item in files)
-                    {
-                        string extention = MimeTypeMap.GetExtension(item.ContentType);
-
-                        string name = fileName.ToString() + extention;
-
-                        filesDTOs.Add(new FilesDTO
-                        {
-                            FileName = name,
-                            FilePath = Path.Combine(fileDestDir, name)
-                        });
-
-                        using var image = Image.Load(item.OpenReadStream());
-                        image.Mutate(x => x.Resize(528, 755));
-                        image.Save(Path.Combine(fileDestDir, name));
-                    }
+                    stream.Close();
 
                     return filesDTOs;
                 }
@@ -139,11 +103,11 @@ namespace Core.Helpers
             }
         }
 
-        public static bool DeleteImageAsync(string oldFilePath)
+        public static bool DeleteFileAsync(string filePath)
         {
-            if (File.Exists(oldFilePath))
+            if (File.Exists(filePath))
             {
-                File.Delete(oldFilePath);
+                File.Delete(filePath);
                 return true;
             }
             else

@@ -218,14 +218,14 @@ namespace FlipBack.Controllers
 
             if (user.UserImagePath != null)
             {
-                bool deleteFile = StaticFiles.DeleteImageAsync(user.UserImagePath);
+                bool deleteFile = StaticFiles.DeleteFileAsync(user.UserImagePath);
                 if (!deleteFile)
                     return BadRequest("Image not found!");
             }
 
             string fileDestDir = Path.Combine("Resources", "UserImages", user.Id);
 
-            var newImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, file);
+            var newImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, file, 209, 209);
 
             if (newImage.FilePath == null)
                 return BadRequest("The link to the file was not created!");
@@ -252,7 +252,7 @@ namespace FlipBack.Controllers
             if (user == null)
                 return BadRequest("User not found!");
 
-            bool deleteFile = StaticFiles.DeleteImageAsync(user.UserImagePath);
+            bool deleteFile = StaticFiles.DeleteFileAsync(user.UserImagePath);
             if (!deleteFile)
                 return BadRequest("Image not found!");
 
