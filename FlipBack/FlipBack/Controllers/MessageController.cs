@@ -43,7 +43,7 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("add-message")]
-        public async Task<IActionResult> AddMessage([FromQuery] AddMessageDTO messageDTO, string myUserId)
+        public async Task<IActionResult> AddMessage([FromForm] AddMessageDTO messageDTO, string myUserId)
         {
             var messageBox = await _context.MessageBox.FirstOrDefaultAsync(x => x.Id == messageDTO.MessageBoxId);
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.DTO.Account;
 using Core.DTO.Message;
+using Core.DTO.Post;
 using Core.DTO.Reels;
 using Core.DTO.User;
 using Core.Entity.MessageEntitys;
@@ -24,14 +25,40 @@ namespace Core.Mapper
             CreateMap<User, GetFollowsDTO>();
 
             CreateMap<Post, GetCreatedPost>()
-                .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
                 .ForMember(x => x.File, y => y.MapFrom(x => x.Files.Select(s => s.FileName)));
+            CreateMap<Post, GetPostDTO>()
+                .ForMember(x => x.CommentaryCount, y => y.MapFrom(x => x.Commentary.Count))
+                .ForMember(x => x.AnswerCount, y => y.MapFrom(x => x.Commentary.Select(s => s.PostAnswers).Count()))
+                .ForMember(x => x.ReactionCount, y => y.MapFrom(x => x.Reactions.Count))
+                .ForMember(x => x.File, y => y.MapFrom(x => x.Files.Select(s => s.FileName)))
+                .ForMember(x => x.Answer, y => y.MapFrom(x => x.Commentary.SelectMany(s => s.PostAnswers)));
+            CreateMap<PostDTO, Post>()
+                .ForMember(x => x.Files, y => y.Ignore());
+            CreateMap<PostCommentaryDTO, PostCommentary>();
+            CreateMap<PostCommentary, PostGetCommentaryDTO>()
+                .ForMember(x => x.Name, y => y.MapFrom(x => x.User.Name))
+                .ForMember(x => x.Image, y => y.MapFrom(x => x.User.UserImage));
+            CreateMap<PostAnswerDTO, PostAnswer>();
+            CreateMap<PostAnswer, PostGetAnswerDTO>()
+                .ForMember(x => x.Name, y => y.MapFrom(x => x.User.Name))
+                .ForMember(x => x.Image, y => y.MapFrom(x => x.User.UserImage));
 
             CreateMap<Reels, GetReelsDTO>()
                 .ForMember(x => x.CommentaryCount, y => y.MapFrom(x => x.Commentary.Count))
                 .ForMember(x => x.AnswerCount, y => y.MapFrom(x => x.Commentary.Select(s => s.ReelsAnswers).Count()))
                 .ForMember(x => x.ReactionCount, y => y.MapFrom(x => x.Reactions.Count))
-                .ForMember(x => x.Files, y => y.MapFrom(x => x.Files.Select(y => y.FileName).ToList()));
+                .ForMember(x => x.File, y => y.MapFrom(x => x.File.FileName))
+                .ForMember(x => x.Answer, y => y.MapFrom(x => x.Commentary.SelectMany(s => s.ReelsAnswers)));
+            CreateMap<ReelsDTO, Reels>()
+                .ForMember(x => x.File, y => y.Ignore());
+            CreateMap<ReelsCommentaryDTO, ReelsCommentary>();
+            CreateMap<ReelsCommentary, ReelsGetCommentaryDTO>()
+                .ForMember(x => x.Name, y => y.MapFrom(x => x.User.Name))
+                .ForMember(x => x.Image, y => y.MapFrom(x => x.User.UserImage));
+            CreateMap<ReelsAnswerDTO, ReelsAnswer>();
+            CreateMap<ReelsAnswer, ReelsGetAnswerDTO>()
+                .ForMember(x => x.Name, y => y.MapFrom(x => x.User.Name))
+                .ForMember(x => x.Image, y => y.MapFrom(x => x.User.UserImage));
 
             CreateMap<MessageBox, GetMessageBoxDTO>()
                 .ForMember(x => x.LastMessage, y => y.MapFrom(x => x.Messages.LastOrDefault()))

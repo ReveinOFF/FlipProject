@@ -235,6 +235,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    FileId = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     DatePosted = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Views = table.Column<int>(type: "integer", nullable: false),
@@ -737,7 +738,8 @@ namespace Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ReelsFiles_ReelsId",
                 table: "ReelsFiles",
-                column: "ReelsId");
+                column: "ReelsId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReelsReaction_ReelsId",

@@ -252,6 +252,9 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<string>("FileId")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsBlocked")
                         .HasColumnType("boolean");
 
@@ -349,7 +352,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReelsId");
+                    b.HasIndex("ReelsId")
+                        .IsUnique();
 
                     b.ToTable("ReelsFiles");
                 });
@@ -838,8 +842,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsFiles", b =>
                 {
                     b.HasOne("Core.Entity.ReelsEntity.Reels", "Reels")
-                        .WithMany("Files")
-                        .HasForeignKey("ReelsId");
+                        .WithOne("File")
+                        .HasForeignKey("Core.Entity.ReelsEntity.ReelsFiles", "ReelsId");
 
                     b.Navigation("Reels");
                 });
@@ -1017,7 +1021,7 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("Commentary");
 
-                    b.Navigation("Files");
+                    b.Navigation("File");
 
                     b.Navigation("Reactions");
 

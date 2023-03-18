@@ -3,16 +3,14 @@ using Core.DTO.Reels;
 using Core.DTO.User;
 using Core.Entity.ReelsEntity;
 using Core.Helpers;
-using FlipBack.Constans;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace FlipBack.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReelsController : ControllerBase
@@ -82,19 +80,17 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("add-reels")]
-        public async Task<IActionResult> AddReels(ReelsDTO reelsDTO)
+        public async Task<IActionResult> AddReels([FromForm] ReelsDTO reelsDTO)
         {
             var reels = _mapper.Map<Reels>(reelsDTO);
 
             string fileDestDir = Path.Combine("Resources", "ReelsFiles", reels.Id);
             var file = await StaticFiles.CreateFileAsync(_env, fileDestDir, reelsDTO.file);
 
-            reels.File.PathName = file.FilePath;
-            reels.File.FileName = file.FileName;
+            reels.File = new ReelsFiles { PathName = file.FilePath, FileName = file.FileName, ReelsId = reels.Id };
+            reels.FileId = reels.File.Id;
             reels.DatePosted = DateTime.UtcNow;
-            reels.Views = 0;
-            reels.IsBlocked = false;
-            reels.IsPremium = false;
+            reels.UserId = "ddceebbc-f59b-4a99-9c31-99d2e8fa3795";
 
             await _context.Reels.AddAsync(reels);
             await _context.SaveChangesAsync();

@@ -1,6 +1,6 @@
-﻿namespace Core.DTO.Reels
+﻿namespace Core.DTO.Post
 {
-    public class GetReelsDTO
+    public class GetPostDTO
     {
         public string Id { get; set; }
         public string Description { get; set; }
@@ -10,9 +10,9 @@
         public int CommentaryCount { get; set; }
         public int AnswerCount { get; set; }
         public int ReactionCount { get; set; }
-        public string File { get; set; }
 
-        public ICollection<ReelsGetCommentaryDTO> Commentary { get; set; }
-        public ICollection<ReelsGetAnswerDTO> Answer { get; set; }
+        public ICollection<string> File { get; set; }
+        public ICollection<PostGetCommentaryDTO> Commentary { get; set; }
+        public ICollection<PostGetAnswerDTO> Answer { get; set; }
     }
 }
