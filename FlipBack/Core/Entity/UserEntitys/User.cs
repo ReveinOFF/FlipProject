@@ -1,4 +1,5 @@
-﻿using Core.Entity.MessageEntitys;
+﻿using Core.Entity.History;
+using Core.Entity.MessageEntitys;
 using Core.Entity.PostEntitys;
 using Core.Entity.ReelsEntity;
 using Core.Helpers;
@@ -57,5 +58,9 @@ namespace Core.Entity.UserEntitys
         public virtual ICollection<Follow> Followers { get; set; }
         public virtual ICollection<Follow> Followings { get; set; }
         public virtual ICollection<User> Blocked { get; set; }
+
+        /* History */
+        public virtual ICollection<History.History> Histories { get; set; }
+        public virtual ICollection<HistoryReaction> HistoryReactions { get; set; }
     }
 }

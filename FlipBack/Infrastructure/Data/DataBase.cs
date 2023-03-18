@@ -1,4 +1,5 @@
-﻿using Core.Entity.MessageEntitys;
+﻿using Core.Entity.History;
+using Core.Entity.MessageEntitys;
 using Core.Entity.PostEntitys;
 using Core.Entity.ReelsEntity;
 using Core.Entity.UserEntitys;
@@ -92,6 +93,20 @@ namespace Infrastructure.Data
                     .WithMany(y => y.Reactions)
                     .HasForeignKey(z => z.ReelsId);
             });
+
+            /* Setting up history reactions */
+            modelBuilder.Entity<HistoryReaction>(reaction =>
+            {
+                reaction.HasKey(x => new { x.UserId, x.HistoryId });
+
+                reaction.HasOne(x => x.User)
+                    .WithMany(y => y.HistoryReactions)
+                    .HasForeignKey(z => z.UserId);
+
+                reaction.HasOne(x => x.History)
+                    .WithMany(y => y.Reactions)
+                    .HasForeignKey(z => z.HistoryId);
+            });
         }
 
         /* Post */
@@ -118,5 +133,9 @@ namespace Infrastructure.Data
         public virtual DbSet<Message> Message { get; set; }
         public virtual DbSet<MessageFiles> MessageFiles { get; set; }
         public virtual DbSet<MessageBox> MessageBox { get; set; }
+
+        /* History */
+        public virtual DbSet<History> Histories { get; set; }
+        public virtual DbSet<HistoryReaction> HistoryReactions { get; set; }
     }
 }

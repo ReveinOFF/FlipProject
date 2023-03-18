@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Core.DTO.Account;
+using Core.DTO.History;
 using Core.DTO.Message;
 using Core.DTO.Post;
 using Core.DTO.Reels;
 using Core.DTO.User;
+using Core.Entity.History;
 using Core.Entity.MessageEntitys;
 using Core.Entity.PostEntitys;
 using Core.Entity.ReelsEntity;
@@ -64,9 +66,13 @@ namespace Core.Mapper
                 .ForMember(x => x.LastMessage, y => y.MapFrom(x => x.Messages.LastOrDefault()))
                 .ForMember(x => x.UserImage, y => y.MapFrom(x => x.Users.LastOrDefault().UserImage))
                 .ForMember(x => x.Name, y => y.MapFrom(x => x.Users.LastOrDefault().Name));
-
             CreateMap<Message, GetMessageDTO>()
                 .ForMember(x => x.Files, y => y.MapFrom(x => x.Files.Select(s => s.FileName).ToList()));
+
+            CreateMap<History, GetHistoryDTO>()
+                .ForMember(x => x.Files, y => y.MapFrom(x => x.FileName))
+                .ForMember(x => x.UserImage, y => y.MapFrom(x => x.User.UserImage))
+                .ForMember(x => x.NameUser, y => y.MapFrom(x => x.User.Name));
         }
     }
 }

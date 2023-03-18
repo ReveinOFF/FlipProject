@@ -14,6 +14,7 @@ namespace FlipBack.Services
                 Directory.CreateDirectory(Path.Combine(dir, "PostFiles"));
                 Directory.CreateDirectory(Path.Combine(dir, "ReelsFiles"));
                 Directory.CreateDirectory(Path.Combine(dir, "MessageFiles"));
+                Directory.CreateDirectory(Path.Combine(dir, "HistoryFiles"));
             }
             app.UseStaticFiles(new StaticFileOptions
             {
