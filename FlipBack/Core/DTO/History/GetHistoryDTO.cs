@@ -2,10 +2,10 @@
 {
     public class GetHistoryDTO
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string UserImage { get; set; }
         public string NameUser { get; set; }
         public DateTime DateCreate { get; set; }
-        public ICollection<string> Files { get; set; }
+        public string File { get; set; }
     }
 }

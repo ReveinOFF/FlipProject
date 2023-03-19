@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataBase))]
-    partial class DataBaseModelSnapshot : ModelSnapshot
+    [Migration("20230319131748_History")]
+    partial class History
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,36 +138,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("MessageId");
 
                     b.ToTable("MessageFiles");
-                });
-
-            modelBuilder.Entity("Core.Entity.Notification.Notification", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("DateCreate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsViewed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("RecipientId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SenderId")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RecipientId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("Core.Entity.PostEntitys.Post", b =>
@@ -813,21 +786,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Message");
                 });
 
-            modelBuilder.Entity("Core.Entity.Notification.Notification", b =>
-                {
-                    b.HasOne("Core.Entity.UserEntitys.User", "Recipient")
-                        .WithMany("ReceivedNotifications")
-                        .HasForeignKey("RecipientId");
-
-                    b.HasOne("Core.Entity.UserEntitys.User", "Sender")
-                        .WithMany("SendNotifications")
-                        .HasForeignKey("SenderId");
-
-                    b.Navigation("Recipient");
-
-                    b.Navigation("Sender");
-                });
-
             modelBuilder.Entity("Core.Entity.PostEntitys.Post", b =>
                 {
                     b.HasOne("Core.Entity.UserEntitys.User", "User")
@@ -1185,8 +1143,6 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("PostReaction");
 
-                    b.Navigation("ReceivedNotifications");
-
                     b.Navigation("ReelsAnswer");
 
                     b.Navigation("ReelsCommentary");
@@ -1198,8 +1154,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("SavedPosts");
 
                     b.Navigation("SavedReels");
-
-                    b.Navigation("SendNotifications");
 
                     b.Navigation("UserRoles");
                 });

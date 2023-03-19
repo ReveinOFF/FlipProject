@@ -1,5 +1,6 @@
 ﻿using Core.Entity.History;
 using Core.Entity.MessageEntitys;
+using Core.Entity.Notification;
 using Core.Entity.PostEntitys;
 using Core.Entity.ReelsEntity;
 using Core.Entity.UserEntitys;
@@ -107,6 +108,19 @@ namespace Infrastructure.Data
                     .WithMany(y => y.Reactions)
                     .HasForeignKey(z => z.HistoryId);
             });
+
+            /* Setting up notification */
+            modelBuilder.Entity<Notification>(reaction =>
+            {
+                reaction.HasOne(x => x.Sender)
+                    .WithMany(y => y.SendNotifications)
+                    .HasForeignKey(z => z.SenderId);
+
+                reaction.HasOne(x => x.Recipient)
+                    .WithMany(y => y.ReceivedNotifications)
+                    .HasForeignKey(z => z.RecipientId);
+
+            });
         }
 
         /* Post */
@@ -137,5 +151,8 @@ namespace Infrastructure.Data
         /* History */
         public virtual DbSet<History> Histories { get; set; }
         public virtual DbSet<HistoryReaction> HistoryReactions { get; set; }
+
+        /* Notification */
+        public virtual DbSet<Notification> Notification { get; set; }
     }
 }

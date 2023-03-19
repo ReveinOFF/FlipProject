@@ -40,7 +40,7 @@ namespace FlipBack.Controllers
             if (user == null)
                 return NotFound();
 
-            var histories = user.Histories.Where(w => w.Expires <= DateTime.UtcNow).OrderByDescending(o => o.DateCreate).ToList();
+            var histories = user.Histories.Where(w => w.Expires > DateTime.UtcNow).OrderByDescending(o => o.DateCreate).ToList();
 
             if (histories == null)
                 return NotFound();
@@ -69,7 +69,7 @@ namespace FlipBack.Controllers
         [HttpPost("add-history")]
         public async Task<IActionResult> AddHistory(IFormFile File)
         {
-            var user = await _userManager.FindByIdAsync("");
+            var user = await _userManager.FindByIdAsync("ddceebbc-f59b-4a99-9c31-99d2e8fa3795");
 
             if (user == null)
                 return NotFound();

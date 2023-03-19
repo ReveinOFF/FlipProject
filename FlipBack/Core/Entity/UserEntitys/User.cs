@@ -62,5 +62,9 @@ namespace Core.Entity.UserEntitys
         /* History */
         public virtual ICollection<History.History> Histories { get; set; }
         public virtual ICollection<HistoryReaction> HistoryReactions { get; set; }
+
+        /* Notification */
+        public virtual ICollection<Notification.Notification> SendNotifications { get; set; }
+        public virtual ICollection<Notification.Notification> ReceivedNotifications { get; set; }
     }
 }

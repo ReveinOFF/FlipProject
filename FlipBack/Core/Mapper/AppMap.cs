@@ -2,11 +2,13 @@
 using Core.DTO.Account;
 using Core.DTO.History;
 using Core.DTO.Message;
+using Core.DTO.Notification;
 using Core.DTO.Post;
 using Core.DTO.Reels;
 using Core.DTO.User;
 using Core.Entity.History;
 using Core.Entity.MessageEntitys;
+using Core.Entity.Notification;
 using Core.Entity.PostEntitys;
 using Core.Entity.ReelsEntity;
 using Core.Entity.UserEntitys;
@@ -70,9 +72,15 @@ namespace Core.Mapper
                 .ForMember(x => x.Files, y => y.MapFrom(x => x.Files.Select(s => s.FileName).ToList()));
 
             CreateMap<History, GetHistoryDTO>()
-                .ForMember(x => x.Files, y => y.MapFrom(x => x.FileName))
+                .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
+                .ForMember(x => x.File, y => y.MapFrom(x => x.FileName))
                 .ForMember(x => x.UserImage, y => y.MapFrom(x => x.User.UserImage))
                 .ForMember(x => x.NameUser, y => y.MapFrom(x => x.User.Name));
+
+            CreateMap<Notification, GetNotificationDTO>()
+                .ForMember(x => x.SenderName, y => y.MapFrom(x => x.Sender.Name))
+                .ForMember(x => x.SenderImage, y => y.MapFrom(x => x.Sender.UserImage));
+            CreateMap<NotificationDTO, Notification>();
         }
     }
 }
