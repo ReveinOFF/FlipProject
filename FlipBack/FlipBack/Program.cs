@@ -19,6 +19,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Twilio.Clients;
 using FlipBack.Services;
+using FlipBack.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +59,7 @@ builder.Services.AddFluentValidation(x => {
 });
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSignalR();
 builder.Services.AddSwaggerGen(options =>
 {
     options.MapType<DateOnly>(() => new OpenApiSchema
@@ -144,6 +146,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/chatHub");
 
 app.SeedDB();
 
