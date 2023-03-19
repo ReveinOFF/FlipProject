@@ -1,20 +1,17 @@
 ﻿using AutoMapper;
 using Core.DTO.History;
-using Core.DTO.Reels;
 using Core.Entity.History;
-using Core.Entity.ReelsEntity;
 using Core.Entity.UserEntitys;
 using Core.Helpers;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlipBack.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class HistoryController : ControllerBase
@@ -38,12 +35,12 @@ namespace FlipBack.Controllers
             var user = await _userManager.Users.Include(i => i.Histories).FirstOrDefaultAsync(f => f.Id == userId);
 
             if (user == null)
-                return NotFound();
+                return NotFound("User not found!");
 
             var histories = user.Histories.Where(w => w.Expires > DateTime.UtcNow).OrderByDescending(o => o.DateCreate).ToList();
 
             if (histories == null)
-                return NotFound();
+                return NotFound("No stories found!");
 
             var map = _mapper.Map<List<GetHistoryDTO>>(histories);
 
@@ -56,10 +53,10 @@ namespace FlipBack.Controllers
             var history = await _context.Histories.Include(i => i.Reactions).Include(i => i.User).FirstOrDefaultAsync(f => f.Id == id);
 
             if (history == null)
-                return NotFound();
+                return NotFound("History not found!");
 
             if (history.Expires < DateTime.UtcNow)
-                return BadRequest();
+                return BadRequest("The time for this story is over!");
 
             var map = _mapper.Map<GetHistoryDTO>(history);
 
@@ -69,10 +66,11 @@ namespace FlipBack.Controllers
         [HttpPost("add-history")]
         public async Task<IActionResult> AddHistory(IFormFile File)
         {
-            var user = await _userManager.FindByIdAsync("ddceebbc-f59b-4a99-9c31-99d2e8fa3795");
+            string username = User.FindFirst("UserName")?.Value;
+            var user = await _userManager.FindByNameAsync(username);
 
             if (user == null)
-                return NotFound();
+                return NotFound("User not found!");
 
             string fileDestDir = Path.Combine("Resources", "HistoryFiles", user.Id);
             var file = await StaticFiles.CreateFileAsync(_env, fileDestDir, File);
@@ -91,7 +89,7 @@ namespace FlipBack.Controllers
             var history = await _context.Histories.Include(i => i.Reactions).FirstOrDefaultAsync(f => f.Id == id);
 
             if (history == null)
-                return NotFound();
+                return NotFound("History not found!");
 
             StaticFiles.DeleteFileAsync(history.PathName);
 

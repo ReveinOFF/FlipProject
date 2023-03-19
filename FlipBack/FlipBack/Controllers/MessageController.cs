@@ -13,7 +13,7 @@ namespace FlipBack.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class MessageController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -34,7 +34,8 @@ namespace FlipBack.Controllers
         {
             var messageBox = await _context.MessageBox.Include(i => i.Messages).ThenInclude(t => t.Files).FirstOrDefaultAsync(x => x.Id == messageBoxId);
 
-            if (messageBox == null) return NotFound();
+            if (messageBox == null) 
+                return NotFound("No correspondence room found!");
 
             var list = _mapper.Map<List<GetMessageDTO>>(messageBox.Messages.OrderByDescending(o => o.DateSender).ToList());
 
@@ -42,15 +43,19 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("add-message")]
-        public async Task<IActionResult> AddMessage([FromForm] AddMessageDTO messageDTO, string myUserId)
+        public async Task<IActionResult> AddMessage([FromForm] AddMessageDTO messageDTO)
         {
+            string username = User.FindFirst("UserName")?.Value;
+
             var messageBox = await _context.MessageBox.FirstOrDefaultAsync(x => x.Id == messageDTO.MessageBoxId);
 
-            if (messageBox == null) return NotFound();
+            if (messageBox == null) 
+                return NotFound("No correspondence room found!");
 
-            var user = await _userManager.FindByIdAsync(myUserId);
+            var user = await _userManager.FindByNameAsync(username);
 
-            if (user == null) return NotFound();
+            if (user == null) 
+                return NotFound("User not found!");
 
             var newMessage = new Message() { DateSender = DateTime.UtcNow, IsEdited = false, MessageBoxId = messageBox.Id, UserId = user.Id };
 
@@ -82,7 +87,8 @@ namespace FlipBack.Controllers
         {
             var message = await _context.Message.Include(i => i.Files).FirstOrDefaultAsync(x => x.Id == id);
 
-            if (message == null) return NotFound();
+            if (message == null) 
+                return NotFound("This letter was not found!");
 
             _context.Entry(message).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
@@ -108,11 +114,13 @@ namespace FlipBack.Controllers
         {
             var message = await _context.Message.Include(i => i.Files).FirstOrDefaultAsync(x => x.Id == messageId);
 
-            if (message == null) return NotFound();
+            if (message == null) 
+                return NotFound("This letter was not found!");
 
             var file = message.Files.FirstOrDefault(x => x.Id == fileId);
 
-            if (file == null) return NotFound();
+            if (file == null) 
+                return NotFound("This file was not found!");
 
             _context.Entry(file).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
@@ -127,7 +135,8 @@ namespace FlipBack.Controllers
         {
             var oldMessage = await _context.Message.FirstOrDefaultAsync(x => x.Id == messageDTO.Id);
 
-            if (oldMessage == null) return NotFound();
+            if (oldMessage == null) 
+                return NotFound("This letter was not found!");
 
             oldMessage.MessageText = messageDTO.Message;
             oldMessage.IsEdited = true;

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FlipBack.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReelsController : ControllerBase
@@ -87,10 +87,12 @@ namespace FlipBack.Controllers
             string fileDestDir = Path.Combine("Resources", "ReelsFiles", reels.Id);
             var file = await StaticFiles.CreateFileAsync(_env, fileDestDir, reelsDTO.file);
 
+            string UserId = User.FindFirst("UserId")?.Value;
+
             reels.File = new ReelsFiles { PathName = file.FilePath, FileName = file.FileName, ReelsId = reels.Id };
             reels.FileId = reels.File.Id;
             reels.DatePosted = DateTime.UtcNow;
-            reels.UserId = "ddceebbc-f59b-4a99-9c31-99d2e8fa3795";
+            reels.UserId = UserId;
 
             await _context.Reels.AddAsync(reels);
             await _context.SaveChangesAsync();

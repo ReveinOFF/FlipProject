@@ -1,15 +1,15 @@
 ﻿using Core.Entity.MessageEntitys;
 using Core.Entity.UserEntitys;
 using Core.Helpers;
-using FlipBack.Entity;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Twilio.TwiML.Voice;
 
 namespace FlipBack.Hubs
 {
+    [Authorize]
     public class ChatHub : Hub
     {
         private readonly DataBase _context;
@@ -23,17 +23,56 @@ namespace FlipBack.Hubs
             _env = env;
         }
 
-        public async System.Threading.Tasks.Task JoinRoom(string RoomId)
+        public async Task JoinRoom(string RoomId, string UserId, string SUserId)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, RoomId);
+            var currRoom = await _context.MessageBox.FirstOrDefaultAsync(f => f.Id == RoomId);
+
+            if (currRoom == null)
+            {
+                var user = await _userManager.FindByIdAsync(UserId);
+                if (user == null)
+                    return;
+
+                var suser = await _userManager.FindByIdAsync(SUserId);
+                if (suser == null)
+                    return;
+
+                var messageBox = new MessageBox();
+                _context.Users.Attach(user);
+                _context.Users.Attach(suser);
+                messageBox.Users = new List<User> { user, suser };
+                messageBox.LastSendMessage = DateTime.UtcNow;
+
+                await _context.MessageBox.AddAsync(messageBox);
+                await _context.SaveChangesAsync();
+
+                await Groups.AddToGroupAsync(Context.ConnectionId, messageBox.Id);
+            }
+            else
+                await Groups.AddToGroupAsync(Context.ConnectionId, RoomId);
         }
 
-        public async System.Threading.Tasks.Task LeaveRoom(string RoomId)
+        public async Task LeaveRoom(string RoomId, string UserId)
         {
+            var user = await _userManager.FindByIdAsync(UserId);
+
+            if (user == null)
+                return;
+
+            var room = await _context.MessageBox.FirstOrDefaultAsync(f => f.Id == RoomId);
+            
+            if (room == null) return;
+
+            if (!room.Users.Contains(user))
+                return;
+
+            room.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, RoomId);
         }
 
-        public async System.Threading.Tasks.Task SendMessage(string roomId, string userId, string message, IFormFileCollection files)
+        public async Task SendMessage(string roomId, string userId, string message, IFormFileCollection files)
         {
             var user = await _userManager.Users.Include(i => i.MessageBoxs).FirstOrDefaultAsync(f => f.Id == userId);
             if (user == null)

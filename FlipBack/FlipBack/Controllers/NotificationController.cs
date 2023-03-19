@@ -4,14 +4,13 @@ using Core.Entity.Notification;
 using Core.Entity.UserEntitys;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlipBack.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class NotificationController : ControllerBase
@@ -19,23 +18,23 @@ namespace FlipBack.Controllers
         private readonly DataBase _context;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        private readonly IWebHostEnvironment _env;
 
-        public NotificationController(DataBase context, IMapper mapper, IWebHostEnvironment env, UserManager<User> userManager)
+        public NotificationController(DataBase context, IMapper mapper, UserManager<User> userManager)
         {
             _context = context;
             _mapper = mapper;
-            _env = env;
             _userManager = userManager;
         }
 
-        [HttpGet("get-all-notification/{userId}")]
-        public async Task<IActionResult> GetAllNotification(string userId)
+        [HttpGet("get-all-notification")]
+        public async Task<IActionResult> GetAllNotification()
         {
-            var user = await _userManager.Users.Include(i => i.ReceivedNotifications).FirstOrDefaultAsync(f => f.Id == userId);
+            string username = User.FindFirst("UserName")?.Value;
+
+            var user = await _userManager.Users.Include(i => i.ReceivedNotifications).FirstOrDefaultAsync(f => f.UserName == username);
 
             if (user == null) 
-                return NotFound();
+                return NotFound("User not found!");
 
             var map = _mapper.Map<List<GetNotificationDTO>>(user.ReceivedNotifications.OrderByDescending(o => o.DateCreate).ToList());
 

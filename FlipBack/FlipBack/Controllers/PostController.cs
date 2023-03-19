@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Core.DTO.Post;
-using Core.DTO.Reels;
 using Core.DTO.User;
 using Core.Entity.PostEntitys;
 using Core.Helpers;
@@ -11,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FlipBack.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : ControllerBase
@@ -97,8 +96,10 @@ namespace FlipBack.Controllers
                 post.Files.Add(new PostFiles { PathName = file.FilePath, FileName = file.FileName, PostId = post.Id });
             }
 
+            string UserId = User.FindFirst("UserId")?.Value;
+
             post.DatePosted = DateTime.UtcNow;
-            post.UserId = "ddceebbc-f59b-4a99-9c31-99d2e8fa3795";
+            post.UserId = UserId;
 
             await _context.Post.AddAsync(post);
             await _context.SaveChangesAsync();
