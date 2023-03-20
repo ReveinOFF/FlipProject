@@ -29,6 +29,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
 });
+builder.Services.AddSignalR();
+
 //builder.Services.AddTransient<DataBase>()
 //    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
 builder.Services.AddTransient<DataBase>()
@@ -59,7 +61,6 @@ builder.Services.AddFluentValidation(x => {
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSignalR();
 builder.Services.AddSwaggerGen(options =>
 {
     options.MapType<DateOnly>(() => new OpenApiSchema
@@ -146,7 +147,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<ChatHub>("/chatHub");
+app.MapHub<ChatHub>("/hubs/chat");
+app.MapHub<NotificationHub>("/hubs/notification");
 
 app.SeedDB();
 
