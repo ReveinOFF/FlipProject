@@ -35,20 +35,20 @@ namespace FlipBack.Controllers
                 .Include(i => i.MessageBoxs).ThenInclude(t => t.Messages)
                 .FirstOrDefaultAsync();
 
-            if (findUser != null)
+            if (findUser == null)
                 return NotFound("User not found!");
 
             if (!findUser.MessageBoxs.Any())
-                return NotFound("No correspondence room found!");
+                return Ok();
 
-            var list = findUser.MessageBoxs.OrderByDescending(o => o.LastSendMessage).ToList();
+            var list = findUser.MessageBoxs.OrderBy(o => o.LastSendMessage).ToList();
             var getMessageBox = _mapper.Map<List<GetMessageBoxDTO>>(list);
 
             return Ok(getMessageBox);
         }
 
         [HttpPost("create-message-boxs")]
-        public async Task<IActionResult> CreateMessageBoxs(string userId, string myUserId)
+        public async Task<IActionResult> CreateMessageBoxs([FromBody] string userId)
         {
             string username = User.FindFirst("UserName")?.Value;
             var findMyUser = await _userManager.Users.Where(x => x.UserName == username).FirstOrDefaultAsync();
@@ -75,7 +75,7 @@ namespace FlipBack.Controllers
             await _context.MessageBox.AddAsync(messageBox);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(messageBox.Id);
         }
 
         [HttpDelete("delete-message-boxs/{id}")]

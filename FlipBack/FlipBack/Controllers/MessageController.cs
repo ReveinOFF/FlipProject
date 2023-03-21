@@ -32,14 +32,23 @@ namespace FlipBack.Controllers
         [HttpGet("get-messages/{messageBoxId}")]
         public async Task<IActionResult> GetMessages(string messageBoxId)
         {
-            var messageBox = await _context.MessageBox.Include(i => i.Messages).ThenInclude(t => t.Files).FirstOrDefaultAsync(x => x.Id == messageBoxId);
+            string userId = User.FindFirst("UserId")?.Value;
+
+            var messageBox = await _context.MessageBox.Include(i => i.Messages).ThenInclude(t => t.Files).Include(i => i.Users).FirstOrDefaultAsync(x => x.Id == messageBoxId);
 
             if (messageBox == null) 
                 return NotFound("No correspondence room found!");
 
-            var list = _mapper.Map<List<GetMessageDTO>>(messageBox.Messages.OrderByDescending(o => o.DateSender).ToList());
+            var list = _mapper.Map<List<GetMessageDTO>>(messageBox.Messages.OrderBy(o => o.DateSender).ToList());
 
-            return Ok(list);
+            var user = messageBox.Users.FirstOrDefault(x => x.Id != userId);
+
+            if (user == null)
+                return NotFound("User not found!");
+
+            var messageObject = new { Messages = list, NameUser = user.Name, UserImage = user.UserImage, UserId = user.Id };
+
+            return Ok(messageObject);
         }
 
         [HttpPost("add-message")]

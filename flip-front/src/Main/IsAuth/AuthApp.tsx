@@ -121,7 +121,7 @@ const AuthApp = () => {
           <Route path="help" element={<HelpComponent />} />
         </Route>
         <Route path="messages" element={<MessagesSelectionComponent />} />
-        <Route path="chat" element={<MessagesRoomComponent />} />
+        <Route path="chat/:id" element={<MessagesRoomComponent />} />
       </Route>
       <Route path="*" element={<PNFComponent />} />
     </Routes>

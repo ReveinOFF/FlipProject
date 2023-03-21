@@ -12,6 +12,7 @@ import { BlockedPage } from "../BlockedPage/BlockedPage";
 import { FliperModal } from "../FliperModal/FliperModal";
 import { PostModal } from "../PostModal/PostModal";
 import { SUserMenu } from "../SUserMenu/SUserMenu";
+import { useNavigate } from "react-router-dom";
 
 export const SProfile = (props) => {
   const { profile } = props;
@@ -19,6 +20,7 @@ export const SProfile = (props) => {
   const myProfile = useTypedSelector((state) => state.auth.user);
   const [t] = useTranslation("translation");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [selector, setSelector] = useState(1);
@@ -113,6 +115,16 @@ export const SProfile = (props) => {
             },
           });
       });
+  };
+
+  const Chat = async () => {
+    await axios
+      .post(`messagebox/create-message-boxs`, profile!.id, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => navigate(`/chat/${res.data}`));
   };
 
   // return (
@@ -315,7 +327,7 @@ export const SProfile = (props) => {
                 </button>
               )}
               {!profile.isPrivateUser && (
-                <button>{t("main.s_profile.notif_btn")}</button>
+                <button onClick={Chat}>{t("main.s_profile.notif_btn")}</button>
               )}
             </div>
           </div>

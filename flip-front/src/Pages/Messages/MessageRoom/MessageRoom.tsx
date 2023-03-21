@@ -1,21 +1,69 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./MessageRoom.module.scss";
 import EmojiPicker, { Theme, EmojiStyle } from "emoji-picker-react";
+import axios from "axios";
+import { useQuery } from "react-query";
+import { useTypedSelector } from "../../../Hooks/useTypedSelector";
+import { GetMessage } from "../../../Interface/Message";
+import * as signalR from "@microsoft/signalr";
+import { formatDate } from "../../../Components/Convertor/formatDate";
+import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
 
 export const MessageRoom = () => {
+  const myUser = useTypedSelector((state) => state.auth.user);
   const [t] = useTranslation("translation");
   const navigate = useNavigate();
+  const { id } = useParams();
 
+  const hiddenFileInput = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<any>(null);
+  const messageListRef = useRef<any>(null);
+  const [selectFiles, setSelectFiles] = useState<any>(null);
   const [emojiShow, setEmojiShow] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState<string>("");
   const [icon, setIcon] = useState(66);
+  const [messages, setMessages] = useState<GetMessage[]>([]);
+  const [connection, setConnection] = useState<any>(null);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
 
   useEffect(() => {
     document.title = "Chat";
   }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const newConnection = new signalR.HubConnectionBuilder()
+      .withUrl(process.env.REACT_APP_BASE_HUBS + "chat", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .configureLogging(signalR.LogLevel.None)
+      .withAutomaticReconnect()
+      .build();
+
+    setConnection(newConnection);
+  }, []);
+
+  useEffect(() => {
+    if (connection) {
+      connection.start().then(() => connection.invoke("JoinRoom", id));
+
+      connection.on("ReceiveTyping", (sUserId, isTyping) => {
+        if (sUserId === myUser?.id) {
+          if (isTyping) setIsTyping(true);
+          else setIsTyping(false);
+        }
+      });
+      connection.on("ReceiveMessage", (message) => {
+        setMessages((prevMessages) => [...prevMessages, message]);
+        messageListRef.current?.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+  }, [connection]);
 
   useEffect(() => {
     if (textAreaRef.current.scrollHeight > 102) return;
@@ -25,6 +73,65 @@ export const MessageRoom = () => {
     textAreaRef.current.style.height = scrollHeight + "px";
     setIcon(scrollHeight);
   }, [currentValue]);
+
+  const getMessages = async (messageBoxId: string) => {
+    const { data } = await axios.get(`message/get-messages/${messageBoxId}`);
+
+    return data;
+  };
+
+  const { isLoading, data } = useQuery(
+    ["getMessages", id],
+    async () => await getMessages(id as string),
+    {
+      onSuccess: (res) => {
+        setMessages(res.messages);
+      },
+    }
+  );
+
+  const SendMessage = async (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+
+      if (currentValue.length > 0) {
+        connection
+          .invoke(
+            "SendMessage",
+            id,
+            myUser?.id,
+            currentValue,
+            selectFiles ? selectFiles : null
+          )
+          .then(() => {
+            setCurrentValue("");
+            messageListRef.current?.scrollIntoView({ behavior: "smooth" });
+          });
+      }
+    }
+  };
+
+  const fileClick = () => {
+    if (hiddenFileInput.current) hiddenFileInput.current.click();
+  };
+
+  useEffect(() => {
+    setTimeout(
+      () => messageListRef.current?.scrollIntoView({ behavior: "smooth" }),
+      400
+    );
+  }, []);
+
+  const handleKeyDown = () => {
+    if (textAreaRef.current.value && !isTyping) {
+      connection.invoke("UserTyping", id, data?.userId, true);
+      setTimeout(() => {
+        connection.invoke("UserTyping", id, data?.userId, false);
+      }, 5000);
+    }
+  };
+
+  if (isLoading) return <LazyLoading />;
 
   return (
     <div className={styles.message}>
@@ -46,14 +153,61 @@ export const MessageRoom = () => {
             />
           </svg>
           <div className={styles.image}>
-            <img
-              src="/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
-              alt=""
-            />
+            {data?.userImage ? (
+              <img
+                src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${data?.userId}/${data?.userImage}`}
+                alt=""
+              />
+            ) : (
+              <svg
+                width="110"
+                height="110"
+                viewBox="0 0 209 209"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="104.5"
+                  cy="104.5"
+                  r="102.029"
+                  fill="url(#paint0_linear_1675_10359)"
+                  fillOpacity="0.5"
+                  stroke="#2F2F2F"
+                  strokeWidth="4.94119"
+                />
+                <path
+                  d="M77.3984 78.5C77.3984 85.4036 71.802 91 64.8984 91C57.9949 91 52.3984 85.4036 52.3984 78.5C52.3984 71.5964 57.9949 66 64.8984 66C71.802 66 77.3984 71.5964 77.3984 78.5Z"
+                  fill="#2F2F2F"
+                />
+                <path
+                  d="M157.398 78.5C157.398 85.4036 151.802 91 144.898 91C137.995 91 132.398 85.4036 132.398 78.5C132.398 71.5964 137.995 66 144.898 66C151.802 66 157.398 71.5964 157.398 78.5Z"
+                  fill="#2F2F2F"
+                />
+                <path
+                  d="M84.8984 146H124.898"
+                  stroke="#2F2F2F"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+                <defs>
+                  <linearGradient
+                    id="paint0_linear_1675_10359"
+                    x1="-40.5348"
+                    y1="188.1"
+                    x2="212.652"
+                    y2="182.514"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stopColor="#48D824" />
+                    <stop offset="1" stopColor="#10D0EA" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            )}
           </div>
           <div className={styles.info}>
             <div className={styles.name}>
-              <div className={styles.text}>Рома Бобер</div>
+              <div className={styles.text}>{data?.nameUser}</div>
               <svg
                 className={styles.online}
                 width="17"
@@ -65,7 +219,9 @@ export const MessageRoom = () => {
                 <circle cx="8.96484" cy="8" r="8" fill="#2FD57D" />
               </svg>
             </div>
-            <div className={styles.write}>{t("main.message_room.write")}</div>
+            <div className={styles.write}>
+              {isTyping && <>{t("main.message_room.write")}</>}
+            </div>
           </div>
         </div>
         <div className={styles.right}>
@@ -188,21 +344,44 @@ export const MessageRoom = () => {
       </div>
 
       <div className={styles.chat}>
-        <div className={styles.my_message}>
-          <div className={styles.my_date}>11.55</div>
-          <div className={styles.my_text}>
-            Ми вже не бачилися більше 3 днів, нам терміново потрібно зустрітися
-          </div>
-        </div>
-        <div className={styles.someone_message}>
-          <div className={styles.someone_text}>Привет</div>
-          <div className={styles.someone_date}>11.55</div>
-        </div>
-        <div className={styles.my_message}>
-          <div className={styles.my_date}>11.55</div>
-          <div className={styles.my_text}>Хай</div>
-        </div>
-        <div className={styles.showed}>{t("main.message_room.showed")}</div>
+        {messages &&
+          messages.map((item) => (
+            <div
+              className={
+                item.userId === myUser?.id
+                  ? styles.my_message
+                  : styles.someone_message
+              }
+              key={item.id}
+            >
+              {item.userId === myUser?.id ? (
+                <>
+                  <div className={styles.my_date}>
+                    {formatDate(new Date(item.dateSender))}
+                  </div>
+                  <div className={styles.my_text}>
+                    {item.messageText.split(/\n/g).map((item, idx) => {
+                      return (
+                        <React.Fragment key={idx}>
+                          {item}
+                          <br />
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={styles.someone_text}>{item.messageText}</div>
+                  <div className={styles.someone_date}>
+                    {formatDate(new Date(item.dateSender))}
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+        <div ref={messageListRef}></div>
+        {/* <div className={styles.showed}>{t("main.message_room.showed")}</div> */}
       </div>
 
       <div className={styles.bottom}>
@@ -211,6 +390,8 @@ export const MessageRoom = () => {
           placeholder={t("main.message_room.text_area").toString()}
           ref={textAreaRef}
           value={currentValue}
+          onKeyPress={SendMessage}
+          onKeyDown={handleKeyDown}
           onChange={(e) => {
             setCurrentValue(e.target.value);
           }}
@@ -230,8 +411,19 @@ export const MessageRoom = () => {
           </div>
         )}
         <div className={styles.icon} style={{ height: icon }}>
+          <input
+            type="file"
+            ref={hiddenFileInput}
+            onChange={async (event: any) => {
+              const file = event.currentTarget.files;
+              setSelectFiles(file);
+            }}
+            style={{ display: "none" }}
+            multiple
+          />
           <svg
             className={styles.file}
+            onClick={fileClick}
             width="23"
             height="27"
             viewBox="0 0 23 27"

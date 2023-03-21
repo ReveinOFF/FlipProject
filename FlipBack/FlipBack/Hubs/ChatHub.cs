@@ -1,54 +1,32 @@
-﻿using Core.Entity.MessageEntitys;
+﻿using AutoMapper;
+using Core.DTO.Message;
+using Core.Entity.MessageEntitys;
 using Core.Entity.UserEntitys;
 using Core.Helpers;
 using Infrastructure.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlipBack.Hubs
 {
-    [Authorize]
     public class ChatHub : Hub
     {
         private readonly DataBase _context;
         private readonly UserManager<User> _userManager;
         private readonly IWebHostEnvironment _env;
+        private readonly IMapper _mapper;
 
-        public ChatHub(DataBase context, UserManager<User> userManager, IWebHostEnvironment env) 
+        public ChatHub(DataBase context, UserManager<User> userManager, IWebHostEnvironment env, IMapper mapper) 
         {
             _context = context;
             _userManager = userManager;
             _env = env;
+            _mapper = mapper;
         }
 
-        public async Task JoinRoom(string RoomId, string UserId, string SUserId)
+        public async Task JoinRoom(string RoomId)
         {
-            var currRoom = await _context.MessageBox.FirstOrDefaultAsync(f => f.Id == RoomId);
-
-            if (currRoom == null)
-            {
-                var user = await _userManager.FindByIdAsync(UserId);
-                if (user == null)
-                    return;
-
-                var suser = await _userManager.FindByIdAsync(SUserId);
-                if (suser == null)
-                    return;
-
-                var messageBox = new MessageBox();
-                _context.Users.Attach(user);
-                _context.Users.Attach(suser);
-                messageBox.Users = new List<User> { user, suser };
-                messageBox.LastSendMessage = DateTime.UtcNow;
-
-                await _context.MessageBox.AddAsync(messageBox);
-                await _context.SaveChangesAsync();
-
-                await Groups.AddToGroupAsync(Context.ConnectionId, messageBox.Id);
-            }
-            else
                 await Groups.AddToGroupAsync(Context.ConnectionId, RoomId);
         }
 
@@ -106,11 +84,20 @@ namespace FlipBack.Hubs
                         chatMessage.Files.Add(new MessageFiles { MessageId = chatMessage.Id, PathName = fileInfo.FilePath, FileName = fileInfo.FileName });
                 }
             }
+            room.LastSendMessage = DateTime.UtcNow;
 
+            _context.MessageBox.Update(room);
             await _context.Message.AddAsync(chatMessage);
             await _context.SaveChangesAsync();
 
-            await Clients.Group(roomId).SendAsync("ReceiveMessage", userId, message, chatMessage.Files.SelectMany(s => s.FileName).ToList());
+            var getMessage = _mapper.Map<GetMessageDTO>(chatMessage);
+
+            await Clients.Group(roomId).SendAsync("ReceiveMessage", getMessage);
+        }
+
+        public async Task UserTyping(string roomId, string sUserId, bool isTyping)
+        {
+            await Clients.Group(roomId).SendAsync("ReceiveTyping", sUserId, isTyping);
         }
     }
 }

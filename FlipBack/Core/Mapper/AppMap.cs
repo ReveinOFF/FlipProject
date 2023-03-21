@@ -65,8 +65,9 @@ namespace Core.Mapper
                 .ForMember(x => x.Image, y => y.MapFrom(x => x.User.UserImage));
 
             CreateMap<MessageBox, GetMessageBoxDTO>()
-                .ForMember(x => x.LastMessage, y => y.MapFrom(x => x.Messages.LastOrDefault()))
+                .ForMember(x => x.LastMessage, y => y.MapFrom(x => x.Messages.LastOrDefault().MessageText))
                 .ForMember(x => x.UserImage, y => y.MapFrom(x => x.Users.LastOrDefault().UserImage))
+                .ForMember(x => x.UserId, y => y.MapFrom(x => x.Users.LastOrDefault().Id))
                 .ForMember(x => x.Name, y => y.MapFrom(x => x.Users.LastOrDefault().Name));
             CreateMap<Message, GetMessageDTO>()
                 .ForMember(x => x.Files, y => y.MapFrom(x => x.Files.Select(s => s.FileName).ToList()));

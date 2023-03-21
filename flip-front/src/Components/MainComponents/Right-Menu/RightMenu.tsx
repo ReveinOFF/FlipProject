@@ -20,9 +20,10 @@ export const RightMenu = () => {
 
   const debouncedSearch = useCallback(
     lodash.debounce((query) => {
-      axios.get(`user/search-users/${query}`).then((res) => {
-        setSearchUser(res.data);
-      });
+      if (query)
+        axios.get(`user/search-users/${query}`).then((res) => {
+          setSearchUser(res.data);
+        });
     }, 500),
     []
   );

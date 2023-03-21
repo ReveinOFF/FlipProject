@@ -40,14 +40,16 @@
         justify-content: center;
         align-items: center;
 
-        height: 121px;
-        width: 116px;
+        height: 120px;
+        width: 120px;
 
-        background: linear-gradient(to right, #3ed647, #10cfe7) border-box;
+        border: 2px solid transparent;
+        background: linear-gradient(#ffffff, #ffffff) padding-box,
+          linear-gradient(to right, #3ed647, #10cfe7) border-box;
         border-radius: 50%;
 
         img {
-          height: 115px;
+          height: 110px;
           width: 110px;
           border-radius: 50%;
         }
@@ -126,13 +128,35 @@
   .chat {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
 
-    height: 100%;
+    margin-top: auto;
+
     width: 100%;
 
     padding-left: 30px;
     padding-right: 30px;
+
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-left: 3px solid #ebebeb;
+      border-right: 3px solid #ebebeb;
+      border-top: 3px solid #ebebeb;
+      border-bottom: 3px solid #ebebeb;
+      border-radius: 4px;
+
+      background: #2f2f2f;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(88.74deg, #48d824 -18.76%, #10d0ea 99.82%);
+      border-radius: 50px;
+    }
 
     .my_message {
       align-self: flex-end;
@@ -277,6 +301,8 @@
       display: flex;
       align-items: center;
       background: #ebebeb;
+
+      padding-left: 25px;
 
       border-top-right-radius: 15px;
       border-bottom-right-radius: 15px;

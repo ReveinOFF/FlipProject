@@ -96,6 +96,9 @@ namespace FlipBack.Controllers
                 .Where(x => x.Name.ToLower().Contains(name.ToLower()) || x.UserName.ToLower().Contains(name.ToLower()))
                 .ToListAsync();
 
+            if (user == null) 
+                return Ok();
+
             var getUser = _mapper.Map<List<GetUsersDTO>>(user);
 
             return Ok(getUser);

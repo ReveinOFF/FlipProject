@@ -131,9 +131,10 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 app.UseCors(x => x
-    .AllowAnyOrigin()
+    .WithOrigins("http://localhost:3000", "http://solido.tk", "https://solido.tk")
     .AllowAnyMethod()
-    .AllowAnyHeader());
+    .AllowAnyHeader()
+    .AllowCredentials());
 
 if (app.Environment.IsDevelopment())
 {
