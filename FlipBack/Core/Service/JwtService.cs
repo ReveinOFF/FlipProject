@@ -31,6 +31,7 @@ namespace Core.Service
             List<Claim> claims = new List<Claim>()
             {
                 new Claim("UserId", user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim("UserName", user.UserName)
             };
 

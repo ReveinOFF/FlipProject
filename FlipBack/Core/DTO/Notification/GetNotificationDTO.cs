@@ -2,11 +2,12 @@
 {
     public class GetNotificationDTO
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public NotificationType Type { get; set; }
-        public bool IsViewed { get; set; }
         public DateTime DateCreate { get; set; }
+        public string SenderId { get; set; }
         public string SenderName { get; set; }
         public string SenderImage { get; set;}
+        //public string LikeUrl { get; set; }
     }
 }

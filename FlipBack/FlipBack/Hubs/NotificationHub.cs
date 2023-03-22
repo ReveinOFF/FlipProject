@@ -1,20 +1,35 @@
-﻿using Core.DTO.Notification;
+﻿using AutoMapper;
+using Core.DTO.Notification;
 using Core.Entity.UserEntitys;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 
 namespace FlipBack.Hubs
 {
+    [Authorize]
     public class NotificationHub : Hub
     {
         private readonly UserManager<User> _userManager;
         private readonly DataBase _context;
+        private readonly IMapper _mapper;
 
-        public NotificationHub(UserManager<User> userManager, DataBase context)
+        public NotificationHub(UserManager<User> userManager, DataBase context, IMapper mapper)
         {
             _userManager = userManager;
             _context = context;
+            _mapper = mapper;
+        }
+
+        public override async Task OnConnectedAsync()
+        {
+            await base.OnConnectedAsync();
+        }
+
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            await base.OnDisconnectedAsync(exception);
         }
 
         public async Task SendNotification(string senderId, string recipientId, NotificationType type)
@@ -36,10 +51,17 @@ namespace FlipBack.Hubs
             if (_context.Notification.Any(x => x.SenderId == senderId && type == NotificationType.Follow && x.Type == type))
                 return;
 
-            await _context.Notification.AddAsync(new Core.Entity.Notification.Notification { DateCreate = DateTime.UtcNow, Type = type, SenderId = senderId, RecipientId = recipientId });
+            var notif = new Core.Entity.Notification.Notification { DateCreate = DateTime.UtcNow, Type = type, SenderId = senderId, RecipientId = recipientId };
+
+            await _context.Notification.AddAsync(notif);
             await _context.SaveChangesAsync();
 
-            await Clients.User(recipientId).SendAsync("ReceiveNotification", senderId, recipientId, type);
+            notif.Sender = user;
+            notif.Recipient = user2;
+
+            var notification = _mapper.Map<GetNotificationDTO>(notif);
+
+            await Clients.User(recipientId).SendAsync("ReceiveNotification", notification);
         }
     }
 }

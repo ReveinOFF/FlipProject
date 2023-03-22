@@ -208,6 +208,52 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Histories",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Expires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PathName = table.Column<string>(type: "text", nullable: false),
+                    FileName = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Histories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Histories_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notification",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    SenderId = table.Column<string>(type: "text", nullable: true),
+                    RecipientId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notification", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notification_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Notification_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Post",
                 columns: table => new
                 {
@@ -321,6 +367,30 @@ namespace Infrastructure.Migrations
                         name: "FK_MessageBoxUser_MessageBox_MessageBoxsId",
                         column: x => x.MessageBoxsId,
                         principalTable: "MessageBox",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HistoryReactions",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    HistoryId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HistoryReactions", x => new { x.UserId, x.HistoryId });
+                    table.ForeignKey(
+                        name: "FK_HistoryReactions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_HistoryReactions_Histories_HistoryId",
+                        column: x => x.HistoryId,
+                        principalTable: "Histories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -656,6 +726,16 @@ namespace Infrastructure.Migrations
                 column: "FollowerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Histories_UserId",
+                table: "Histories",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HistoryReactions_HistoryId",
+                table: "HistoryReactions",
+                column: "HistoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Message_MessageBoxId",
                 table: "Message",
                 column: "MessageBoxId");
@@ -674,6 +754,16 @@ namespace Infrastructure.Migrations
                 name: "IX_MessageFiles_MessageId",
                 table: "MessageFiles",
                 column: "MessageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notification_RecipientId",
+                table: "Notification",
+                column: "RecipientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notification_SenderId",
+                table: "Notification",
+                column: "SenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Post_UserId",
@@ -784,10 +874,16 @@ namespace Infrastructure.Migrations
                 name: "Follows");
 
             migrationBuilder.DropTable(
+                name: "HistoryReactions");
+
+            migrationBuilder.DropTable(
                 name: "MessageBoxUser");
 
             migrationBuilder.DropTable(
                 name: "MessageFiles");
+
+            migrationBuilder.DropTable(
+                name: "Notification");
 
             migrationBuilder.DropTable(
                 name: "PostAnswer");
@@ -818,6 +914,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Histories");
 
             migrationBuilder.DropTable(
                 name: "Message");

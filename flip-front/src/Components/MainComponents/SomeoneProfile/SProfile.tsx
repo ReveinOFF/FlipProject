@@ -13,6 +13,8 @@ import { FliperModal } from "../FliperModal/FliperModal";
 import { PostModal } from "../PostModal/PostModal";
 import { SUserMenu } from "../SUserMenu/SUserMenu";
 import { useNavigate } from "react-router-dom";
+import * as signalR from "@microsoft/signalr";
+import { NotificationType } from "../../../Interface/Notification";
 
 export const SProfile = (props) => {
   const { profile } = props;
@@ -21,6 +23,8 @@ export const SProfile = (props) => {
   const [t] = useTranslation("translation");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [connection, setConnection] = useState<any>();
 
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [selector, setSelector] = useState(1);
@@ -46,6 +50,28 @@ export const SProfile = (props) => {
         if (res.status === 200) setIsFollow(res.data);
       });
   }, [myProfile?.id, profile?.id]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const newConnection = new signalR.HubConnectionBuilder()
+      .withUrl(process.env.REACT_APP_BASE_HUBS + "notification", {
+        accessTokenFactory: () => token as string,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "user-id": myProfile?.id as string,
+        },
+      })
+      .configureLogging(signalR.LogLevel.None)
+      .withAutomaticReconnect()
+      .build();
+
+    setConnection(newConnection);
+  }, []);
+
+  useEffect(() => {
+    if (connection) connection.start();
+  }, [connection]);
 
   const FollowersShow = async () => {
     await axios
@@ -74,13 +100,22 @@ export const SProfile = (props) => {
       if (res.status === 200) {
         setIsFollow(true);
 
-        dispatch({
-          type: ToastActionTypes.SHOW,
-          payload: {
-            message: t("toast.success.follow"),
-            type: "success",
-          },
-        });
+        connection
+          .invoke(
+            "SendNotification",
+            myProfile?.id,
+            profile.id,
+            NotificationType.Follow
+          )
+          .then(() => {
+            dispatch({
+              type: ToastActionTypes.SHOW,
+              payload: {
+                message: t("toast.success.follow"),
+                type: "success",
+              },
+            });
+          });
       } else
         dispatch({
           type: ToastActionTypes.SHOW,

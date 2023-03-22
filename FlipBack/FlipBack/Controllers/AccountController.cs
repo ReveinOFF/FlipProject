@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using FlipBack.Helpers;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
+using System.Security.Claims;
 
 namespace FlipBack.Controllers
 {

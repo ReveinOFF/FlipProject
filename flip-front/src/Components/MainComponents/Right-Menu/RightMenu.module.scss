@@ -54,6 +54,10 @@
         border-radius: 50%;
       }
 
+      svg {
+        margin-right: 7px;
+      }
+
       .find_user_name {
         font-style: normal;
         font-weight: 600;
@@ -159,6 +163,7 @@
     padding-left: 22px;
     padding-right: 12px;
     padding-top: 17px;
+    padding-bottom: 17px;
 
     .header {
       margin-bottom: 30px;
@@ -174,6 +179,7 @@
     }
 
     .notif_first {
+      margin-top: 30px;
       margin-bottom: 30px;
     }
 
@@ -208,17 +214,26 @@
       span {
         font-weight: 600;
 
+        margin-right: 5px;
+
         color: #2f2f2f;
       }
 
       .notif_img_h {
         margin-right: 14px;
 
+        width: 35px;
+        height: 35px;
+
+        cursor: pointer;
+
         border-radius: 50%;
       }
 
       .notif_img_m {
-        margin-right: 10px;
+        margin-right: 14px;
+
+        min-width: 35px;
       }
 
       button {
@@ -256,7 +271,7 @@
     .notinf_date {
       margin-top: 2px;
       margin-bottom: 20px;
-      margin-left: 45px;
+      margin-left: 50px;
 
       font-style: normal;
       font-weight: 600;

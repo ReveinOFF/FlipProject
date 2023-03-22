@@ -79,6 +79,7 @@ namespace Core.Mapper
                 .ForMember(x => x.NameUser, y => y.MapFrom(x => x.User.Name));
 
             CreateMap<Notification, GetNotificationDTO>()
+                .ForMember(x => x.SenderId, y => y.MapFrom(x => x.Sender.Id))
                 .ForMember(x => x.SenderName, y => y.MapFrom(x => x.Sender.Name))
                 .ForMember(x => x.SenderImage, y => y.MapFrom(x => x.Sender.UserImage));
             CreateMap<NotificationDTO, Notification>();

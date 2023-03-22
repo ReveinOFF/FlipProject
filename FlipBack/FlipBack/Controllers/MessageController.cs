@@ -51,46 +51,6 @@ namespace FlipBack.Controllers
             return Ok(messageObject);
         }
 
-        [HttpPost("add-message")]
-        public async Task<IActionResult> AddMessage([FromForm] AddMessageDTO messageDTO)
-        {
-            string username = User.FindFirst("UserName")?.Value;
-
-            var messageBox = await _context.MessageBox.FirstOrDefaultAsync(x => x.Id == messageDTO.MessageBoxId);
-
-            if (messageBox == null) 
-                return NotFound("No correspondence room found!");
-
-            var user = await _userManager.FindByNameAsync(username);
-
-            if (user == null) 
-                return NotFound("User not found!");
-
-            var newMessage = new Message() { DateSender = DateTime.UtcNow, IsEdited = false, MessageBoxId = messageBox.Id, UserId = user.Id };
-
-            if (messageDTO.Message != null || messageDTO.Message != "") 
-                newMessage.MessageText = messageDTO.Message;
-
-            if (messageDTO.Files != null)
-            {
-                newMessage.Files = new List<MessageFiles>();
-
-                foreach (var item in messageDTO.Files)
-                {
-                    string fileDestDir = Path.Combine("Resources", "MessageFiles", messageBox.Id);
-
-                    var fileInfo = await StaticFiles.CreateFileAsync(_env, fileDestDir, item);
-                    if (fileInfo != null)
-                        newMessage.Files.Add(new MessageFiles { MessageId = newMessage.Id, PathName = fileInfo.FilePath, FileName = fileInfo.FileName });
-                }
-            }
-
-            await _context.Message.AddAsync(newMessage);
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
         [HttpDelete("delete-message/{id}")]
         public async Task<IActionResult> DeleteMessage(string id)
         {

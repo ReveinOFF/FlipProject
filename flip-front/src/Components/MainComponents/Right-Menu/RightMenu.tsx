@@ -1,22 +1,68 @@
 import { useTranslation } from "react-i18next";
 import styles from "./RightMenu.module.scss";
 import lodash from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GetUsers } from "../../../Interface/Profile";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import { useDispatch } from "react-redux";
+import { useQuery } from "react-query";
+import { formatDate } from "../../Convertor/formatDate";
+import {
+  GetNotification,
+  NotificationType,
+} from "../../../Interface/Notification";
+import * as signalR from "@microsoft/signalr";
 
 export const RightMenu = () => {
   const [t] = useTranslation("translation");
   const theme = useTypedSelector((state) => state.theme.mode);
+  const myUser = useTypedSelector((state) => state.auth.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const notifRef = useRef<any>(null);
   const [mode, setMode] = useState<string>("light");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchUser, setSearchUser] = useState<GetUsers[]>();
+  const [connection, setConnection] = useState<any>();
+  const [notification, setNotification] = useState<GetNotification[]>([]);
+
+  const getNotify = async () => {
+    const { data } = await axios.get("notification/get-all-notification");
+
+    return data;
+  };
+
+  const { data } = useQuery("getNotify", getNotify);
+
+  useEffect(() => setNotification(data), [data]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const newConnection = new signalR.HubConnectionBuilder()
+      .withUrl(process.env.REACT_APP_BASE_HUBS + "notification", {
+        accessTokenFactory: () => token as string,
+      })
+      .configureLogging(signalR.LogLevel.None)
+      .withAutomaticReconnect()
+      .build();
+
+    setConnection(newConnection);
+  }, []);
+
+  useEffect(() => {
+    if (connection) {
+      connection.start().then(() => {
+        connection.on("ReceiveNotification", (notification) => {
+          setNotification((prevMessages) => [...prevMessages, notification]);
+          notifRef.current?.scrollTo(0, 0);
+        });
+      });
+    }
+  }, [connection]);
 
   const debouncedSearch = useCallback(
     lodash.debounce((query) => {
@@ -237,10 +283,51 @@ export const RightMenu = () => {
                   alt=""
                 />
               ) : (
-                <img
-                  src="/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
-                  alt=""
-                />
+                <svg
+                  className={styles.profile_img}
+                  width="59"
+                  height="59"
+                  viewBox="0 0 209 209"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="104.5"
+                    cy="104.5"
+                    r="102.029"
+                    fill="url(#paint0_linear_1675_10359)"
+                    fillOpacity="0.5"
+                    stroke="#2F2F2F"
+                    strokeWidth="4.94119"
+                  />
+                  <path
+                    d="M77.3984 78.5C77.3984 85.4036 71.802 91 64.8984 91C57.9949 91 52.3984 85.4036 52.3984 78.5C52.3984 71.5964 57.9949 66 64.8984 66C71.802 66 77.3984 71.5964 77.3984 78.5Z"
+                    fill="#2F2F2F"
+                  />
+                  <path
+                    d="M157.398 78.5C157.398 85.4036 151.802 91 144.898 91C137.995 91 132.398 85.4036 132.398 78.5C132.398 71.5964 137.995 66 144.898 66C151.802 66 157.398 71.5964 157.398 78.5Z"
+                    fill="#2F2F2F"
+                  />
+                  <path
+                    d="M84.8984 146H124.898"
+                    stroke="#2F2F2F"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_1675_10359"
+                      x1="-40.5348"
+                      y1="188.1"
+                      x2="212.652"
+                      y2="182.514"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="#48D824" />
+                      <stop offset="1" stopColor="#10D0EA" />
+                    </linearGradient>
+                  </defs>
+                </svg>
               )}
               <div className={styles.find_user_inf}>
                 <div className={styles.find_user_name}>{item.name}</div>
@@ -254,63 +341,106 @@ export const RightMenu = () => {
 
       <div className={styles.bottom_menu}>
         <div className={styles.header}>{t("main.right_menu.notification")}</div>
-        <div className={styles.notif_first}>
-          <div className={styles.secondary_header}>
-            {t("main.right_menu.header1")}
+        <div ref={notifRef} style={{ overflowY: "auto" }}>
+          <div>
+            {notification &&
+              notification.map((item) => (
+                <React.Fragment key={item.id}>
+                  <div className={styles.notification}>
+                    {item.senderImage ? (
+                      <img
+                        onClick={() => navigate(`/${item.senderName}`)}
+                        alt=""
+                        className={styles.notif_img_h}
+                        src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${item.senderId}/${item.senderImage}`}
+                      />
+                    ) : (
+                      <svg
+                        onClick={() => navigate(`/${item.senderName}`)}
+                        className={styles.notif_img_m}
+                        width="35"
+                        height="35"
+                        viewBox="0 0 209 209"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle
+                          cx="104.5"
+                          cy="104.5"
+                          r="102.029"
+                          fill="url(#paint0_linear_1675_10359)"
+                          fillOpacity="0.5"
+                          stroke="#2F2F2F"
+                          strokeWidth="4.94119"
+                        />
+                        <path
+                          d="M77.3984 78.5C77.3984 85.4036 71.802 91 64.8984 91C57.9949 91 52.3984 85.4036 52.3984 78.5C52.3984 71.5964 57.9949 66 64.8984 66C71.802 66 77.3984 71.5964 77.3984 78.5Z"
+                          fill="#2F2F2F"
+                        />
+                        <path
+                          d="M157.398 78.5C157.398 85.4036 151.802 91 144.898 91C137.995 91 132.398 85.4036 132.398 78.5C132.398 71.5964 137.995 66 144.898 66C151.802 66 157.398 71.5964 157.398 78.5Z"
+                          fill="#2F2F2F"
+                        />
+                        <path
+                          d="M84.8984 146H124.898"
+                          stroke="#2F2F2F"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                        />
+                        <defs>
+                          <linearGradient
+                            id="paint0_linear_1675_10359"
+                            x1="-40.5348"
+                            y1="188.1"
+                            x2="212.652"
+                            y2="182.514"
+                            gradientUnits="userSpaceOnUse"
+                          >
+                            <stop stopColor="#48D824" />
+                            <stop offset="1" stopColor="#10D0EA" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    )}
+                    <div
+                      className={styles.notinf_text}
+                      onClick={() => navigate(`/${item.senderName}`)}
+                    >
+                      <span>{item.senderName}</span>
+                      {item.type === NotificationType.Follow && (
+                        <>{t("main.right_menu.foll_ed")}</>
+                      )}
+                      {item.type === NotificationType.LikePost && (
+                        <>{t("main.right_menu.like_post")}</>
+                      )}
+                      {item.type === NotificationType.LikeHistory && (
+                        <>{t("main.right_menu.like_history")}</>
+                      )}
+                      {item.type === NotificationType.LikeFliper && (
+                        <>{t("main.right_menu.like_fliper")}</>
+                      )}
+                    </div>
+                    <button className={styles.btn_unfoll}>
+                      {t("main.right_menu.is_foll_ed")}
+                    </button>
+                  </div>
+                  <div className={styles.notinf_date}>
+                    {formatDate(new Date(item.dateCreate))}
+                  </div>
+                </React.Fragment>
+              ))}
+          </div>
+          <div className={styles.notif_first}>
+            <div className={styles.secondary_header}>
+              {t("main.right_menu.header1")}
+            </div>
+            <div></div>
           </div>
           <div>
-            <div className={styles.notification}>
-              <img
-                alt=""
-                className={styles.notif_img_h}
-                src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=30&height=30"
-              />
-              <div className={styles.notinf_text}>
-                <span>Іван Гук</span> {t("main.right_menu.foll_ed")}
-              </div>
-              <button className={styles.btn_unfoll}>
-                {t("main.right_menu.is_foll_ed")}
-              </button>
+            <div className={styles.secondary_header}>
+              {t("main.right_menu.header2")}
             </div>
-            <div className={styles.notinf_date}>3 д.</div>
-          </div>
-        </div>
-        <div>
-          <div className={styles.secondary_header}>
-            {t("main.right_menu.header2")}
-          </div>
-          <div>
-            <div className={styles.notification}>
-              <img
-                alt=""
-                className={styles.notif_img_h}
-                src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=30&height=30"
-              />
-              <div className={styles.notinf_text}>
-                <span>Руся Щем</span> {t("main.right_menu.like_post")}
-              </div>
-              <img
-                alt=""
-                className={styles.notif_img_m}
-                src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=46&height=52"
-              />
-            </div>
-            <div className={styles.notinf_date}>3 тиж.</div>
-
-            <div className={styles.notification}>
-              <img
-                alt=""
-                className={styles.notif_img_h}
-                src="https://media.discordapp.net/attachments/580349748389871641/1071742373815668756/image.png?width=30&height=30"
-              />
-              <div className={styles.notinf_text}>
-                <span>Вадис Семенко</span> {t("main.right_menu.foll_ed")}
-              </div>
-              <button className={styles.btn_foll}>
-                {t("main.right_menu.follow")}
-              </button>
-            </div>
-            <div className={styles.notinf_date}>3 д.</div>
+            <div></div>
           </div>
         </div>
       </div>

@@ -31,7 +31,7 @@ namespace FlipBack.Controllers
         {
             string username = User.FindFirst("UserName")?.Value;
 
-            var user = await _userManager.Users.Include(i => i.ReceivedNotifications).FirstOrDefaultAsync(f => f.UserName == username);
+            var user = await _userManager.Users.Include(i => i.ReceivedNotifications).ThenInclude(t => t.Sender).FirstOrDefaultAsync(f => f.UserName == username);
 
             if (user == null) 
                 return NotFound("User not found!");

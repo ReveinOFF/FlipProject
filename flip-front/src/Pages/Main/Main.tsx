@@ -260,7 +260,7 @@ export const Main = () => {
                 <div className={styles.name}>Розняк Чоник</div>
                 <div className={styles.time}>8 год.</div>
               </div>
-              <button>{t("main.main.following")}</button>
+              {/* <button>{t("main.main.following")}</button> */}
               <svg
                 className={styles.save}
                 width="24"
@@ -584,7 +584,7 @@ export const Main = () => {
                 <div className={styles.name}>Розняк Чоник</div>
                 <div className={styles.time}>8 год.</div>
               </div>
-              <button>Відстежується</button>
+              {/* <button>Відстежується</button> */}
               <svg
                 className={styles.save}
                 width="24"

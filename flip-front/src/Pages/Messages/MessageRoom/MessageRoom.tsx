@@ -10,11 +10,14 @@ import { GetMessage } from "../../../Interface/Message";
 import * as signalR from "@microsoft/signalr";
 import { formatDate } from "../../../Components/Convertor/formatDate";
 import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
+import { useDispatch } from "react-redux";
+import { ToastActionTypes } from "../../../Components/Toast/store/type";
 
 export const MessageRoom = () => {
   const myUser = useTypedSelector((state) => state.auth.user);
   const [t] = useTranslation("translation");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { id } = useParams();
 
   const hiddenFileInput = useRef<HTMLInputElement>(null);
@@ -66,12 +69,14 @@ export const MessageRoom = () => {
   }, [connection]);
 
   useEffect(() => {
-    if (textAreaRef.current.scrollHeight > 102) return;
+    if (textAreaRef.current) {
+      if (textAreaRef.current.scrollHeight > 102) return;
 
-    textAreaRef.current.style.height = "0px";
-    const scrollHeight = textAreaRef.current.scrollHeight;
-    textAreaRef.current.style.height = scrollHeight + "px";
-    setIcon(scrollHeight);
+      textAreaRef.current.style.height = "0px";
+      const scrollHeight = textAreaRef.current.scrollHeight;
+      textAreaRef.current.style.height = scrollHeight + "px";
+      setIcon(scrollHeight);
+    }
   }, [currentValue]);
 
   const getMessages = async (messageBoxId: string) => {
@@ -413,10 +418,26 @@ export const MessageRoom = () => {
         <div className={styles.icon} style={{ height: icon }}>
           <input
             type="file"
+            max={5}
             ref={hiddenFileInput}
             onChange={async (event: any) => {
-              const file = event.currentTarget.files;
-              setSelectFiles(file);
+              const files = event.currentTarget.files;
+
+              files.forEach((element, index) => {
+                if (element.size > 20971520) {
+                  files.splice(index, 1);
+
+                  dispatch({
+                    type: ToastActionTypes.SHOW,
+                    payload: {
+                      message: t("toast.error.big_size_file"),
+                      type: "error",
+                    },
+                  });
+                }
+              });
+
+              setSelectFiles(files);
             }}
             style={{ display: "none" }}
             multiple

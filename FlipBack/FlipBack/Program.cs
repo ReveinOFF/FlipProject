@@ -20,6 +20,8 @@ using System.Text.Json.Serialization;
 using Twilio.Clients;
 using FlipBack.Services;
 using FlipBack.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using FlipBack.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,6 +100,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOpti
 builder.Services.Configure<MailSettingsDTO>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<TwilioVerifySettings>(builder.Configuration.GetSection("Twilio"));
 
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IValidatorRepository, ValidatorRepository>();
 builder.Services.AddScoped(typeof(ICaptchaValidator), typeof(CaptchaValidator));
@@ -112,6 +115,7 @@ var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configu
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(cfg =>
 {
@@ -125,6 +129,21 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ClockSkew = TimeSpan.Zero
+    };
+    cfg.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/hubs/notification")))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 

@@ -3,6 +3,7 @@ using Core.Entity.UserEntitys;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using FlipBack.Constans;
+using System.Security.Claims;
 
 namespace FlipBack.Services
 {
@@ -51,8 +52,7 @@ namespace FlipBack.Services
                         IsPrivateUser = false,
                         EmailConfirmed = true
                     };
-                    var result = userManager.CreateAsync(user).Result;
-                    result = userManager.AddPasswordAsync(user, "romap310103").Result;
+                    var result = userManager.CreateAsync(user, "romap310103").Result;
                     result = userManager.AddToRolesAsync(user, role).Result;
                 }
                 if (!context.Post.Any())

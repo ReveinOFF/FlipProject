@@ -17,7 +17,7 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -145,9 +145,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("DateCreate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsViewed")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("RecipientId")
                         .HasColumnType("text");
