@@ -146,6 +146,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("DateCreate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("LikeUrl")
+                        .HasColumnType("text");
+
                     b.Property<string>("RecipientId")
                         .HasColumnType("text");
 

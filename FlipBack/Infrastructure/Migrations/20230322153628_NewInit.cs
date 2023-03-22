@@ -235,6 +235,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     DateCreate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
+                    LikeUrl = table.Column<string>(type: "text", nullable: true),
                     SenderId = table.Column<string>(type: "text", nullable: true),
                     RecipientId = table.Column<string>(type: "text", nullable: true)
                 },

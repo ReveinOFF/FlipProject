@@ -12,4 +12,6 @@ export interface GetNotification {
   senderId: string;
   senderName: string;
   senderImage: string;
+  isFollowed: boolean;
+  likeUrl?: string;
 }

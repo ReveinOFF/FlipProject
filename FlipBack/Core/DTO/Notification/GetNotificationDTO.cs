@@ -8,6 +8,7 @@
         public string SenderId { get; set; }
         public string SenderName { get; set; }
         public string SenderImage { get; set;}
-        //public string LikeUrl { get; set; }
+        public bool IsFollowed { get; set; }
+        public string LikeUrl { get; set; }
     }
 }

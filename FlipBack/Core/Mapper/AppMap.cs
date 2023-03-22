@@ -81,7 +81,8 @@ namespace Core.Mapper
             CreateMap<Notification, GetNotificationDTO>()
                 .ForMember(x => x.SenderId, y => y.MapFrom(x => x.Sender.Id))
                 .ForMember(x => x.SenderName, y => y.MapFrom(x => x.Sender.Name))
-                .ForMember(x => x.SenderImage, y => y.MapFrom(x => x.Sender.UserImage));
+                .ForMember(x => x.SenderImage, y => y.MapFrom(x => x.Sender.UserImage))
+                .ForMember(x => x.IsFollowed, y => y.MapFrom(x => x.Recipient.Followings.Any(a => a.FollowerId == x.SenderId)));
             CreateMap<NotificationDTO, Notification>();
         }
     }

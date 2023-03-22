@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataBase))]
-    [Migration("20230321235045_NewInit")]
+    [Migration("20230322153628_NewInit")]
     partial class NewInit
     {
         /// <inheritdoc />
@@ -148,6 +148,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("DateCreate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LikeUrl")
+                        .HasColumnType("text");
 
                     b.Property<string>("RecipientId")
                         .HasColumnType("text");

@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./RightMenu.module.scss";
 import lodash from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { GetUsers } from "../../../Interface/Profile";
+import { FollowUser, GetUsers } from "../../../Interface/Profile";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
@@ -14,6 +14,7 @@ import {
   NotificationType,
 } from "../../../Interface/Notification";
 import * as signalR from "@microsoft/signalr";
+import { ToastActionTypes } from "../../Toast/store/type";
 
 export const RightMenu = () => {
   const [t] = useTranslation("translation");
@@ -107,6 +108,105 @@ export const RightMenu = () => {
       setMode("light");
       dispatch({ type: "Theme", payload: { mode: "light" } });
     }
+  };
+
+  const DateCheck = (date: Date, type: string) => {
+    const MILLISECONDS_IN_SECOND = 1000;
+    const MILLISECONDS_IN_MINUTE = 60 * MILLISECONDS_IN_SECOND;
+    const MILLISECONDS_IN_HOUR = 60 * MILLISECONDS_IN_MINUTE;
+    const MILLISECONDS_IN_DAY = 24 * MILLISECONDS_IN_HOUR;
+    const MILLISECONDS_IN_WEEK = 7 * MILLISECONDS_IN_DAY;
+    const MILLISECONDS_IN_MONTH = 30 * MILLISECONDS_IN_WEEK;
+
+    const currentTime = new Date();
+    const timeDifference = currentTime.getTime() - date.getTime();
+
+    if (type === "day") {
+      if (timeDifference < MILLISECONDS_IN_DAY) {
+        return true;
+      }
+    }
+
+    if (type === "week") {
+      if (
+        timeDifference >= MILLISECONDS_IN_DAY &&
+        timeDifference < MILLISECONDS_IN_WEEK
+      ) {
+        return true;
+      }
+    }
+
+    if (type === "month") {
+      if (
+        timeDifference >= MILLISECONDS_IN_MONTH &&
+        timeDifference < MILLISECONDS_IN_MONTH * 2
+      ) {
+        return true;
+      }
+    }
+  };
+
+  const Follow = async (profileId, index) => {
+    const follow: FollowUser = { UserId: myUser?.id, FollowId: profileId };
+
+    await axios.post("user/follow", follow).then((res) => {
+      if (res.status === 200) {
+        connection
+          .invoke(
+            "SendNotification",
+            myUser?.id,
+            profileId,
+            NotificationType.Follow
+          )
+          .then(() => {
+            const notifi = [...notification];
+            notifi[index].isFollowed = true;
+            setNotification(notifi);
+
+            dispatch({
+              type: ToastActionTypes.SHOW,
+              payload: {
+                message: t("toast.success.follow"),
+                type: "success",
+              },
+            });
+          });
+      } else
+        dispatch({
+          type: ToastActionTypes.SHOW,
+          payload: {
+            message: t("toast.error.follow"),
+            type: "error",
+          },
+        });
+    });
+  };
+
+  const UnFollow = async (profileId, index) => {
+    await axios
+      .delete(`user/${myUser?.id}/unfollow/${profileId}`)
+      .then((res) => {
+        if (res.status === 200) {
+          const notifi = [...notification];
+          notifi[index].isFollowed = false;
+          setNotification(notifi);
+
+          dispatch({
+            type: ToastActionTypes.SHOW,
+            payload: {
+              message: t("toast.success.unfollow"),
+              type: "success",
+            },
+          });
+        } else
+          dispatch({
+            type: ToastActionTypes.SHOW,
+            payload: {
+              message: t("toast.error.unfollow"),
+              type: "error",
+            },
+          });
+      });
   };
 
   return (
@@ -341,106 +441,331 @@ export const RightMenu = () => {
 
       <div className={styles.bottom_menu}>
         <div className={styles.header}>{t("main.right_menu.notification")}</div>
-        <div ref={notifRef} style={{ overflowY: "auto" }}>
+        <div ref={notifRef} className={styles.container}>
           <div>
-            {notification &&
-              notification.map((item) => (
-                <React.Fragment key={item.id}>
-                  <div className={styles.notification}>
-                    {item.senderImage ? (
-                      <img
+            {notification?.map((item, index) => (
+              <React.Fragment key={item.id}>
+                {DateCheck(new Date(item.dateCreate), "day") && (
+                  <>
+                    <div className={styles.notification}>
+                      {item.senderImage ? (
+                        <img
+                          onClick={() => navigate(`/${item.senderName}`)}
+                          alt=""
+                          className={styles.notif_img_h}
+                          src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${item.senderId}/${item.senderImage}`}
+                        />
+                      ) : (
+                        <svg
+                          onClick={() => navigate(`/${item.senderName}`)}
+                          className={styles.notif_img_m}
+                          width="35"
+                          height="35"
+                          viewBox="0 0 209 209"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle
+                            cx="104.5"
+                            cy="104.5"
+                            r="102.029"
+                            fill="url(#paint0_linear_1675_10359)"
+                            fillOpacity="0.5"
+                            stroke="#2F2F2F"
+                            strokeWidth="4.94119"
+                          />
+                          <path
+                            d="M77.3984 78.5C77.3984 85.4036 71.802 91 64.8984 91C57.9949 91 52.3984 85.4036 52.3984 78.5C52.3984 71.5964 57.9949 66 64.8984 66C71.802 66 77.3984 71.5964 77.3984 78.5Z"
+                            fill="#2F2F2F"
+                          />
+                          <path
+                            d="M157.398 78.5C157.398 85.4036 151.802 91 144.898 91C137.995 91 132.398 85.4036 132.398 78.5C132.398 71.5964 137.995 66 144.898 66C151.802 66 157.398 71.5964 157.398 78.5Z"
+                            fill="#2F2F2F"
+                          />
+                          <path
+                            d="M84.8984 146H124.898"
+                            stroke="#2F2F2F"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                          />
+                          <defs>
+                            <linearGradient
+                              id="paint0_linear_1675_10359"
+                              x1="-40.5348"
+                              y1="188.1"
+                              x2="212.652"
+                              y2="182.514"
+                              gradientUnits="userSpaceOnUse"
+                            >
+                              <stop stopColor="#48D824" />
+                              <stop offset="1" stopColor="#10D0EA" />
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                      )}
+                      <div
+                        className={styles.notinf_text}
                         onClick={() => navigate(`/${item.senderName}`)}
-                        alt=""
-                        className={styles.notif_img_h}
-                        src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${item.senderId}/${item.senderImage}`}
-                      />
-                    ) : (
-                      <svg
-                        onClick={() => navigate(`/${item.senderName}`)}
-                        className={styles.notif_img_m}
-                        width="35"
-                        height="35"
-                        viewBox="0 0 209 209"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <circle
-                          cx="104.5"
-                          cy="104.5"
-                          r="102.029"
-                          fill="url(#paint0_linear_1675_10359)"
-                          fillOpacity="0.5"
-                          stroke="#2F2F2F"
-                          strokeWidth="4.94119"
-                        />
-                        <path
-                          d="M77.3984 78.5C77.3984 85.4036 71.802 91 64.8984 91C57.9949 91 52.3984 85.4036 52.3984 78.5C52.3984 71.5964 57.9949 66 64.8984 66C71.802 66 77.3984 71.5964 77.3984 78.5Z"
-                          fill="#2F2F2F"
-                        />
-                        <path
-                          d="M157.398 78.5C157.398 85.4036 151.802 91 144.898 91C137.995 91 132.398 85.4036 132.398 78.5C132.398 71.5964 137.995 66 144.898 66C151.802 66 157.398 71.5964 157.398 78.5Z"
-                          fill="#2F2F2F"
-                        />
-                        <path
-                          d="M84.8984 146H124.898"
-                          stroke="#2F2F2F"
-                          strokeWidth="3"
-                          strokeLinecap="round"
-                        />
-                        <defs>
-                          <linearGradient
-                            id="paint0_linear_1675_10359"
-                            x1="-40.5348"
-                            y1="188.1"
-                            x2="212.652"
-                            y2="182.514"
-                            gradientUnits="userSpaceOnUse"
-                          >
-                            <stop stopColor="#48D824" />
-                            <stop offset="1" stopColor="#10D0EA" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                    )}
-                    <div
-                      className={styles.notinf_text}
-                      onClick={() => navigate(`/${item.senderName}`)}
-                    >
-                      <span>{item.senderName}</span>
-                      {item.type === NotificationType.Follow && (
-                        <>{t("main.right_menu.foll_ed")}</>
-                      )}
-                      {item.type === NotificationType.LikePost && (
-                        <>{t("main.right_menu.like_post")}</>
-                      )}
-                      {item.type === NotificationType.LikeHistory && (
-                        <>{t("main.right_menu.like_history")}</>
-                      )}
-                      {item.type === NotificationType.LikeFliper && (
-                        <>{t("main.right_menu.like_fliper")}</>
+                        <span>{item.senderName}</span>
+                        {item.type === NotificationType.Follow && (
+                          <>{t("main.right_menu.foll_ed")}</>
+                        )}
+                        {item.type === NotificationType.LikePost && (
+                          <>{t("main.right_menu.like_post")}</>
+                        )}
+                        {item.type === NotificationType.LikeHistory && (
+                          <>{t("main.right_menu.like_history")}</>
+                        )}
+                        {item.type === NotificationType.LikeFliper && (
+                          <>{t("main.right_menu.like_fliper")}</>
+                        )}
+                      </div>
+                      {item.isFollowed ? (
+                        <button
+                          className={styles.btn_unfoll}
+                          onClick={async () => UnFollow(item.senderId, index)}
+                        >
+                          {t("main.right_menu.is_foll_ed")}
+                        </button>
+                      ) : (
+                        <button
+                          className={styles.btn_foll}
+                          onClick={async () => Follow(item.senderId, index)}
+                        >
+                          {t("main.right_menu.follow")}
+                        </button>
                       )}
                     </div>
-                    <button className={styles.btn_unfoll}>
-                      {t("main.right_menu.is_foll_ed")}
-                    </button>
-                  </div>
-                  <div className={styles.notinf_date}>
-                    {formatDate(new Date(item.dateCreate))}
-                  </div>
-                </React.Fragment>
-              ))}
+                    <div className={styles.notinf_date}>
+                      {formatDate(new Date(item.dateCreate))}
+                    </div>
+                  </>
+                )}
+              </React.Fragment>
+            ))}
           </div>
           <div className={styles.notif_first}>
             <div className={styles.secondary_header}>
               {t("main.right_menu.header1")}
             </div>
-            <div></div>
+            <div>
+              {notification &&
+                notification.map((item, index) => (
+                  <React.Fragment key={item.id}>
+                    {DateCheck(new Date(item.dateCreate), "week") && (
+                      <>
+                        <div className={styles.notification}>
+                          {item.senderImage ? (
+                            <img
+                              onClick={() => navigate(`/${item.senderName}`)}
+                              alt=""
+                              className={styles.notif_img_h}
+                              src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${item.senderId}/${item.senderImage}`}
+                            />
+                          ) : (
+                            <svg
+                              onClick={() => navigate(`/${item.senderName}`)}
+                              className={styles.notif_img_m}
+                              width="35"
+                              height="35"
+                              viewBox="0 0 209 209"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="104.5"
+                                cy="104.5"
+                                r="102.029"
+                                fill="url(#paint0_linear_1675_10359)"
+                                fillOpacity="0.5"
+                                stroke="#2F2F2F"
+                                strokeWidth="4.94119"
+                              />
+                              <path
+                                d="M77.3984 78.5C77.3984 85.4036 71.802 91 64.8984 91C57.9949 91 52.3984 85.4036 52.3984 78.5C52.3984 71.5964 57.9949 66 64.8984 66C71.802 66 77.3984 71.5964 77.3984 78.5Z"
+                                fill="#2F2F2F"
+                              />
+                              <path
+                                d="M157.398 78.5C157.398 85.4036 151.802 91 144.898 91C137.995 91 132.398 85.4036 132.398 78.5C132.398 71.5964 137.995 66 144.898 66C151.802 66 157.398 71.5964 157.398 78.5Z"
+                                fill="#2F2F2F"
+                              />
+                              <path
+                                d="M84.8984 146H124.898"
+                                stroke="#2F2F2F"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                              />
+                              <defs>
+                                <linearGradient
+                                  id="paint0_linear_1675_10359"
+                                  x1="-40.5348"
+                                  y1="188.1"
+                                  x2="212.652"
+                                  y2="182.514"
+                                  gradientUnits="userSpaceOnUse"
+                                >
+                                  <stop stopColor="#48D824" />
+                                  <stop offset="1" stopColor="#10D0EA" />
+                                </linearGradient>
+                              </defs>
+                            </svg>
+                          )}
+                          <div
+                            className={styles.notinf_text}
+                            onClick={() => navigate(`/${item.senderName}`)}
+                          >
+                            <span>{item.senderName}</span>
+                            {item.type === NotificationType.Follow && (
+                              <>{t("main.right_menu.foll_ed")}</>
+                            )}
+                            {item.type === NotificationType.LikePost && (
+                              <>{t("main.right_menu.like_post")}</>
+                            )}
+                            {item.type === NotificationType.LikeHistory && (
+                              <>{t("main.right_menu.like_history")}</>
+                            )}
+                            {item.type === NotificationType.LikeFliper && (
+                              <>{t("main.right_menu.like_fliper")}</>
+                            )}
+                          </div>
+                          {item.isFollowed ? (
+                            <button
+                              className={styles.btn_unfoll}
+                              onClick={async () =>
+                                UnFollow(item.senderId, index)
+                              }
+                            >
+                              {t("main.right_menu.is_foll_ed")}
+                            </button>
+                          ) : (
+                            <button
+                              className={styles.btn_foll}
+                              onClick={async () => Follow(item.senderId, index)}
+                            >
+                              {t("main.right_menu.follow")}
+                            </button>
+                          )}
+                        </div>
+                        <div className={styles.notinf_date}>
+                          {formatDate(new Date(item.dateCreate))}
+                        </div>
+                      </>
+                    )}
+                  </React.Fragment>
+                ))}
+            </div>
           </div>
           <div>
             <div className={styles.secondary_header}>
               {t("main.right_menu.header2")}
             </div>
-            <div></div>
+            <div>
+              {notification &&
+                notification.map((item, index) => (
+                  <React.Fragment key={item.id}>
+                    {DateCheck(new Date(item.dateCreate), "month") && (
+                      <>
+                        <div className={styles.notification}>
+                          {item.senderImage ? (
+                            <img
+                              onClick={() => navigate(`/${item.senderName}`)}
+                              alt=""
+                              className={styles.notif_img_h}
+                              src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${item.senderId}/${item.senderImage}`}
+                            />
+                          ) : (
+                            <svg
+                              onClick={() => navigate(`/${item.senderName}`)}
+                              className={styles.notif_img_m}
+                              width="35"
+                              height="35"
+                              viewBox="0 0 209 209"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="104.5"
+                                cy="104.5"
+                                r="102.029"
+                                fill="url(#paint0_linear_1675_10359)"
+                                fillOpacity="0.5"
+                                stroke="#2F2F2F"
+                                strokeWidth="4.94119"
+                              />
+                              <path
+                                d="M77.3984 78.5C77.3984 85.4036 71.802 91 64.8984 91C57.9949 91 52.3984 85.4036 52.3984 78.5C52.3984 71.5964 57.9949 66 64.8984 66C71.802 66 77.3984 71.5964 77.3984 78.5Z"
+                                fill="#2F2F2F"
+                              />
+                              <path
+                                d="M157.398 78.5C157.398 85.4036 151.802 91 144.898 91C137.995 91 132.398 85.4036 132.398 78.5C132.398 71.5964 137.995 66 144.898 66C151.802 66 157.398 71.5964 157.398 78.5Z"
+                                fill="#2F2F2F"
+                              />
+                              <path
+                                d="M84.8984 146H124.898"
+                                stroke="#2F2F2F"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                              />
+                              <defs>
+                                <linearGradient
+                                  id="paint0_linear_1675_10359"
+                                  x1="-40.5348"
+                                  y1="188.1"
+                                  x2="212.652"
+                                  y2="182.514"
+                                  gradientUnits="userSpaceOnUse"
+                                >
+                                  <stop stopColor="#48D824" />
+                                  <stop offset="1" stopColor="#10D0EA" />
+                                </linearGradient>
+                              </defs>
+                            </svg>
+                          )}
+                          <div
+                            className={styles.notinf_text}
+                            onClick={() => navigate(`/${item.senderName}`)}
+                          >
+                            <span>{item.senderName}</span>
+                            {item.type === NotificationType.Follow && (
+                              <>{t("main.right_menu.foll_ed")}</>
+                            )}
+                            {item.type === NotificationType.LikePost && (
+                              <>{t("main.right_menu.like_post")}</>
+                            )}
+                            {item.type === NotificationType.LikeHistory && (
+                              <>{t("main.right_menu.like_history")}</>
+                            )}
+                            {item.type === NotificationType.LikeFliper && (
+                              <>{t("main.right_menu.like_fliper")}</>
+                            )}
+                          </div>
+                          {item.isFollowed ? (
+                            <button
+                              className={styles.btn_unfoll}
+                              onClick={async () =>
+                                UnFollow(item.senderId, index)
+                              }
+                            >
+                              {t("main.right_menu.is_foll_ed")}
+                            </button>
+                          ) : (
+                            <button
+                              className={styles.btn_foll}
+                              onClick={async () => Follow(item.senderId, index)}
+                            >
+                              {t("main.right_menu.follow")}
+                            </button>
+                          )}
+                        </div>
+                        <div className={styles.notinf_date}>
+                          {formatDate(new Date(item.dateCreate))}
+                        </div>
+                      </>
+                    )}
+                  </React.Fragment>
+                ))}
+            </div>
           </div>
         </div>
       </div>

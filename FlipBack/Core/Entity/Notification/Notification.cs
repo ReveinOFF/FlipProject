@@ -11,8 +11,7 @@ namespace Core.Entity.Notification
         public DateTime DateCreate { get; set; }
         [Required]
         public NotificationType Type { get; set; }
-        //[Required]
-        //public string LikeUrl { get; set; }
+        public string LikeUrl { get; set; }
 
         [ForeignKey("User")]
         public string SenderId { get; set; }

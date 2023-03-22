@@ -142,6 +142,7 @@ namespace Infrastructure.Data
         /* User */
         public virtual DbSet<Follow> Follows { get; set; }
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+        public virtual DbSet<UsersAuthentications> Authentications { get; set; }
 
         /* Message */
         public virtual DbSet<Message> Message { get; set; }

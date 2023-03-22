@@ -294,7 +294,7 @@ namespace FlipBack.Controllers
 
             MailDataDTO mailData = new MailDataDTO()
             {
-                Body = $"Hello {user.Email}. Your password has been reset!",
+                Body = Body,
                 To = user.Email,
                 Subject = "Reset Password"
             };
@@ -303,50 +303,6 @@ namespace FlipBack.Controllers
 
             if (!resultSend)
                 return BadRequest("Error in sending the message!");
-
-            return Ok();
-        }
-
-        [HttpPost("change-email")]
-        public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDTO emailDTO)
-        {
-            var user = await _userManager.FindByEmailAsync(emailDTO.OldEmail);
-            if (user == null)
-                return BadRequest("Email not found!");
-
-            var findUser = await _userManager.FindByEmailAsync(emailDTO.NewEmail);
-            if (findUser != null)
-                return BadRequest("Email already exists!");
-
-            var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailDTO.NewEmail);
-            var confirmationLink = $"http://localhost:3000/changemail?token={token}";
-
-            MailDataDTO mailData = new MailDataDTO()
-            {
-                Body = $"Hello {emailDTO.OldEmail}. If you have change your email, follow this link {confirmationLink}",
-                To = emailDTO.OldEmail,
-                Subject = "Change Email"
-            };
-
-            var resultSend = await _mailService.SendEmailAsync(mailData);
-
-            if (!resultSend)
-                return BadRequest("Error in sending the message!");
-
-            return Ok();
-        }
-
-        [HttpPost("confirm-change-email")]
-        public async Task<IActionResult> ConfirmChangeEmail([FromBody] ConfChangeEmailDTO emailDTO)
-        {
-            var user = await _userManager.FindByEmailAsync(emailDTO.OldEmail);
-            if (user == null)
-                return BadRequest("Email not found!");
-
-            var changeEmail = await _userManager.ChangeEmailAsync(user, emailDTO.NewEmail, emailDTO.Token);
-
-            if (!changeEmail.Succeeded)
-                return BadRequest("Error in changing the email!");
 
             return Ok();
         }
