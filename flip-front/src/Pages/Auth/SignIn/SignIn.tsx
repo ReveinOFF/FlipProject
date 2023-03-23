@@ -88,7 +88,15 @@ export const SignIn = () => {
   };
 
   const PostAuth = async (token) => {
-    const { data: dataLocation } = await axios.get("https://ipinfo.io/json");
+    const { data: dataLocation } = await axios.get(
+      "https://geolocation-db.com/json/",
+      {
+        transformRequest: (data, headers) => {
+          delete headers["Authorization"];
+          return data;
+        },
+      }
+    );
 
     const tokenDecode: JwtDecoder = jwtDecode(token);
 
@@ -96,12 +104,13 @@ export const SignIn = () => {
       "account/add-authentication",
       {
         userId: tokenDecode.UserId,
+        ipAddress: dataLocation.IPv4,
         browser: getBrowser(window.navigator.userAgent),
-        device: window.navigator.userAgentData?.platform,
+        device: window.navigator.platform,
         city: dataLocation.city,
-        region: dataLocation.region,
-        country: dataLocation.country,
-        location: dataLocation.loc,
+        country: dataLocation.country_name,
+        latitude: dataLocation.latitude,
+        longitude: dataLocation.longitude,
       },
       {
         headers: {
@@ -113,14 +122,15 @@ export const SignIn = () => {
     return res;
   };
 
-  const { mutateAsync: PostAuthAsync } = useMutation(PostAuth);
+  const { isLoading: isLoadingAuth, mutateAsync: PostAuthAsync } =
+    useMutation(PostAuth);
 
   const { isLoading, mutateAsync } = useMutation(PostLogin, {
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       localStorage.setItem("token", res?.data.token);
       localStorage.setItem("refreshToken", res?.data.refreshToken);
 
-      PostAuthAsync(res?.data.token);
+      await PostAuthAsync(res?.data.token);
 
       navigate("/");
       window.location.reload();
@@ -150,7 +160,7 @@ export const SignIn = () => {
 
   return (
     <>
-      {isLoading && <LazyLoading />}
+      {(isLoading && <LazyLoading />) || (isLoadingAuth && <LazyLoading />)}
 
       <div
         className={`${styles.log_header} ${

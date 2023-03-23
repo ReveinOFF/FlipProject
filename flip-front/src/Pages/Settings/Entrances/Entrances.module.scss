@@ -45,14 +45,14 @@
   .container {
     border-bottom: 1px solid rgba(47, 47, 47, 0.5);
 
-    cursor: pointer;
-
     padding-top: 20px;
     padding-bottom: 15px;
 
     .top {
       display: flex;
       align-items: center;
+
+      cursor: pointer;
 
       svg {
         margin-right: 15px;
@@ -74,7 +74,20 @@
       align-items: center;
       justify-content: space-between;
 
+      cursor: pointer;
+
       margin-left: 45px;
+      margin-bottom: 19px;
+
+      .rotate_arrow {
+        transform: rotate(0deg);
+        transition: 0.5s;
+      }
+
+      .rotate_arrow_active {
+        transform: rotate(180deg);
+        transition: 0.5s;
+      }
 
       .info {
         display: flex;

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["react-i18next", "i18next", "./node_modules/user-agent-data-types"],
+    "types": ["react-i18next", "i18next"],
     "target": "es5",
     "noImplicitAny": false,
     "lib": [

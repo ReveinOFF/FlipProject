@@ -86,25 +86,25 @@ namespace FlipBack.Controllers
         [HttpPost("add-authentication")]
         public async Task<IActionResult> AddAuthentication([FromBody] AddAuthDTO auth)
         {
-            var user = await _userManager.FindByIdAsync(auth.UserId);
+            var user = await _userManager.Users.Include(i => i.Authentications).FirstOrDefaultAsync(x => x.Id == auth.UserId);
 
             if (user == null) 
                 return NotFound("User not found!");
 
-            if (user.Authentications.Any(a => a.IpAddress == HttpContext.Connection.RemoteIpAddress.ToString()))
+            if (user.Authentications.Any(a => a.IpAddress == auth.IpAddress))
                 return Ok();
 
             await _context.Authentications.AddAsync(new UsersAuthentications
             {
-                IpAddress = HttpContext.Connection.RemoteIpAddress.ToString(),
+                IpAddress = auth.IpAddress,
                 Browser = auth.Browser,
                 Device = auth.Device,
                 City = auth.City,
                 Country = auth.Country,
                 LastOnline = DateTime.UtcNow,
                 UserId = auth.UserId,
-                Location = auth.Location,
-                Region = auth.Region
+                Latitude = auth.Latitude,
+                Longitude = auth.Longitude
             });
             await _context.SaveChangesAsync();
 

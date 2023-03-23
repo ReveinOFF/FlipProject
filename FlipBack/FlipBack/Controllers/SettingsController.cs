@@ -254,7 +254,7 @@ namespace FlipBack.Controllers
             if (user == null)
                 return BadRequest("User not found!");
 
-            var map = _mapper.Map<List<GetAuthorizeDTO>>(user.Authentications);
+            var map = _mapper.Map<List<GetAuthorizeDTO>>(user.Authentications.ToList());
 
             return Ok(map);
         }
