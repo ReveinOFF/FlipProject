@@ -184,6 +184,30 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Authentications",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    IpAddress = table.Column<string>(type: "text", nullable: true),
+                    CountryName = table.Column<string>(type: "text", nullable: true),
+                    CountryCode = table.Column<string>(type: "text", nullable: true),
+                    City = table.Column<string>(type: "text", nullable: true),
+                    UserAgent = table.Column<string>(type: "text", nullable: true),
+                    Latitude = table.Column<double>(type: "double precision", nullable: false),
+                    Longitude = table.Column<double>(type: "double precision", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Authentications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Authentications_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Follows",
                 columns: table => new
                 {
@@ -722,6 +746,11 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Authentications_UserId",
+                table: "Authentications",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Follows_FollowerId",
                 table: "Follows",
                 column: "FollowerId");
@@ -870,6 +899,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Authentications");
 
             migrationBuilder.DropTable(
                 name: "Follows");

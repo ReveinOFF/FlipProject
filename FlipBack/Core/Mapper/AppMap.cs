@@ -22,6 +22,7 @@ namespace Core.Mapper
             CreateMap<RegisterDTO, User>()
                 .ForMember(x => x.PhoneNumber, y => y.MapFrom(z => z.Phone));
             CreateMap<User, GetUserDTO>()
+                .ForMember(x => x.Phone, y => y.MapFrom(x => x.PhoneNumber))
                 .ForMember(x => x.Followers, y => y.MapFrom(x => x.Followers.Count))
                 .ForMember(x => x.Followings, y => y.MapFrom(x => x.Followings.Count))
                 .ForMember(x => x.CreatedPost, y => y.MapFrom(x => x.CreatedPosts.ToList()));

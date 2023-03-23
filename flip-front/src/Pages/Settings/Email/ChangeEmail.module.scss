@@ -27,6 +27,7 @@
   padding-left: 50px;
   padding-top: 36px;
   padding-bottom: 150px;
+  padding-right: 290px;
 
   .profile {
     display: flex;
@@ -59,6 +60,7 @@
   .email {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     margin-bottom: 25px;
 
@@ -69,8 +71,6 @@
       line-height: 150%;
 
       letter-spacing: -0.011em;
-
-      margin-right: 149px;
     }
 
     input {
@@ -98,7 +98,7 @@
   .buttons {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
 
     a {
       font-style: normal;

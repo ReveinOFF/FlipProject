@@ -5,6 +5,7 @@ using Core.DTO.User;
 using Core.Entity.UserEntitys;
 using Core.Helpers;
 using Core.Interface;
+using Core.Service;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,14 +26,16 @@ namespace FlipBack.Controllers
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
         private readonly IMailService _mailService;
+        private readonly IJwtService _jwtService;
 
-        public SettingsController(DataBase context, UserManager<User> userManager, IMapper mapper, IWebHostEnvironment env, IMailService mailService)
+        public SettingsController(DataBase context, UserManager<User> userManager, IMapper mapper, IWebHostEnvironment env, IMailService mailService, IJwtService jwtService)
         {
             _context = context;
             _userManager = userManager;
             _mapper = mapper;
             _env = env;
             _mailService = mailService;
+            _jwtService = jwtService;
         }
 
         [HttpPost("add-image-user/{userId}")]
@@ -102,11 +105,21 @@ namespace FlipBack.Controllers
             user.DateOfBirth = changeUser.DateOfBirth;
             user.UserName = changeUser.UserName;
 
-
             await _userManager.UpdateAsync(user);
             await _userManager.UpdateNormalizedUserNameAsync(user);
 
-            return Ok();
+            var token = _jwtService.CreateToken(user);
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            refreshToken.UserId = user.Id;
+            await _context.RefreshTokens.AddAsync(refreshToken);
+            await _context.SaveChangesAsync();
+
+            return Ok(new TokenDTO
+            {
+                Token = token,
+                RefreshToken = refreshToken.Token
+            });
         }
 
         [HttpPost("change-email")]
@@ -125,20 +138,16 @@ namespace FlipBack.Controllers
             var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
 
             string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "ChangeEmail.html"));
-            //Body = Body.Replace("#url#", $"http://localhost:3000/email-change?token={codeEncoded}&email={user.Email}");
-            Body = Body.Replace("#url#", $"https://solido.tk/email-change?token={codeEncoded}&email={user.Email}");
+            Body = Body.Replace("#url#", $"https://solido.tk/email-change?token={codeEncoded}&curr-email={emailDTO.OldEmail}&new-email={emailDTO.NewEmail}");
 
             MailDataDTO mailData = new MailDataDTO()
             {
                 Body = Body,
-                To = user.Email,
+                To = emailDTO.OldEmail,
                 Subject = "Change Email"
             };
 
-            var resultSend = await _mailService.SendEmailAsync(mailData);
-
-            if (!resultSend)
-                return BadRequest("Error in sending the message!");
+            await _mailService.SendEmailAsync(mailData);
 
             return Ok();
         }
@@ -150,7 +159,9 @@ namespace FlipBack.Controllers
             if (user == null)
                 return BadRequest("User not found!");
 
-            await _userManager.ChangeEmailAsync(user, emailDTO.NewEmail, emailDTO.Token);
+            var codeDecodedBytes = WebEncoders.Base64UrlDecode(emailDTO.Token);
+            var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
+            await _userManager.ChangeEmailAsync(user, emailDTO.NewEmail, codeDecoded);
 
             string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "ChangeEmailTHX.html"));
 
@@ -161,10 +172,7 @@ namespace FlipBack.Controllers
                 Subject = "Confirmation email"
             };
 
-            var resultSend = await _mailService.SendEmailAsync(mailData);
-
-            if (!resultSend)
-                return BadRequest("Error in sending the message!");
+            await _mailService.SendEmailAsync(mailData);
 
             return Ok();
         }
@@ -182,7 +190,19 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpPut("get-all-authorize")]
+        [HttpPost("recover-password")]
+        public async Task<IActionResult> RecoverPassword()
+        {
+            return Ok();
+        }
+
+        [HttpPost("confirm-recover")]
+        public async Task<IActionResult> ConfirmRecover()
+        {
+            return Ok();
+        }
+
+        [HttpGet("get-all-authorize")]
         public async Task<IActionResult> GetAllAuthorize()
         {
             return Ok();

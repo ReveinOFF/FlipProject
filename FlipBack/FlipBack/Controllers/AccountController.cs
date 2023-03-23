@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using FlipBack.Helpers;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
-using System.Security.Claims;
 
 namespace FlipBack.Controllers
 {
@@ -133,7 +132,6 @@ namespace FlipBack.Controllers
                 var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
 
                 string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "ConfirmEmail.html"));
-                //Body = Body.Replace("#url#", $"http://localhost:3000/email-confirm?token={codeEncoded}&email={user.Email}");
                 Body = Body.Replace("#url#", $"https://solido.tk/email-confirm?token={codeEncoded}&email={user.Email}");
 
                 MailDataDTO mailData = new MailDataDTO()
@@ -252,7 +250,6 @@ namespace FlipBack.Controllers
                 var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
 
                 string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPassword.html"));
-                //Body = Body.Replace("#url#", $"http://localhost:3000/change-password?token={codeEncoded}&email={email}");
                 Body = Body.Replace("#url#", $"https://solido.tk/change-password?token={codeEncoded}&email={email}");
 
                 MailDataDTO mailData = new MailDataDTO()

@@ -78,6 +78,28 @@
       margin-bottom: 0;
     }
 
+    .descrip {
+      max-width: 507px;
+
+      margin-top: 5px;
+
+      font-style: normal;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 150%;
+
+      letter-spacing: -0.011em;
+
+      color: rgba(47, 47, 47, 0.7);
+
+      span {
+        background: linear-gradient(88.74deg, #48d824 -18.76%, #10d0ea 99.82%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    }
+
     div {
       font-style: normal;
       font-weight: 400;
@@ -111,6 +133,41 @@
       border: 0;
 
       padding: 8px 10px;
+
+      &:focus {
+        outline: none;
+      }
+
+      &::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+      }
+
+      &::-webkit-scrollbar-track {
+        border-left: 3px solid #ebebeb;
+        border-right: 3px solid #ebebeb;
+        border-top: 3px solid #ebebeb;
+        border-bottom: 3px solid #ebebeb;
+        border-radius: 4px;
+
+        background: #2f2f2f;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: linear-gradient(88.74deg, #48d824 -18.76%, #10d0ea 99.82%);
+        border-radius: 50px;
+      }
+    }
+
+    .lenght {
+      font-style: normal;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 150%;
+
+      letter-spacing: -0.011em;
+
+      color: #2f2f2f;
     }
   }
 

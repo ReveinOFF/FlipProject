@@ -33,10 +33,10 @@ namespace FlipBack.Controllers
         [HttpGet("get-user-auth")]
         public async Task<IActionResult> GetUserAuth()
         {
-            string username = User.FindFirst("UserName")?.Value;
+            string userId = User.FindFirst("UserId")?.Value;
 
             var user = await _userManager.Users
-                    .Where(x => x.UserName == username)
+                    .Where(x => x.Id == userId)
                     .Include(x => x.Followers)
                     .Include(x => x.Followings)
                     .Include(x => x.CreatedPosts)

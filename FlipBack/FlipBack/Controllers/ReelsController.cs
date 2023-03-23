@@ -82,12 +82,12 @@ namespace FlipBack.Controllers
         [HttpPost("add-reels")]
         public async Task<IActionResult> AddReels([FromForm] ReelsDTO reelsDTO)
         {
+            string UserId = User.FindFirst("UserId")?.Value;
+
             var reels = _mapper.Map<Reels>(reelsDTO);
 
             string fileDestDir = Path.Combine("Resources", "ReelsFiles", reels.Id);
             var file = await StaticFiles.CreateFileAsync(_env, fileDestDir, reelsDTO.file);
-
-            string UserId = User.FindFirst("UserId")?.Value;
 
             reels.File = new ReelsFiles { PathName = file.FilePath, FileName = file.FileName, ReelsId = reels.Id };
             reels.FileId = reels.File.Id;

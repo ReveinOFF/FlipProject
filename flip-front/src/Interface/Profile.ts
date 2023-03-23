@@ -3,6 +3,8 @@ export interface IUser {
   userImage: string;
   name: string;
   userName: string;
+  email: string;
+  phone: string;
   description: string;
   dateOfBirth: Date;
   isVerified: boolean;

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Core.DTO.Message;
-using Core.Entity.MessageEntitys;
-using Core.Entity.UserEntitys;
 using Core.Helpers;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -16,17 +14,13 @@ namespace FlipBack.Controllers
     [Authorize]
     public class MessageController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
         private readonly DataBase _context;
         private readonly IMapper _mapper;
-        private readonly IWebHostEnvironment _env;
 
-        public MessageController(UserManager<User> userManager, DataBase context, IMapper mapper, IWebHostEnvironment env)
+        public MessageController(DataBase context, IMapper mapper)
         {
-            _userManager = userManager;
             _context = context;
             _mapper = mapper;
-            _env = env;
         }
 
         [HttpGet("get-messages/{messageBoxId}")]

@@ -154,6 +154,7 @@ namespace FlipBack.Controllers
         public async Task<IActionResult> AddReaction([FromBody] PostReactionDTO reactionDTO)
         {
             var postreaction = await _context.PostReaction.Where(x => x.UserId.Equals(reactionDTO.UserId) && x.PostId.Equals(reactionDTO.PostId)).FirstOrDefaultAsync();
+
             if (postreaction != null)
                 return BadRequest("You've already put a reaction to this post!");
 
@@ -167,6 +168,7 @@ namespace FlipBack.Controllers
         public async Task<IActionResult> RemoveReaction(string UserId, string PostId)
         {
             var postreaction = await _context.PostReaction.Where(x => x.UserId.Equals(UserId) && x.PostId.Equals(PostId)).FirstOrDefaultAsync();
+
             if (postreaction == null)
                 return BadRequest("Your reaction to this post is not there!");
 
@@ -184,6 +186,7 @@ namespace FlipBack.Controllers
                 .Include(i => i.Reactions)
                 .ThenInclude(t => t.User)
                 .SelectMany(x => x.Reactions.Select(x => x.User)).ToListAsync();
+
             if (reactionusers == null)
                 return BadRequest("There are no reactions in this post!");
 
@@ -208,6 +211,7 @@ namespace FlipBack.Controllers
         public async Task<IActionResult> DeleteCommentary(string postid, string commid)
         {
             var comm = await _context.PostCommentary.Where(x => x.Id == commid && x.PostId == postid).FirstOrDefaultAsync();
+
             if (comm == null)
                 return BadRequest("This commentary was not found!");
 

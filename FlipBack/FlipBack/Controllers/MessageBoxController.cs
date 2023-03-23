@@ -29,8 +29,9 @@ namespace FlipBack.Controllers
         [HttpGet("get-message-boxs")]
         public async Task<IActionResult> GetMessageBoxs()
         {
-            string username = User.FindFirst("UserName")?.Value;
-            var findUser = await _userManager.Users.Where(x => x.UserName == username)
+            string userId = User.FindFirst("UserId")?.Value;
+
+            var findUser = await _userManager.Users.Where(x => x.Id == userId)
                 .Include(i => i.MessageBoxs).ThenInclude(t => t.Users)
                 .Include(i => i.MessageBoxs).ThenInclude(t => t.Messages)
                 .FirstOrDefaultAsync();
@@ -50,8 +51,9 @@ namespace FlipBack.Controllers
         [HttpPost("create-message-boxs")]
         public async Task<IActionResult> CreateMessageBoxs([FromBody] string userId)
         {
-            string username = User.FindFirst("UserName")?.Value;
-            var findMyUser = await _userManager.Users.Where(x => x.UserName == username).FirstOrDefaultAsync();
+            string idUser = User.FindFirst("UserId")?.Value;
+
+            var findMyUser = await _userManager.Users.Where(x => x.Id == idUser).FirstOrDefaultAsync();
 
             if (findMyUser == null) 
                 return NotFound("User not found!");

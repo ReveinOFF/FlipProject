@@ -1,15 +1,68 @@
+import axios from "axios";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
+import { ToastActionTypes } from "../../../Components/Toast/store/type";
+import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./ChangePassword.module.scss";
 
 export const ChangePassword = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [t] = useTranslation("translation");
+  const myUser = useTypedSelector((state) => state.auth.user);
+
+  const [password, setPassword] = useState<string>();
+  const [newPassword, setNewPassword] = useState<string>();
+  const [confNewpassword, setConfNewPassword] = useState<string>();
 
   const [visible, setVisible] = useState<boolean>(false);
   const [visible2, setVisible2] = useState<boolean>(false);
   const [visible3, setVisible3] = useState<boolean>(false);
+
+  const PostChange = async () => {
+    const res = await axios.put(
+      "settings/change-password",
+      {
+        id: myUser?.id,
+        oldPassword: password,
+        newPassword: newPassword,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res;
+  };
+
+  const { isLoading, mutateAsync } = useMutation(PostChange, {
+    onSuccess: () => {
+      dispatch({
+        type: ToastActionTypes.SHOW,
+        payload: {
+          message: "Ви успішно змінили пароль!",
+          type: "success",
+        },
+      });
+    },
+    onError: () => {
+      dispatch({
+        type: ToastActionTypes.SHOW,
+        payload: {
+          message: "Виникла помилка при зміні пароля!",
+          type: "error",
+        },
+      });
+    },
+  });
+
+  if (isLoading) return <LazyLoading />;
 
   return (
     <>
@@ -32,11 +85,59 @@ export const ChangePassword = () => {
 
       <div className={styles.setting}>
         <div className={styles.profile}>
-          <img
-            src="/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
-            alt=""
-          />
-          <div>Рома Зайчик</div>
+          {myUser?.userImage ? (
+            <img
+              src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${myUser?.id}/${myUser?.userImage}`}
+              alt=""
+            />
+          ) : (
+            <svg
+              className={styles.profile_img}
+              width="86"
+              height="86"
+              viewBox="0 0 209 209"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="104.5"
+                cy="104.5"
+                r="102.029"
+                fill="url(#paint0_linear_1675_10359)"
+                fillOpacity="0.5"
+                stroke="#2F2F2F"
+                strokeWidth="4.94119"
+              />
+              <path
+                d="M77.3984 78.5C77.3984 85.4036 71.802 91 64.8984 91C57.9949 91 52.3984 85.4036 52.3984 78.5C52.3984 71.5964 57.9949 66 64.8984 66C71.802 66 77.3984 71.5964 77.3984 78.5Z"
+                fill="#2F2F2F"
+              />
+              <path
+                d="M157.398 78.5C157.398 85.4036 151.802 91 144.898 91C137.995 91 132.398 85.4036 132.398 78.5C132.398 71.5964 137.995 66 144.898 66C151.802 66 157.398 71.5964 157.398 78.5Z"
+                fill="#2F2F2F"
+              />
+              <path
+                d="M84.8984 146H124.898"
+                stroke="#2F2F2F"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+              <defs>
+                <linearGradient
+                  id="paint0_linear_1675_10359"
+                  x1="-40.5348"
+                  y1="188.1"
+                  x2="212.652"
+                  y2="182.514"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stopColor="#48D824" />
+                  <stop offset="1" stopColor="#10D0EA" />
+                </linearGradient>
+              </defs>
+            </svg>
+          )}
+          <div>{myUser?.name}</div>
         </div>
 
         <div className={styles.passwords}>
@@ -45,7 +146,10 @@ export const ChangePassword = () => {
               {t("main.settings.change_pass.old_pass")}
             </div>
             <div className={styles.input}>
-              <input type={visible ? "text" : "password"} />
+              <input
+                type={visible ? "text" : "password"}
+                onChange={(e) => setPassword(e.target.value)}
+              />
               <svg
                 onClick={() => setVisible(!visible)}
                 width="28"
@@ -68,7 +172,7 @@ export const ChangePassword = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                {visible && (
+                {!visible && (
                   <line x1="30" y1="0" x2="0" y2="20" stroke="#2F2F2F" />
                 )}
               </svg>
@@ -79,7 +183,10 @@ export const ChangePassword = () => {
               {t("main.settings.change_pass.new_pass")}
             </div>
             <div className={styles.input}>
-              <input type={visible2 ? "text" : "password"} />
+              <input
+                type={visible2 ? "text" : "password"}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
               <svg
                 onClick={() => setVisible2(!visible2)}
                 width="28"
@@ -102,7 +209,7 @@ export const ChangePassword = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                {visible2 && (
+                {!visible2 && (
                   <line x1="30" y1="0" x2="0" y2="20" stroke="#2F2F2F" />
                 )}
               </svg>
@@ -113,7 +220,10 @@ export const ChangePassword = () => {
               {t("main.settings.change_pass.conf_new_pass")}
             </div>
             <div className={styles.input}>
-              <input type={visible3 ? "text" : "password"} />
+              <input
+                type={visible3 ? "text" : "password"}
+                onChange={(e) => setConfNewPassword(e.target.value)}
+              />
               <svg
                 onClick={() => setVisible3(!visible3)}
                 width="28"
@@ -136,7 +246,7 @@ export const ChangePassword = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                {visible3 && (
+                {!visible3 && (
                   <line x1="30" y1="0" x2="0" y2="20" stroke="#2F2F2F" />
                 )}
               </svg>
@@ -148,7 +258,9 @@ export const ChangePassword = () => {
           <a onClick={() => navigate("/settings/forgot-password")}>
             {t("main.settings.change_pass.forgot_pass")}
           </a>
-          <button>{t("main.settings.change_pass.btn")}</button>
+          <button onClick={async () => await mutateAsync()}>
+            {t("main.settings.change_pass.btn")}
+          </button>
         </div>
       </div>
     </>

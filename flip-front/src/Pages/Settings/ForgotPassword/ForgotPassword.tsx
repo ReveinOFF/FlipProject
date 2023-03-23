@@ -1,10 +1,56 @@
+import axios from "axios";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
+import { ToastActionTypes } from "../../../Components/Toast/store/type";
 import styles from "./ForgotPassword.module.scss";
 
 export const ForgotPassword = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [t] = useTranslation("translation");
+
+  const [email, setEmail] = useState<string>();
+
+  const PostChange = async () => {
+    const res = await axios.put(
+      "settings/change-password",
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res;
+  };
+
+  const { isLoading, mutateAsync } = useMutation(PostChange, {
+    onSuccess: () => {
+      dispatch({
+        type: ToastActionTypes.SHOW,
+        payload: {
+          message: "Вам на пошту був відправлений лист!",
+          type: "success",
+        },
+      });
+    },
+    onError: () => {
+      dispatch({
+        type: ToastActionTypes.SHOW,
+        payload: {
+          message: "Виникла помилка пошуку пошти!",
+          type: "error",
+        },
+      });
+    },
+  });
+
+  if (isLoading) return <LazyLoading />;
 
   return (
     <>
@@ -56,9 +102,16 @@ export const ForgotPassword = () => {
         </div>
 
         <div className={styles.form}>
-          <input type="email" placeholder="fliper@gmail.com" />
+          <input
+            type="email"
+            placeholder="fliper@gmail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-          <button>{t("main.settings.forgot_pass.btn")}</button>
+          <button onClick={async () => await mutateAsync()}>
+            {t("main.settings.forgot_pass.btn")}
+          </button>
         </div>
       </div>
     </>

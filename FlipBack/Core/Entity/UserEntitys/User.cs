@@ -23,6 +23,7 @@ namespace Core.Entity.UserEntitys
         [Required]
         [MaxLength(15)]
         public string Name { get; set; }
+        [MaxLength(50)]
         public string Description { get; set; }
         [Required]
         [JsonConverter(typeof(DateOnlyConverter))]

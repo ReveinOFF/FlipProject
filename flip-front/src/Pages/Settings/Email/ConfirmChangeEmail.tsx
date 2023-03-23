@@ -1,40 +1,44 @@
 import axios from "axios";
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { LazyLoading } from "../../../LazyLoading/LazyLoading";
-import { ToastActionTypes } from "../../../Toast/store/type";
+import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
+import { ToastActionTypes } from "../../../Components/Toast/store/type";
 
-export const ConfirmEmail = () => {
+export const ConfirmChangeEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [t] = useTranslation("translation");
 
-  const PostConfirm = async ({ email: email, token: token }) => {
-    const res = await axios.post("account/email-confirm", {
-      email: email,
-      token: token,
-    });
+  const PostConfirm = async ({ newemail, oldemail, token }) => {
+    const res = await axios.post(
+      "settings/confirm-change-email",
+      {
+        newEmail: newemail,
+        oldEmail: oldemail,
+        token: token,
+      },
+      {
+        headers: {
+          "Content-Application": "application/json",
+        },
+      }
+    );
 
     return res;
   };
 
   const { isLoading, isError, mutateAsync } = useMutation(PostConfirm, {
-    onSuccess: (res) => {
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("refreshToken", res.data.refreshToken);
-
-      navigate("/");
+    onSuccess: () => {
+      navigate("/settings");
       window.location.reload();
 
       setTimeout(() => {
         dispatch({
           type: ToastActionTypes.SHOW,
           payload: {
-            message: t("toast.success.confirm-email"),
+            message: "Ви успішно змінили пошту!",
             type: "success",
           },
         });
@@ -44,7 +48,7 @@ export const ConfirmEmail = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: t("toast.error.confirm-email"),
+          message: "Виникла помилка при зміні пошти",
           type: "error",
         },
       });
@@ -53,10 +57,12 @@ export const ConfirmEmail = () => {
 
   useEffect(() => {
     const token = searchParams.get("token");
-    const email = searchParams.get("email");
+    const oldemail = searchParams.get("curr-email");
+    const newemail = searchParams.get("new-email");
 
-    if (token && email) mutateAsync({ email: email, token: token });
-    else navigate("/");
+    if (token && oldemail && newemail)
+      mutateAsync({ newemail: newemail, oldemail: oldemail, token: token });
+    else navigate("/settings");
   }, []);
 
   return (

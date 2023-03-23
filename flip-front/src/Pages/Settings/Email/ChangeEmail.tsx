@@ -1,10 +1,56 @@
+import axios from "axios";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
+import { ToastActionTypes } from "../../../Components/Toast/store/type";
+import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./ChangeEmail.module.scss";
 
 export const ChangeEmail = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [t] = useTranslation("translation");
+  const myUser = useTypedSelector((state) => state.auth.user);
+
+  const [email, setEmail] = useState<string>();
+
+  const sendEmail = async (email: string) => {
+    const res = await axios.post(
+      "settings/change-email",
+      { newEmail: email, oldEmail: myUser?.email },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    return res;
+  };
+
+  const { isLoading, mutateAsync } = useMutation(sendEmail, {
+    onSuccess: () => {
+      dispatch({
+        type: ToastActionTypes.SHOW,
+        payload: {
+          message: "Вам на пошту надіслано повідомлення!",
+          type: "success",
+        },
+      });
+    },
+    onError: () => {
+      dispatch({
+        type: ToastActionTypes.SHOW,
+        payload: {
+          message: "Пошта вказано не вірно?",
+          type: "error",
+        },
+      });
+    },
+  });
+
+  if (isLoading) return <LazyLoading />;
 
   return (
     <>
@@ -27,23 +73,73 @@ export const ChangeEmail = () => {
 
       <div className={styles.setting}>
         <div className={styles.profile}>
-          <img
-            src="/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
-            alt=""
-          />
-          <div>Рома Зайчик</div>
+          {myUser?.userImage ? (
+            <img
+              src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${myUser?.id}/${myUser?.userImage}`}
+              alt=""
+            />
+          ) : (
+            <svg
+              className={styles.profile_img}
+              width="86"
+              height="86"
+              viewBox="0 0 209 209"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="104.5"
+                cy="104.5"
+                r="102.029"
+                fill="url(#paint0_linear_1675_10359)"
+                fillOpacity="0.5"
+                stroke="#2F2F2F"
+                strokeWidth="4.94119"
+              />
+              <path
+                d="M77.3984 78.5C77.3984 85.4036 71.802 91 64.8984 91C57.9949 91 52.3984 85.4036 52.3984 78.5C52.3984 71.5964 57.9949 66 64.8984 66C71.802 66 77.3984 71.5964 77.3984 78.5Z"
+                fill="#2F2F2F"
+              />
+              <path
+                d="M157.398 78.5C157.398 85.4036 151.802 91 144.898 91C137.995 91 132.398 85.4036 132.398 78.5C132.398 71.5964 137.995 66 144.898 66C151.802 66 157.398 71.5964 157.398 78.5Z"
+                fill="#2F2F2F"
+              />
+              <path
+                d="M84.8984 146H124.898"
+                stroke="#2F2F2F"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+              <defs>
+                <linearGradient
+                  id="paint0_linear_1675_10359"
+                  x1="-40.5348"
+                  y1="188.1"
+                  x2="212.652"
+                  y2="182.514"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stopColor="#48D824" />
+                  <stop offset="1" stopColor="#10D0EA" />
+                </linearGradient>
+              </defs>
+            </svg>
+          )}
+          <div>{myUser?.name}</div>
         </div>
 
         <div className={styles.email}>
           <div>{t("main.settings.change_email.email")}</div>
-          <input type="email" />
+          <input type="email" onChange={(e) => setEmail(e.target.value)} />
         </div>
 
         <div className={styles.buttons}>
           <a onClick={() => navigate(-1)}>
             {t("main.settings.change_email.cancel")}
           </a>
-          <button>{t("main.settings.change_email.btn")}</button>
+          <button onClick={async () => await mutateAsync(email as string)}>
+            {t("main.settings.change_email.btn")}
+          </button>
         </div>
       </div>
     </>

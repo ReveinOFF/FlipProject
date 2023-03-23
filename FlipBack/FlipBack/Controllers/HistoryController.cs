@@ -66,8 +66,9 @@ namespace FlipBack.Controllers
         [HttpPost("add-history")]
         public async Task<IActionResult> AddHistory(IFormFile File)
         {
-            string username = User.FindFirst("UserName")?.Value;
-            var user = await _userManager.FindByNameAsync(username);
+            string userId = User.FindFirst("UserId")?.Value;
+
+            var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
                 return NotFound("User not found!");

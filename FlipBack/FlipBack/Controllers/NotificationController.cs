@@ -29,9 +29,9 @@ namespace FlipBack.Controllers
         [HttpGet("get-all-notification")]
         public async Task<IActionResult> GetAllNotification()
         {
-            string username = User.FindFirst("UserName")?.Value;
+            string userId = User.FindFirst("UserId")?.Value;
 
-            var user = await _userManager.Users.Include(i => i.ReceivedNotifications).ThenInclude(t => t.Sender).Include(i => i.Followings).FirstOrDefaultAsync(f => f.UserName == username);
+            var user = await _userManager.Users.Include(i => i.ReceivedNotifications).ThenInclude(t => t.Sender).Include(i => i.Followings).FirstOrDefaultAsync(f => f.Id == userId);
 
             if (user == null) 
                 return NotFound("User not found!");

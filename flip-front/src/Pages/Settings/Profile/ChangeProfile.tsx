@@ -1,36 +1,72 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
+import { ToastActionTypes } from "../../../Components/Toast/store/type";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import styles from "./ChangeProfile.module.scss";
 
 export const ChangeProfile = () => {
   const profile = useTypedSelector((state) => state.auth.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [t] = useTranslation("translation");
 
   const [nameValue, setNameValue] = useState(profile?.name);
   const [loginValue, setLoginValue] = useState(profile?.userName);
   const [descriptionValue, setDescriptionValue] = useState(
-    profile?.description
+    profile?.description || ""
   );
-  const [phoneValue, setPhoneValue] = useState("+3809556161");
+  const [dateValue, setDateValue] = useState<Date>();
+  const [phoneValue, setPhoneValue] = useState(profile?.phone);
 
-  const nameInputChange = (event) => {
-    setNameValue(event.target.value);
+  const editProfile = async () => {
+    const res = await axios.put(
+      "settings/edit-user",
+      {
+        id: profile?.id,
+        name: nameValue,
+        userName: loginValue,
+        dateOfBirth: dateValue?.toISOString().substring(0, 10),
+        description: descriptionValue,
+        numberPhone: phoneValue,
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    return res;
   };
 
-  const loginInputChange = (event) => {
-    setLoginValue(event.target.value);
-  };
+  const { isLoading, data, mutateAsync } = useMutation(editProfile, {
+    onSuccess: () => {
+      localStorage.setItem("token", data?.data.token);
+      localStorage.setItem("refreshToken", data?.data.refreshToken);
+      window.location.reload();
+      dispatch({
+        type: ToastActionTypes.SHOW,
+        payload: {
+          message: "Ви успішно поміняли данні профіля!",
+          type: "success",
+        },
+      });
+    },
+    onError: () => {
+      dispatch({
+        type: ToastActionTypes.SHOW,
+        payload: {
+          message: "Не вірно введені данні?",
+          type: "error",
+        },
+      });
+    },
+  });
 
-  const descriptionInputChange = (event) => {
-    setDescriptionValue(event.target.value);
-  };
-
-  const phoneInputChange = (event) => {
-    setPhoneValue(event.target.value);
-  };
+  if (isLoading) return <LazyLoading />;
 
   return (
     <>
@@ -54,10 +90,58 @@ export const ChangeProfile = () => {
       <div className={styles.profile}>
         <div className={styles.curr}>
           <div className={styles.image}>
-            <img
-              src="/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
-              alt=""
-            />
+            {profile?.userImage ? (
+              <img
+                src={`${process.env.REACT_APP_BASE_RESOURCES}UserImages/${profile?.id}/${profile?.userImage}`}
+                alt=""
+              />
+            ) : (
+              <svg
+                className={styles.profile_img}
+                width="112"
+                height="112"
+                viewBox="0 0 209 209"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="104.5"
+                  cy="104.5"
+                  r="102.029"
+                  fill="url(#paint0_linear_1675_10359)"
+                  fillOpacity="0.5"
+                  stroke="#2F2F2F"
+                  strokeWidth="4.94119"
+                />
+                <path
+                  d="M77.3984 78.5C77.3984 85.4036 71.802 91 64.8984 91C57.9949 91 52.3984 85.4036 52.3984 78.5C52.3984 71.5964 57.9949 66 64.8984 66C71.802 66 77.3984 71.5964 77.3984 78.5Z"
+                  fill="#2F2F2F"
+                />
+                <path
+                  d="M157.398 78.5C157.398 85.4036 151.802 91 144.898 91C137.995 91 132.398 85.4036 132.398 78.5C132.398 71.5964 137.995 66 144.898 66C151.802 66 157.398 71.5964 157.398 78.5Z"
+                  fill="#2F2F2F"
+                />
+                <path
+                  d="M84.8984 146H124.898"
+                  stroke="#2F2F2F"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+                <defs>
+                  <linearGradient
+                    id="paint0_linear_1675_10359"
+                    x1="-40.5348"
+                    y1="188.1"
+                    x2="212.652"
+                    y2="182.514"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stopColor="#48D824" />
+                    <stop offset="1" stopColor="#10D0EA" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            )}
             <svg
               width="30"
               height="30"
@@ -118,32 +202,66 @@ export const ChangeProfile = () => {
         </div>
         <div className={styles.change_data}>
           <div>{t("main.settings.change_profile.name")}</div>
-          <input type="text" value={nameValue} onChange={nameInputChange} />
+          <div>
+            <input
+              type="text"
+              value={nameValue}
+              onChange={(event) => setNameValue(event.target.value)}
+            />
+            <div className={styles.descrip}>
+              Допоможіть людям знайти ваш обліковий запис, використовуючи ім'я,
+              за яким вас знають: повне ім'я, псевдонім.
+            </div>
+          </div>
         </div>
         <div className={styles.change_data}>
           <div>{t("main.settings.change_profile.login")}</div>
-          <input type="text" value={loginValue} onChange={loginInputChange} />
+          <div>
+            <input
+              type="text"
+              value={loginValue}
+              onChange={(event) => setLoginValue(event.target.value)}
+            />
+            <div className={styles.descrip}>
+              У більшості випадків ви зможете змінити своє ім'я користувача
+              назад протягом ще 14 днів. <span>Докладніше</span>
+            </div>
+          </div>
         </div>
         <div className={styles.change_data}>
           <div>{t("main.settings.change_profile.date")}</div>
-          <input type="date" />
-        </div>
-        <div className={styles.change_data}>
-          <div>{t("main.settings.change_profile.description")}</div>
-          <textarea
-            value={descriptionValue}
-            onChange={descriptionInputChange}
+          <input
+            type="date"
+            defaultValue={profile?.dateOfBirth.toString()}
+            onChange={(e) => setDateValue(new Date(e.target.value))}
           />
         </div>
         <div className={styles.change_data}>
+          <div>{t("main.settings.change_profile.description")}</div>
+          <div>
+            <textarea
+              value={descriptionValue}
+              maxLength={50}
+              onChange={(event) => setDescriptionValue(event.target.value)}
+            />
+            <div className={styles.lenght}>{descriptionValue!.length}/50</div>
+          </div>
+        </div>
+        <div className={styles.change_data}>
           <div>{t("main.settings.change_profile.phone")}</div>
-          <input type="text" value={phoneValue} onChange={phoneInputChange} />
+          <input
+            type="text"
+            value={phoneValue}
+            onChange={(event) => setPhoneValue(event.target.value)}
+          />
         </div>
         <div className={styles.buttons}>
           <a href="#" onClick={() => navigate(-1)}>
             {t("main.settings.change_profile.cancel")}
           </a>
-          <button>{t("main.settings.change_profile.save")}</button>
+          <button onClick={async () => await mutateAsync()}>
+            {t("main.settings.change_profile.save")}
+          </button>
         </div>
       </div>
     </>

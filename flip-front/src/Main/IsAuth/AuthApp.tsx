@@ -101,6 +101,12 @@ const HelpComponent = React.lazy(() =>
   }))
 );
 
+const ConfChangeEmailComponent = React.lazy(() =>
+  import("../../Pages/Settings/Email/ConfirmChangeEmail").then((module) => ({
+    default: module.ConfirmChangeEmail,
+  }))
+);
+
 const AuthApp = () => {
   return (
     <Routes>
@@ -120,6 +126,7 @@ const AuthApp = () => {
           <Route path="information" element={<InformationComponent />} />
           <Route path="help" element={<HelpComponent />} />
         </Route>
+        <Route path="email-change" element={<ConfChangeEmailComponent />} />
         <Route path="messages" element={<MessagesSelectionComponent />} />
         <Route path="chat/:id" element={<MessagesRoomComponent />} />
       </Route>

@@ -651,6 +651,43 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("Core.Entity.UserEntitys.UsersAuthentications", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<string>("City")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CountryName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("text");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("UserAgent")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Authentications");
+                });
+
             modelBuilder.Entity("MessageBoxUser", b =>
                 {
                     b.Property<string>("MessageBoxsId")
@@ -1058,6 +1095,15 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Core.Entity.UserEntitys.UsersAuthentications", b =>
+                {
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("Authentications")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MessageBoxUser", b =>
                 {
                     b.HasOne("Core.Entity.MessageEntitys.MessageBox", null)
@@ -1163,6 +1209,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Entity.UserEntitys.User", b =>
                 {
+                    b.Navigation("Authentications");
+
                     b.Navigation("Blocked");
 
                     b.Navigation("CreatedPosts");
