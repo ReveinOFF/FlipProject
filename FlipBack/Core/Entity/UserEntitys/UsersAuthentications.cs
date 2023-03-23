@@ -5,12 +5,13 @@ namespace Core.Entity.UserEntitys
     public class UsersAuthentications : BaseEntity
     {
         public string IpAddress { get; set; }
-        public string CountryName { get; set; }
-        public string CountryCode { get; set; }
+        public string Country { get; set; }
         public string City { get; set; }
-        public string UserAgent { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public string Region { get; set; }
+        public string Device { get; set; }
+        public string Browser { get; set; }
+        public string Location { get; set; }
+        public DateTime LastOnline { get; set; }
 
         [ForeignKey("User")]
         public string UserId { get; set; }

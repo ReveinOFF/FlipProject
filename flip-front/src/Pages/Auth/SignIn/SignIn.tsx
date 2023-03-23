@@ -16,6 +16,8 @@ import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { LazyLoading } from "../../../Components/LazyLoading/LazyLoading";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
+import jwtDecode from "jwt-decode";
+import { JwtDecoder } from "../../../Interface/JwtDecoder";
 
 export const SignIn = () => {
   const [visible, setVisoiblity] = useState(false);
@@ -47,6 +49,30 @@ export const SignIn = () => {
     Password: yup.string().required(t("auht.signin.yup.password").toString()),
   });
 
+  const getBrowser = (userAgent) => {
+    if (userAgent.includes("Firefox")) {
+      return "Mozilla Firefox";
+    } else if (userAgent.includes("SamsungBrowser")) {
+      return "Samsung Internet";
+    } else if (
+      userAgent.includes("Opera") ||
+      userAgent.includes("OPR") ||
+      userAgent.includes("Opera GX")
+    ) {
+      return "Opera";
+    } else if (userAgent.includes("Edge")) {
+      return "Microsoft Edge (Legacy)";
+    } else if (userAgent.includes("Edg")) {
+      return "Microsoft Edge (Chromium)";
+    } else if (userAgent.includes("Chrome")) {
+      return "Google Chrome or Chromium";
+    } else if (userAgent.includes("Safari")) {
+      return "Apple Safari";
+    } else {
+      return "unknown";
+    }
+  };
+
   const PostLogin = async (value: UserLogin) => {
     if (!executeRecaptcha) {
       setBot(true);
@@ -61,10 +87,40 @@ export const SignIn = () => {
     return response;
   };
 
+  const PostAuth = async (token) => {
+    const { data: dataLocation } = await axios.get("https://ipinfo.io/json");
+
+    const tokenDecode: JwtDecoder = jwtDecode(token);
+
+    const res = await axios.post(
+      "account/add-authentication",
+      {
+        userId: tokenDecode.UserId,
+        browser: getBrowser(window.navigator.userAgent),
+        device: window.navigator.userAgentData?.platform,
+        city: dataLocation.city,
+        region: dataLocation.region,
+        country: dataLocation.country,
+        location: dataLocation.loc,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res;
+  };
+
+  const { mutateAsync: PostAuthAsync } = useMutation(PostAuth);
+
   const { isLoading, mutateAsync } = useMutation(PostLogin, {
     onSuccess: (res) => {
       localStorage.setItem("token", res?.data.token);
       localStorage.setItem("refreshToken", res?.data.refreshToken);
+
+      PostAuthAsync(res?.data.token);
 
       navigate("/");
       window.location.reload();

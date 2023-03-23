@@ -66,6 +66,10 @@ export const ChangeProfile = () => {
     },
   });
 
+  useEffect(() => {
+    document.title = "Редагування профіля";
+  }, []);
+
   if (isLoading) return <LazyLoading />;
 
   return (
@@ -143,6 +147,7 @@ export const ChangeProfile = () => {
               </svg>
             )}
             <svg
+              className={styles.change_img}
               width="30"
               height="30"
               viewBox="0 0 30 30"

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,10 @@ export const ChangeEmail = () => {
   const dispatch = useDispatch();
   const [t] = useTranslation("translation");
   const myUser = useTypedSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    document.title = "Зміна пошти";
+  }, []);
 
   const [email, setEmail] = useState<string>();
 

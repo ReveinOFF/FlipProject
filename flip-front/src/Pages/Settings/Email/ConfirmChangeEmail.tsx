@@ -11,6 +11,10 @@ export const ConfirmChangeEmail = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    document.title = "Підтвердження пошти";
+  }, []);
+
   const PostConfirm = async ({ newemail, oldemail, token }) => {
     const res = await axios.post(
       "settings/confirm-change-email",

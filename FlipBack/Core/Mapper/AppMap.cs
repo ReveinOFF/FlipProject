@@ -28,6 +28,7 @@ namespace Core.Mapper
                 .ForMember(x => x.CreatedPost, y => y.MapFrom(x => x.CreatedPosts.ToList()));
             CreateMap<User, GetUsersDTO>();
             CreateMap<User, GetFollowsDTO>();
+            CreateMap<UsersAuthentications, GetAuthorizeDTO>();
 
             CreateMap<Post, GetCreatedPost>()
                 .ForMember(x => x.File, y => y.MapFrom(x => x.Files.Select(s => s.FileName)));

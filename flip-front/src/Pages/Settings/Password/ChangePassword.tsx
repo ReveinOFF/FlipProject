@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
@@ -22,6 +22,10 @@ export const ChangePassword = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [visible2, setVisible2] = useState<boolean>(false);
   const [visible3, setVisible3] = useState<boolean>(false);
+
+  useEffect(() => {
+    document.title = "Зміна пароля";
+  }, []);
 
   const PostChange = async () => {
     const res = await axios.put(

@@ -83,6 +83,34 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
+        [HttpPost("add-authentication")]
+        public async Task<IActionResult> AddAuthentication([FromBody] AddAuthDTO auth)
+        {
+            var user = await _userManager.FindByIdAsync(auth.UserId);
+
+            if (user == null) 
+                return NotFound("User not found!");
+
+            if (user.Authentications.Any(a => a.IpAddress == HttpContext.Connection.RemoteIpAddress.ToString()))
+                return Ok();
+
+            await _context.Authentications.AddAsync(new UsersAuthentications
+            {
+                IpAddress = HttpContext.Connection.RemoteIpAddress.ToString(),
+                Browser = auth.Browser,
+                Device = auth.Device,
+                City = auth.City,
+                Country = auth.Country,
+                LastOnline = DateTime.UtcNow,
+                UserId = auth.UserId,
+                Location = auth.Location,
+                Region = auth.Region
+            });
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+ 
         [HttpPost("registration")]
         public async Task<IActionResult> Register([FromForm] RegisterDTO register)
         {
@@ -141,10 +169,7 @@ namespace FlipBack.Controllers
                     Subject = "Confirmation email"
                 };
 
-                var resultSend = await _mailService.SendEmailAsync(mailData);
-
-                if (!resultSend)
-                    return BadRequest("Error in sending the message!");
+                await _mailService.SendEmailAsync(mailData);
             }
             catch (Exception ex)
             {
@@ -259,10 +284,7 @@ namespace FlipBack.Controllers
                     Subject = "Recover Password"
                 };
 
-                var resultSend = await _mailService.SendEmailAsync(mailData);
-
-                if (!resultSend)
-                    return BadRequest("Error in sending the message!");
+                await _mailService.SendEmailAsync(mailData);
             }
             catch (Exception ex) 
             {
@@ -282,10 +304,7 @@ namespace FlipBack.Controllers
             var codeDecodedBytes = WebEncoders.Base64UrlDecode(confirmPass.Token);
             var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
 
-            var result = await _userManager.ResetPasswordAsync(user, codeDecoded, confirmPass.NewPassword);
-
-            if (!result.Succeeded)
-                return BadRequest("There is a problem resetting the password!");
+            await _userManager.ResetPasswordAsync(user, codeDecoded, confirmPass.NewPassword);
 
             string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPasswordTHX.html"));
 
@@ -296,10 +315,7 @@ namespace FlipBack.Controllers
                 Subject = "Reset Password"
             };
 
-            var resultSend = await _mailService.SendEmailAsync(mailData);
-
-            if (!resultSend)
-                return BadRequest("Error in sending the message!");
+            await _mailService.SendEmailAsync(mailData);
 
             return Ok();
         }

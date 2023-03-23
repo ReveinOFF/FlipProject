@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 
 namespace FlipBack.Controllers
@@ -191,21 +192,71 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("recover-password")]
-        public async Task<IActionResult> RecoverPassword()
+        public async Task<IActionResult> RecoverPassword([FromBody] string email)
         {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                return BadRequest("User not found!");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(token);
+            var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
+
+            string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPassword.html"));
+            Body = Body.Replace("#url#", $"https://solido.tk/recover-password?token={codeEncoded}");
+
+            MailDataDTO mailData = new MailDataDTO()
+            {
+                Body = Body,
+                To = user.Email,
+                Subject = "Recover Password"
+            };
+
+            await _mailService.SendEmailAsync(mailData);
+
             return Ok();
         }
 
         [HttpPost("confirm-recover")]
-        public async Task<IActionResult> ConfirmRecover()
+        public async Task<IActionResult> ConfirmRecover([FromBody] ConfirmPasswordDTO confirmPass)
         {
+            var user = await _userManager.FindByEmailAsync(confirmPass.Email);
+            if (user == null)
+                return BadRequest("Email not found!");
+
+            var codeDecodedBytes = WebEncoders.Base64UrlDecode(confirmPass.Token);
+            var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
+
+            await _userManager.ResetPasswordAsync(user, codeDecoded, confirmPass.NewPassword);
+
+            string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPasswordTHX.html"));
+
+            MailDataDTO mailData = new MailDataDTO()
+            {
+                Body = Body,
+                To = user.Email,
+                Subject = "Reset Password"
+            };
+
+            await _mailService.SendEmailAsync(mailData);
+
             return Ok();
         }
 
         [HttpGet("get-all-authorize")]
         public async Task<IActionResult> GetAllAuthorize()
         {
-            return Ok();
+            string userId = User.FindFirst("UserId")?.Value;
+
+            var user = await _userManager.Users.Include(i => i.Authentications).FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (user == null)
+                return BadRequest("User not found!");
+
+            var map = _mapper.Map<List<GetAuthorizeDTO>>(user.Authentications);
+
+            return Ok(map);
         }
     }
 }

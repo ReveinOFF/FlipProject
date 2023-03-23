@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import styles from "./Information.module.scss";
@@ -5,6 +6,10 @@ import styles from "./Information.module.scss";
 export const Information = () => {
   const navigate = useNavigate();
   const [t] = useTranslation("translation");
+
+  useEffect(() => {
+    document.title = "Інформація сайта";
+  }, []);
 
   return (
     <>

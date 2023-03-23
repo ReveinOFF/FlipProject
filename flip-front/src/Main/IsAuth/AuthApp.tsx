@@ -107,6 +107,14 @@ const ConfChangeEmailComponent = React.lazy(() =>
   }))
 );
 
+const ConfRecPassComponent = React.lazy(() =>
+  import("../../Pages/Settings/ConfirmForgotPass/ConfirmForgotPass").then(
+    (module) => ({
+      default: module.ConfirmForgotPass,
+    })
+  )
+);
+
 const AuthApp = () => {
   return (
     <Routes>
@@ -127,6 +135,7 @@ const AuthApp = () => {
           <Route path="help" element={<HelpComponent />} />
         </Route>
         <Route path="email-change" element={<ConfChangeEmailComponent />} />
+        <Route path="recover-password" element={<ConfRecPassComponent />} />
         <Route path="messages" element={<MessagesSelectionComponent />} />
         <Route path="chat/:id" element={<MessagesRoomComponent />} />
       </Route>

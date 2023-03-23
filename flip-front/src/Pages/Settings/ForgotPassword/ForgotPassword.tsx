@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
@@ -16,15 +16,11 @@ export const ForgotPassword = () => {
   const [email, setEmail] = useState<string>();
 
   const PostChange = async () => {
-    const res = await axios.put(
-      "settings/change-password",
-      {},
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await axios.post("settings/recover-password", email, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     return res;
   };
@@ -49,6 +45,10 @@ export const ForgotPassword = () => {
       });
     },
   });
+
+  useEffect(() => {
+    document.title = "Відновлення пароля";
+  }, []);
 
   if (isLoading) return <LazyLoading />;
 
