@@ -35,7 +35,7 @@ export const Main = () => {
       <FPMenu show={showMenu} onClick={() => setShowMenu(false)} />
 
       <div className={styles.header}>
-        <div className={styles.history}>
+        {/* <div className={styles.history}>
           <div className={styles.image}>
             <svg
               width="23"
@@ -79,6 +79,15 @@ export const Main = () => {
             </svg>
           </div>
           <div>Ваша розповідь</div>
+        </div> */}
+        <div className={styles.history} onClick={() => setShow(true)}>
+          <div className={styles.image}>
+            <img
+              src="/Assets/Img/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s1100-c50.jpg"
+              alt=""
+            />
+          </div>
+          <div className={styles.name}>Носеїв Норсоч</div>
         </div>
         <div className={styles.history} onClick={() => setShow(true)}>
           <div className={styles.image}>

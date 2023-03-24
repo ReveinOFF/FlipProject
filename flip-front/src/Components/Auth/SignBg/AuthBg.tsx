@@ -14,6 +14,13 @@ export const AuthBg = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const lng = localStorage.getItem("lng");
+
+    if (lng === "ua") setTrans("UA");
+    else setTrans("EN");
+  }, []);
+
+  useEffect(() => {
     if (theme === "light") setMode("light");
     else setMode("dark");
   }, [theme]);

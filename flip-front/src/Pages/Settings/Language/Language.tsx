@@ -1,11 +1,40 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import i18n from "../../../Components/i18n/i18n";
 import styles from "./Language.module.scss";
 
 export const Language = () => {
   const navigate = useNavigate();
   const [t] = useTranslation("translation");
+
+  const [trans, setTrans] = useState<string>("Українська");
+
+  useEffect(() => {
+    const lng = localStorage.getItem("lng");
+
+    if (lng === "ua") setTrans("Українська");
+    else setTrans("English");
+  }, []);
+
+  const changeLanguageOnClick = () => {
+    const lng = i18n.language;
+
+    if (lng === "ua") {
+      localStorage.setItem("lng", "en");
+      i18n.changeLanguage("en");
+      setTrans("English");
+    } else {
+      localStorage.setItem("lng", "ua");
+      i18n.changeLanguage("ua");
+      setTrans("Українська");
+    }
+  };
+
+  const [showLng, setShowLng] = useState<boolean>(false);
+  const [showLng2, setShowLng2] = useState<boolean>(false);
+  const [showLng3, setShowLng3] = useState<boolean>(false);
+  const [showLng4, setShowLng4] = useState<boolean>(false);
 
   useEffect(() => {
     document.title = "Зміна мови";
@@ -38,19 +67,41 @@ export const Language = () => {
             цього облікового запису
           </div>
           <div className={styles.select}>
-            <div>Українська</div>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              className={styles.selected}
+              onClick={() => setShowLng(!showLng)}
             >
-              <path
-                d="M3.33047 8.90999C3.33047 8.71999 3.40047 8.52999 3.55047 8.37999C3.69161 8.24051 3.88204 8.16229 4.08047 8.16229C4.2789 8.16229 4.46933 8.24051 4.61047 8.37999L11.1305 14.9C11.6105 15.38 12.3905 15.38 12.8705 14.9L19.3905 8.37999C19.5316 8.24051 19.722 8.16229 19.9205 8.16229C20.1189 8.16229 20.3093 8.24051 20.4505 8.37999C20.7405 8.66999 20.7405 9.14999 20.4505 9.43999L13.9305 15.96C13.4205 16.47 12.7305 16.76 12.0005 16.76C11.2705 16.76 10.5805 16.48 10.0705 15.96L3.55047 9.43999C3.41047 9.28999 3.33047 9.09999 3.33047 8.90999Z"
-                fill="#2F2F2F"
-              />
-            </svg>
+              <div className={styles.lng_selected}>{trans}</div>
+              <svg
+                style={
+                  showLng
+                    ? { transform: "rotate(180deg)" }
+                    : { transform: "rotate(0deg)" }
+                }
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3.33047 8.90999C3.33047 8.71999 3.40047 8.52999 3.55047 8.37999C3.69161 8.24051 3.88204 8.16229 4.08047 8.16229C4.2789 8.16229 4.46933 8.24051 4.61047 8.37999L11.1305 14.9C11.6105 15.38 12.3905 15.38 12.8705 14.9L19.3905 8.37999C19.5316 8.24051 19.722 8.16229 19.9205 8.16229C20.1189 8.16229 20.3093 8.24051 20.4505 8.37999C20.7405 8.66999 20.7405 9.14999 20.4505 9.43999L13.9305 15.96C13.4205 16.47 12.7305 16.76 12.0005 16.76C11.2705 16.76 10.5805 16.48 10.0705 15.96L3.55047 9.43999C3.41047 9.28999 3.33047 9.09999 3.33047 8.90999Z"
+                  fill="#2F2F2F"
+                />
+              </svg>
+            </div>
+            <div
+              className={styles.dashboard}
+              style={
+                showLng
+                  ? { transform: "scaleY(1)" }
+                  : { transform: "scaleY(0)" }
+              }
+            >
+              <div onClick={changeLanguageOnClick}>
+                {trans === "English" ? "Українська" : "English"}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -62,19 +113,41 @@ export const Language = () => {
             Мова, якою потрібно перекладати дописи
           </div>
           <div className={styles.select}>
-            <div>Українська</div>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              className={styles.selected}
+              onClick={() => setShowLng2(!showLng2)}
             >
-              <path
-                d="M3.33047 8.90999C3.33047 8.71999 3.40047 8.52999 3.55047 8.37999C3.69161 8.24051 3.88204 8.16229 4.08047 8.16229C4.2789 8.16229 4.46933 8.24051 4.61047 8.37999L11.1305 14.9C11.6105 15.38 12.3905 15.38 12.8705 14.9L19.3905 8.37999C19.5316 8.24051 19.722 8.16229 19.9205 8.16229C20.1189 8.16229 20.3093 8.24051 20.4505 8.37999C20.7405 8.66999 20.7405 9.14999 20.4505 9.43999L13.9305 15.96C13.4205 16.47 12.7305 16.76 12.0005 16.76C11.2705 16.76 10.5805 16.48 10.0705 15.96L3.55047 9.43999C3.41047 9.28999 3.33047 9.09999 3.33047 8.90999Z"
-                fill="#2F2F2F"
-              />
-            </svg>
+              <div className={styles.lng_selected}>{trans}</div>
+              <svg
+                style={
+                  showLng2
+                    ? { transform: "rotate(180deg)" }
+                    : { transform: "rotate(0deg)" }
+                }
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3.33047 8.90999C3.33047 8.71999 3.40047 8.52999 3.55047 8.37999C3.69161 8.24051 3.88204 8.16229 4.08047 8.16229C4.2789 8.16229 4.46933 8.24051 4.61047 8.37999L11.1305 14.9C11.6105 15.38 12.3905 15.38 12.8705 14.9L19.3905 8.37999C19.5316 8.24051 19.722 8.16229 19.9205 8.16229C20.1189 8.16229 20.3093 8.24051 20.4505 8.37999C20.7405 8.66999 20.7405 9.14999 20.4505 9.43999L13.9305 15.96C13.4205 16.47 12.7305 16.76 12.0005 16.76C11.2705 16.76 10.5805 16.48 10.0705 15.96L3.55047 9.43999C3.41047 9.28999 3.33047 9.09999 3.33047 8.90999Z"
+                  fill="#2F2F2F"
+                />
+              </svg>
+            </div>
+            <div
+              className={styles.dashboard}
+              style={
+                showLng2
+                  ? { transform: "scaleY(1)" }
+                  : { transform: "scaleY(0)" }
+              }
+            >
+              <div onClick={changeLanguageOnClick}>
+                {trans === "English" ? "Українська" : "English"}
+              </div>
+            </div>
           </div>
         </div>
         <div className={styles.container}>
@@ -82,19 +155,41 @@ export const Language = () => {
             Мови, для яких ви не бажаєте отримувати пропозиції щодо перекладу
           </div>
           <div className={styles.select}>
-            <div>Українська</div>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              className={styles.selected}
+              onClick={() => setShowLng3(!showLng3)}
             >
-              <path
-                d="M3.33047 8.90999C3.33047 8.71999 3.40047 8.52999 3.55047 8.37999C3.69161 8.24051 3.88204 8.16229 4.08047 8.16229C4.2789 8.16229 4.46933 8.24051 4.61047 8.37999L11.1305 14.9C11.6105 15.38 12.3905 15.38 12.8705 14.9L19.3905 8.37999C19.5316 8.24051 19.722 8.16229 19.9205 8.16229C20.1189 8.16229 20.3093 8.24051 20.4505 8.37999C20.7405 8.66999 20.7405 9.14999 20.4505 9.43999L13.9305 15.96C13.4205 16.47 12.7305 16.76 12.0005 16.76C11.2705 16.76 10.5805 16.48 10.0705 15.96L3.55047 9.43999C3.41047 9.28999 3.33047 9.09999 3.33047 8.90999Z"
-                fill="#2F2F2F"
-              />
-            </svg>
+              <div className={styles.lng_selected}>{trans}</div>
+              <svg
+                style={
+                  showLng3
+                    ? { transform: "rotate(180deg)" }
+                    : { transform: "rotate(0deg)" }
+                }
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3.33047 8.90999C3.33047 8.71999 3.40047 8.52999 3.55047 8.37999C3.69161 8.24051 3.88204 8.16229 4.08047 8.16229C4.2789 8.16229 4.46933 8.24051 4.61047 8.37999L11.1305 14.9C11.6105 15.38 12.3905 15.38 12.8705 14.9L19.3905 8.37999C19.5316 8.24051 19.722 8.16229 19.9205 8.16229C20.1189 8.16229 20.3093 8.24051 20.4505 8.37999C20.7405 8.66999 20.7405 9.14999 20.4505 9.43999L13.9305 15.96C13.4205 16.47 12.7305 16.76 12.0005 16.76C11.2705 16.76 10.5805 16.48 10.0705 15.96L3.55047 9.43999C3.41047 9.28999 3.33047 9.09999 3.33047 8.90999Z"
+                  fill="#2F2F2F"
+                />
+              </svg>
+            </div>
+            <div
+              className={styles.dashboard}
+              style={
+                showLng3
+                  ? { transform: "scaleY(1)" }
+                  : { transform: "scaleY(0)" }
+              }
+            >
+              <div onClick={changeLanguageOnClick}>
+                {trans === "English" ? "Українська" : "English"}
+              </div>
+            </div>
           </div>
         </div>
         <div className={styles.container}>
@@ -102,19 +197,41 @@ export const Language = () => {
             Мови, які не слід автоматично перекладати
           </div>
           <div className={styles.select}>
-            <div>Українська</div>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              className={styles.selected}
+              onClick={() => setShowLng4(!showLng4)}
             >
-              <path
-                d="M3.33047 8.90999C3.33047 8.71999 3.40047 8.52999 3.55047 8.37999C3.69161 8.24051 3.88204 8.16229 4.08047 8.16229C4.2789 8.16229 4.46933 8.24051 4.61047 8.37999L11.1305 14.9C11.6105 15.38 12.3905 15.38 12.8705 14.9L19.3905 8.37999C19.5316 8.24051 19.722 8.16229 19.9205 8.16229C20.1189 8.16229 20.3093 8.24051 20.4505 8.37999C20.7405 8.66999 20.7405 9.14999 20.4505 9.43999L13.9305 15.96C13.4205 16.47 12.7305 16.76 12.0005 16.76C11.2705 16.76 10.5805 16.48 10.0705 15.96L3.55047 9.43999C3.41047 9.28999 3.33047 9.09999 3.33047 8.90999Z"
-                fill="#2F2F2F"
-              />
-            </svg>
+              <div className={styles.lng_selected}>{trans}</div>
+              <svg
+                style={
+                  showLng4
+                    ? { transform: "rotate(180deg)" }
+                    : { transform: "rotate(0deg)" }
+                }
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3.33047 8.90999C3.33047 8.71999 3.40047 8.52999 3.55047 8.37999C3.69161 8.24051 3.88204 8.16229 4.08047 8.16229C4.2789 8.16229 4.46933 8.24051 4.61047 8.37999L11.1305 14.9C11.6105 15.38 12.3905 15.38 12.8705 14.9L19.3905 8.37999C19.5316 8.24051 19.722 8.16229 19.9205 8.16229C20.1189 8.16229 20.3093 8.24051 20.4505 8.37999C20.7405 8.66999 20.7405 9.14999 20.4505 9.43999L13.9305 15.96C13.4205 16.47 12.7305 16.76 12.0005 16.76C11.2705 16.76 10.5805 16.48 10.0705 15.96L3.55047 9.43999C3.41047 9.28999 3.33047 9.09999 3.33047 8.90999Z"
+                  fill="#2F2F2F"
+                />
+              </svg>
+            </div>
+            <div
+              className={styles.dashboard}
+              style={
+                showLng4
+                  ? { transform: "scaleY(1)" }
+                  : { transform: "scaleY(0)" }
+              }
+            >
+              <div onClick={changeLanguageOnClick}>
+                {trans === "English" ? "Українська" : "English"}
+              </div>
+            </div>
           </div>
         </div>
       </div>
