@@ -28,7 +28,7 @@ const root = ReactDOM.createRoot(
 
 if (!ldMode) localStorage.setItem("LightDarkMode", "light");
 
-if (!lng) localStorage.setItem("lng", navigator.language);
+if (!lng) localStorage.setItem("lng", navigator.language.split("-")[0]);
 
 ThemeActions(store.dispatch);
 

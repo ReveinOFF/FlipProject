@@ -1,6 +1,4 @@
-﻿using Core.Entity.PostEntitys;
-
-namespace Core.DTO.User
+﻿namespace Core.DTO.User
 {
     public class GetUserDTO
     {
@@ -18,6 +16,7 @@ namespace Core.DTO.User
         public int Followers { get; set; }
         public int Followings { get; set; }
 
-        public ICollection<GetCreatedPost> CreatedPost { get; set; }
+        public ICollection<GetCreatedPostDTO> CreatedPost { get; set; }
+        public ICollection<GetCreatedReelsDTO> CreatedReels { get; set; }
     }
 }

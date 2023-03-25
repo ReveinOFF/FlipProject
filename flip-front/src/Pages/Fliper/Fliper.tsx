@@ -3,15 +3,28 @@ import { useEffect, useRef, useState } from "react";
 import video from "./video.mp4";
 import { useTranslation } from "react-i18next";
 import { FPMenu } from "../../Components/MainComponents/FPMenu/FPMenu";
+import { useQuery } from "react-query";
+import axios from "axios";
 
 export const Fliper = () => {
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [lasId, setLasId] = useState<string>();
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [t] = useTranslation("translation");
+
+  // const { isLoading, data, refetch } = useQuery(
+  //   "getFliper",
+  //   async () => await axios.get(`fliper/get-fliper?fliper=${lasId}`),
+  //   { enabled: false }
+  // );
+
+  // useEffect(() => {
+  //   refetch();
+  // }, [lasId]);
 
   useEffect(() => {
     document.title = "Fliper - Flip";

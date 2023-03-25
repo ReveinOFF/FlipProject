@@ -9,5 +9,7 @@
         public DateTime DateCreate { get; set; }
         public string UserId { get; set; }
         public string PostId { get; set; }
+
+        public ICollection<PostGetAnswerDTO> Answer { get; set; }
     }
 }

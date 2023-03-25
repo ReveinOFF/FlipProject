@@ -8,7 +8,7 @@ export const Information = () => {
   const [t] = useTranslation("translation");
 
   useEffect(() => {
-    document.title = "Інформація сайта";
+    document.title = t("main.settings.information.title");
   }, []);
 
   return (
@@ -27,13 +27,17 @@ export const Information = () => {
           />
         </svg>
 
-        <div>Інформація сайта</div>
+        <div>{t("main.settings.information.title")}</div>
       </div>
 
       <div className={styles.information}>
-        <div className={styles.header}>Інформація</div>
+        <div className={styles.header}>
+          {t("main.settings.information.header")}
+        </div>
         <div className={styles.container}>
-          <div className={styles.description}>Політика конфеденційності</div>
+          <div className={styles.description}>
+            {t("main.settings.information.desc")}
+          </div>
           <div className={styles.btn}>
             <svg
               width="24"
@@ -50,7 +54,9 @@ export const Information = () => {
           </div>
         </div>
         <div className={styles.container}>
-          <div className={styles.description}>Умови використання</div>
+          <div className={styles.description}>
+            {t("main.settings.information.desc2")}
+          </div>
           <div className={styles.btn}>
             <svg
               width="24"
@@ -67,7 +73,9 @@ export const Information = () => {
           </div>
         </div>
         <div className={styles.container}>
-          <div className={styles.description}>Оновлення Flip</div>
+          <div className={styles.description}>
+            {t("main.settings.information.desc3")}
+          </div>
           <div className={styles.btn}>
             <svg
               width="24"

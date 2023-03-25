@@ -563,23 +563,23 @@ export const SProfile = (props) => {
                 <img
                   onClick={() => setShowPost(true)}
                   key={item.id}
-                  src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/Default/${item.file[0]}`}
+                  src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/${item.id}/${item.file[0]}`}
                   alt=""
                 />
               ))}
             </div>
           )}
 
-          {profile.createdPost.length > 0 && selector === 2 && (
+          {profile.createdReels.length > 0 && selector === 2 && (
             <div className={styles.profile_data_imgs}>
-              {profile.createdPost.map((item: CreatedPost) => (
+              {profile.createdReels.map((item: CreatedPost) => (
                 <div
                   className={styles.flipers}
                   key={item.id}
                   onClick={() => setShowFliper(true)}
                 >
                   <img
-                    src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/Default/${item.file[0]}`}
+                    src={`${process.env.REACT_APP_BASE_RESOURCES}ReelsFiles/${item.id}/${item.file[0]}`}
                     alt=""
                   />
 

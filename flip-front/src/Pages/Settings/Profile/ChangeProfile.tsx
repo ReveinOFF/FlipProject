@@ -50,7 +50,7 @@ export const ChangeProfile = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: "Ви успішно поміняли данні профіля!",
+          message: t("toast.success.profile2"),
           type: "success",
         },
       });
@@ -59,7 +59,7 @@ export const ChangeProfile = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: "Не вірно введені данні?",
+          message: t("toast.error.profile2"),
           type: "error",
         },
       });
@@ -67,7 +67,7 @@ export const ChangeProfile = () => {
   });
 
   useEffect(() => {
-    document.title = "Редагування профіля";
+    document.title = t("main.settings.change_profile.title");
   }, []);
 
   if (isLoading) return <LazyLoading />;
@@ -214,8 +214,7 @@ export const ChangeProfile = () => {
               onChange={(event) => setNameValue(event.target.value)}
             />
             <div className={styles.descrip}>
-              Допоможіть людям знайти ваш обліковий запис, використовуючи ім'я,
-              за яким вас знають: повне ім'я, псевдонім.
+              {t("main.settings.change_profile.desc1")}
             </div>
           </div>
         </div>
@@ -228,8 +227,8 @@ export const ChangeProfile = () => {
               onChange={(event) => setLoginValue(event.target.value)}
             />
             <div className={styles.descrip}>
-              У більшості випадків ви зможете змінити своє ім'я користувача
-              назад протягом ще 14 днів. <span>Докладніше</span>
+              {t("main.settings.change_profile.desc2")}{" "}
+              <span>{t("main.settings.change_profile.span")}</span>
             </div>
           </div>
         </div>

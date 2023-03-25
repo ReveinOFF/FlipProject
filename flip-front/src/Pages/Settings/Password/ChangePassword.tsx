@@ -24,7 +24,7 @@ export const ChangePassword = () => {
   const [visible3, setVisible3] = useState<boolean>(false);
 
   useEffect(() => {
-    document.title = "Зміна пароля";
+    document.title = t("main.settings.change_pass.title");
   }, []);
 
   const PostChange = async () => {
@@ -50,7 +50,7 @@ export const ChangePassword = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: "Ви успішно змінили пароль!",
+          message: t("toast.success.change_pass"),
           type: "success",
         },
       });
@@ -59,7 +59,7 @@ export const ChangePassword = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: "Виникла помилка при зміні пароля!",
+          message: t("toast.error.change_pass"),
           type: "error",
         },
       });

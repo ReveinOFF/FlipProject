@@ -1,4 +1,5 @@
 import axios from "axios";
+import { t } from "i18next";
 import { useEffect } from "react";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
@@ -12,7 +13,7 @@ export const ConfirmChangeEmail = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    document.title = "Підтвердження пошти";
+    document.title = t("main.settings.conf_change_email");
   }, []);
 
   const PostConfirm = async ({ newemail, oldemail, token }) => {
@@ -42,7 +43,7 @@ export const ConfirmChangeEmail = () => {
         dispatch({
           type: ToastActionTypes.SHOW,
           payload: {
-            message: "Ви успішно змінили пошту!",
+            message: t("toast.success.change_email"),
             type: "success",
           },
         });
@@ -52,7 +53,7 @@ export const ConfirmChangeEmail = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: "Виникла помилка при зміні пошти",
+          message: t("toast.error.change_email"),
           type: "error",
         },
       });

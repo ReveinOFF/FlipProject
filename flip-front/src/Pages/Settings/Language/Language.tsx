@@ -37,7 +37,7 @@ export const Language = () => {
   const [showLng4, setShowLng4] = useState<boolean>(false);
 
   useEffect(() => {
-    document.title = "Зміна мови";
+    document.title = t("main.settings.language.title");
   }, []);
 
   return (
@@ -56,15 +56,16 @@ export const Language = () => {
           />
         </svg>
 
-        <div>Мова</div>
+        <div>{t("main.settings.language.back")}</div>
       </div>
 
       <div className={styles.language_first}>
-        <div className={styles.header}>Мова Flip</div>
+        <div className={styles.header}>
+          {t("main.settings.language.header")}
+        </div>
         <div className={styles.container}>
           <div className={styles.description}>
-            Мова для кнопок, заголовків та інших текстових елементів Flip для
-            цього облікового запису
+            {t("main.settings.language.desc")}
           </div>
           <div className={styles.select}>
             <div
@@ -107,10 +108,12 @@ export const Language = () => {
       </div>
 
       <div className={styles.language_second}>
-        <div className={styles.header}>Дописи друзів і сторінок</div>
+        <div className={styles.header}>
+          {t("main.settings.language.header2")}
+        </div>
         <div className={styles.container}>
           <div className={styles.description}>
-            Мова, якою потрібно перекладати дописи
+            {t("main.settings.language.desc2")}
           </div>
           <div className={styles.select}>
             <div
@@ -152,7 +155,7 @@ export const Language = () => {
         </div>
         <div className={styles.container}>
           <div className={styles.description}>
-            Мови, для яких ви не бажаєте отримувати пропозиції щодо перекладу
+            {t("main.settings.language.desc3")}
           </div>
           <div className={styles.select}>
             <div
@@ -194,7 +197,7 @@ export const Language = () => {
         </div>
         <div className={styles.container}>
           <div className={styles.description}>
-            Мови, які не слід автоматично перекладати
+            {t("main.settings.language.desc4")}
           </div>
           <div className={styles.select}>
             <div

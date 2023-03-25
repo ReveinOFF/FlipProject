@@ -8,7 +8,7 @@ export const Help = () => {
   const [t] = useTranslation("translation");
 
   useEffect(() => {
-    document.title = "Допомога";
+    document.title = t("main.settings.help.title");
   }, []);
 
   return (
@@ -27,14 +27,14 @@ export const Help = () => {
           />
         </svg>
 
-        <div>Допомога</div>
+        <div>{t("main.settings.help.title")}</div>
       </div>
 
       <div className={styles.information}>
-        <div className={styles.header}>Допомога</div>
+        <div className={styles.header}>{t("main.settings.help.title")}</div>
         <div className={styles.container}>
           <div className={styles.description}>
-            Допомога з конфіденційністю та безпекою
+            {t("main.settings.help.description")}
           </div>
           <div className={styles.btn}>
             <svg
@@ -52,7 +52,9 @@ export const Help = () => {
           </div>
         </div>
         <div className={styles.container}>
-          <div className={styles.description}>Запити на підтримку</div>
+          <div className={styles.description}>
+            {t("main.settings.help.description2")}
+          </div>
           <div className={styles.btn}>
             <svg
               width="24"
@@ -69,7 +71,9 @@ export const Help = () => {
           </div>
         </div>
         <div className={styles.container}>
-          <div className={styles.description}>Повідомити про проблему</div>
+          <div className={styles.description}>
+            {t("main.settings.help.description3")}
+          </div>
           <div className={styles.btn}>
             <svg
               width="24"
@@ -86,7 +90,9 @@ export const Help = () => {
           </div>
         </div>
         <div className={styles.container}>
-          <div className={styles.description}>Довідковий центр</div>
+          <div className={styles.description}>
+            {t("main.settings.help.description4")}
+          </div>
           <div className={styles.btn}>
             <svg
               width="24"

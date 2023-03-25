@@ -92,6 +92,8 @@ namespace FlipBack.Controllers
         [HttpGet("search-users/{name}")]
         public async Task<IActionResult> SearchUsers(string name)
         {
+            string userId = User.FindFirst("UserId")?.Value;
+
             var user = await _userManager.Users
                 .Where(x => x.Name.ToLower().Contains(name.ToLower()) || x.UserName.ToLower().Contains(name.ToLower()))
                 .ToListAsync();
@@ -99,7 +101,7 @@ namespace FlipBack.Controllers
             if (user == null) 
                 return Ok();
 
-            var getUser = _mapper.Map<List<GetUsersDTO>>(user);
+            var getUser = _mapper.Map<List<GetUsersDTO>>(user.Where(x => x.Id != userId).ToList());
 
             return Ok(getUser);
         }
@@ -225,24 +227,6 @@ namespace FlipBack.Controllers
                 return BadRequest("Saved post not found!");
 
             return Ok(post);
-        }
-
-        [HttpPost("add-bookmarks-post")]
-        public async Task<IActionResult> AddBookmarksPost(string postId, string reelsId)
-        {
-            string userId = User.FindFirst("UserId")?.Value;
-
-            var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
-
-            if (savedPost != null)
-                return BadRequest("A user has already saved this post!");
-
-            UserPost userPost = new UserPost { PostId = postId, UserId = userId };
-
-            await _context.UserPost.AddAsync(userPost);
-            await _context.SaveChangesAsync();
-
-            return Ok();
         }
 
         [HttpDelete("remove-bookmarks-post/{postId}")]

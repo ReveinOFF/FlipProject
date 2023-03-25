@@ -30,7 +30,7 @@ export const ForgotPassword = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: "Вам на пошту був відправлений лист!",
+          message: t("toast.success.forgot_pass"),
           type: "success",
         },
       });
@@ -39,7 +39,7 @@ export const ForgotPassword = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: "Виникла помилка пошуку пошти!",
+          message: t("toast.error.forgot_pass"),
           type: "error",
         },
       });

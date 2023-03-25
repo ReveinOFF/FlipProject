@@ -335,23 +335,23 @@ export const UProfile = (props) => {
               <img
                 onClick={() => setShowPost(true)}
                 key={item.id}
-                src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/Default/${item.file[0]}`}
+                src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/${item.id}/${item.file[0]}`}
                 alt=""
               />
             ))}
           </div>
         )}
 
-        {profile.createdPost.length > 0 && selector === 2 && (
+        {profile.createdReels.length > 0 && selector === 2 && (
           <div className={styles.profile_data_imgs}>
-            {profile.createdPost.map((item: CreatedPost) => (
+            {profile.createdReels.map((item: CreatedPost) => (
               <div
                 className={styles.flipers}
                 key={item.id}
                 onClick={() => setShowFliper(true)}
               >
                 <img
-                  src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/Default/${item.file[0]}`}
+                  src={`${process.env.REACT_APP_BASE_RESOURCES}ReelsFiles/${item.id}/${item.file[0]}`}
                   alt=""
                 />
 
@@ -393,6 +393,60 @@ export const UProfile = (props) => {
             ))}
           </div>
         )}
+
+        {/* {profile.createdReels.length > 0 && selector === 3 && (
+          <div className={styles.profile_data_imgs}>
+            {profile.createdReels.map((item: CreatedPost) => (
+              <div
+                className={styles.flipers}
+                key={item.id}
+                onClick={() => setShowFliper(true)}
+              >
+                <img
+                  src={`${process.env.REACT_APP_BASE_RESOURCES}${
+                    "ReelsFiles" || "PostFiles"
+                  }/${item.id}/${item.file[0]}`}
+                  alt=""
+                />
+
+                <svg
+                  width="96"
+                  height="96"
+                  viewBox="0 0 96 96"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="13.4395"
+                    y="14.3999"
+                    width="69.12"
+                    height="69.12"
+                    rx="34.56"
+                    fill="#F8F8F8"
+                    fillOpacity="0.9"
+                  />
+                  <path
+                    d="M42.2312 67.9639C40.4712 67.9639 38.7912 67.5239 37.3112 66.6839C33.8712 64.6839 31.9512 60.7639 31.9512 55.6439V42.2439C31.9512 37.1239 33.8312 33.2039 37.2712 31.2039C40.7112 29.2039 45.0712 29.5239 49.5112 32.0839L61.1112 38.7639C65.5512 41.3239 67.9912 44.9239 67.9912 48.9239C67.9912 52.8839 65.5512 56.5239 61.1112 59.0839L49.5112 65.7639C47.0312 67.2439 44.5112 67.9639 42.2312 67.9639ZM42.2312 35.8839C41.5112 35.8839 40.8312 36.0439 40.3112 36.3639C38.7912 37.2439 37.9512 39.3639 37.9512 42.2439V55.6439C37.9512 58.4839 38.7912 60.6439 40.3112 61.4839C41.7912 62.3639 44.0712 62.0039 46.5512 60.6039L58.1512 53.9239C60.6312 52.4839 62.0312 50.6839 62.0312 48.9639C62.0312 47.2439 60.5912 45.4439 58.1512 44.0039L46.5512 37.3239C44.9512 36.3639 43.4712 35.8839 42.2312 35.8839Z"
+                    fill="url(#paint0_linear_1200_6772)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_1200_6772"
+                      x1="24.9614"
+                      y1="64.1579"
+                      x2="68.6232"
+                      y2="63.2457"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="#48D824" />
+                      <stop offset="1" stopColor="#10D0EA" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+            ))}
+          </div>
+        )} */}
       </div>
     </>
   );

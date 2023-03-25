@@ -16,7 +16,7 @@ export const ChangeEmail = () => {
   const myUser = useTypedSelector((state) => state.auth.user);
 
   useEffect(() => {
-    document.title = "Зміна пошти";
+    document.title = t("main.settings.change_email.title");
   }, []);
 
   const [email, setEmail] = useState<string>();
@@ -38,7 +38,7 @@ export const ChangeEmail = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: "Вам на пошту надіслано повідомлення!",
+          message: t("toast.success.change_email2"),
           type: "success",
         },
       });
@@ -47,7 +47,7 @@ export const ChangeEmail = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: "Пошта вказано не вірно?",
+          message: t("toast.error.change_email2"),
           type: "error",
         },
       });

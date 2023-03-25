@@ -8,7 +8,7 @@ export const Advertising = () => {
   const [t] = useTranslation("translation");
 
   useEffect(() => {
-    document.title = "Реклама";
+    document.title = t("main.settings.advertising.title");
   }, []);
 
   return (
@@ -27,47 +27,46 @@ export const Advertising = () => {
           />
         </svg>
 
-        <div>Реклама</div>
+        <div>{t("main.settings.advertising.title")}</div>
       </div>
 
       <div className={styles.advertising_inf}>
-        <div className={styles.header}>Важлива інформація</div>
+        <div className={styles.header}>
+          {t("main.settings.advertising.header")}
+        </div>
         <div className={styles.container}>
           <div className={styles.top}>
-            Це налаштування не змінить кількість реклами, яку ви бачитимете в
-            Flip.
+            {t("main.settings.advertising.cont_top")}
           </div>
           <div className={styles.bottom}>
-            Якщо вимкнути це налаштування, ми все одно показуватимемо вам
-            рекламу в Instagram, але вона може бути менш актуальною для вас.
+            {t("main.settings.advertising.cont_bottom")}
           </div>
         </div>
         <div className={styles.container}>
           <div className={styles.top}>
-            Це налаштування дає змогу керувати використанням певних даних.
+            {t("main.settings.advertising.cont_top2")}
           </div>
           <div className={styles.bottom}>
-            Це налаштування контролює те, чи може Flip показувати вам
-            персоналізовану рекламу на основі даних від партнерів про ваші дії.
-            Якщо вимкнути його, реклама, яку ви бачите, може і надалі
-            ґрунтуватися на ваших діях на платформ
+            {t("main.settings.advertising.cont_bottom2")}
           </div>
         </div>
         <div className={styles.container}>
-          <div className={styles.top}>Де діє це налаштування</div>
+          <div className={styles.top}>
+            {t("main.settings.advertising.cont_top3")}
+          </div>
           <div className={styles.bottom}>
-            Це налаштування стосується реклами, яку ви бачите в цьому обліковому
-            записі Instagram. Якщо ви маєте інші облікові записи, ви можете
-            змінити це налаштування і в них.
+            {t("main.settings.advertising.cont_bottom3")}
           </div>
         </div>
       </div>
 
       <div className={styles.advertising}>
-        <div className={styles.header}>Дії з рекламою</div>
+        <div className={styles.header}>
+          {t("main.settings.advertising.header2")}
+        </div>
         <div className={styles.container}>
           <div className={styles.description}>
-            Переглянути рекламу в стрічці
+            {t("main.settings.advertising.description")}
           </div>
           <div className={styles.btn}>
             <svg

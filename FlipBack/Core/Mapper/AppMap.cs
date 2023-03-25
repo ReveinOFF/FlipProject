@@ -30,20 +30,26 @@ namespace Core.Mapper
             CreateMap<User, GetFollowsDTO>();
             CreateMap<UsersAuthentications, GetAuthorizeDTO>();
 
-            CreateMap<Post, GetCreatedPost>()
+            CreateMap<Post, GetCreatedPostDTO>()
                 .ForMember(x => x.File, y => y.MapFrom(x => x.Files.Select(s => s.FileName)));
+            CreateMap<Reels, GetCreatedReelsDTO>()
+                .ForMember(x => x.File, y => y.MapFrom(x => x.File.FileName));
             CreateMap<Post, GetPostDTO>()
                 .ForMember(x => x.CommentaryCount, y => y.MapFrom(x => x.Commentary.Count))
                 .ForMember(x => x.AnswerCount, y => y.MapFrom(x => x.Commentary.Select(s => s.PostAnswers).Count()))
-                .ForMember(x => x.ReactionCount, y => y.MapFrom(x => x.Reactions.Count))
                 .ForMember(x => x.File, y => y.MapFrom(x => x.Files.Select(s => s.FileName)))
-                .ForMember(x => x.Answer, y => y.MapFrom(x => x.Commentary.SelectMany(s => s.PostAnswers)));
+                .ForMember(x => x.Name, y => y.MapFrom(x => x.User.Name))
+                .ForMember(x => x.UserImage, y => y.MapFrom(x => x.User.UserImage))
+                .ForMember(x => x.Reactions, y => y.MapFrom(x => x.Reactions.SelectMany(s => s.UserId)))
+                .ForMember(x => x.Commentary, y => y.MapFrom(x => x.Commentary.OrderBy(o => o.DateCreate)))
+                .ForMember(x => x.IsFollowed, y => y.MapFrom(x => x.User.Followings.Any(a => a.FollowerId == x.UserId)));
             CreateMap<PostDTO, Post>()
                 .ForMember(x => x.Files, y => y.Ignore());
             CreateMap<PostCommentaryDTO, PostCommentary>();
             CreateMap<PostCommentary, PostGetCommentaryDTO>()
                 .ForMember(x => x.Name, y => y.MapFrom(x => x.User.Name))
                 .ForMember(x => x.Image, y => y.MapFrom(x => x.User.UserImage));
+            CreateMap<PostCommentary, PostCommentary>();
             CreateMap<PostAnswerDTO, PostAnswer>();
             CreateMap<PostAnswer, PostGetAnswerDTO>()
                 .ForMember(x => x.Name, y => y.MapFrom(x => x.User.Name))

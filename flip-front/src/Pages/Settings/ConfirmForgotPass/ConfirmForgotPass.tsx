@@ -25,7 +25,7 @@ export const ConfirmForgotPass = () => {
   const [confNewpassword, setConfNewPassword] = useState<string>();
 
   useEffect(() => {
-    document.title = "Зміна пароля";
+    document.title = t("main.settings.conf_forg_pass.title");
   }, []);
 
   const PostConfirm = async () => {
@@ -54,7 +54,7 @@ export const ConfirmForgotPass = () => {
         dispatch({
           type: ToastActionTypes.SHOW,
           payload: {
-            message: "Ви успішно змінили пароль!",
+            message: t("toast.success.change_pass"),
             type: "success",
           },
         });
@@ -64,7 +64,7 @@ export const ConfirmForgotPass = () => {
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {
-          message: "Виникла помилка при зміні пароля!",
+          message: t("toast.error.change_pass"),
           type: "error",
         },
       });
@@ -142,7 +142,9 @@ export const ConfirmForgotPass = () => {
 
       <div className={styles.form}>
         <div className={styles.inputs}>
-          <div className={styles.pass}>Новий пароль</div>
+          <div className={styles.pass}>
+            {t("main.settings.conf_forg_pass.new_pass")}
+          </div>
           <div className={styles.input}>
             <input
               type={visible ? "text" : "password"}
@@ -177,7 +179,9 @@ export const ConfirmForgotPass = () => {
           </div>
         </div>
         <div className={styles.inputs}>
-          <div className={styles.pass}>Підтвердження паролю</div>
+          <div className={styles.pass}>
+            {t("main.settings.conf_forg_pass.conf_new_pass")}
+          </div>
           <div className={styles.input}>
             <input
               type={visible2 ? "text" : "password"}
@@ -213,7 +217,9 @@ export const ConfirmForgotPass = () => {
         </div>
       </div>
       <div className={styles.button}>
-        <button onClick={async () => await mutateAsync()}>Підтвердити</button>
+        <button onClick={async () => await mutateAsync()}>
+          {t("main.settings.conf_forg_pass.btn")}
+        </button>
       </div>
     </div>
   );

@@ -146,6 +146,8 @@
             "foll_ed": "starts to follow you.",
             "is_foll_ed": "Following",
             "like_post": "liked your photo.",
+            "like_history": "liked your story.",
+            "like_fliper": "liked your fliper.",
             "follow": "Follow"
         },
         "s_profile": {
@@ -176,6 +178,7 @@
         "main": {
             "title_page": "Home",
             "following": "Followed",
+            "follow": "Follow",
             "show_more": "Show more...",
             "like": "preferences",
             "answ": "reply",
@@ -184,6 +187,7 @@
         "settings": {
             "title_page": "Settings",
             "change_email": {
+                "title": "Change email",
                 "back": "Change email",
                 "email": "New email",
                 "cancel": "Cancel changes",
@@ -209,6 +213,7 @@
                 "logout": "Exit the account"
             },
             "change_pass": {
+                "title": "Change password",
                 "back": "Change password",
                 "old_pass": "Old password",
                 "new_pass": "New password",
@@ -217,6 +222,10 @@
                 "btn": "Change password"
             },
             "change_profile": {
+                "title": "Edit your profile",
+                "desc1": "Help people find your account by using a name they know you by: full name, nickname.",
+                "desc2": "In most cases, you can change your username back within another 14 days.",
+                "span": "Read more",
                 "back": "Edit profile",
                 "name": "Name",
                 "login": "User name",
@@ -225,6 +234,54 @@
                 "phone": "Phone number",
                 "cancel": "Cancel changes",
                 "save": "Save"
+            },
+            "advertising": {
+                "title": "Advertising",
+                "header": "Important information",
+                "cont_top": "This setting will not change the number of ads you see in Flip.",
+                "cont_bottom": "If you turn this setting off, we will still show you Instagram ads, but they may be less relevant to you.",
+                "cont_top2": "This setting lets you control the use of certain data.",
+                "cont_bottom2": "This setting controls whether Flip can show you personalized ads based on data from partners about your activities. If you turn it off, the ads you see may continue to be based on your activities on",
+                "cont_top3": "Where this setting applies",
+                "cont_bottom3": "This setting affects the ads you see on this Instagram account. If you have other accounts, you can change this setting on them as well.",
+                "header2": "Actions with advertising",
+                "description": "View ads in the feed"
+            },
+            "conf_forg_pass": {
+                "title": "Change your password",
+                "new_pass": "New password",
+                "conf_new_pass": "Password confirmation",
+                "btn": "Confirm"
+            },
+            "conf_change_email": "Mail confirmation",
+            "entrances": {
+                "title": "Log in to your account",
+                "header": "Your active login sessions",
+                "is_online": "Now online"
+            },
+            "help": {
+                "title": "Help",
+                "description": "Help with privacy and security",
+                "description2": "Support requests",
+                "description3": "Report a problem",
+                "description4": "Help center"
+            },
+            "information": {
+                "title": "Site information",
+                "header": "Information.",
+                "desc": "Privacy policy",
+                "desc2": "Terms of use",
+                "desc3": "Flip update"
+            },
+            "language": {
+                "title": "Change of language",
+                "back": "Language",
+                "header": "Flip language",
+                "desc": "Language for buttons, titles, and other Flip text elements for this account",
+                "header2": "Posts by friends and pages",
+                "desc2": "Language into which posts should be translated",
+                "desc3": "Languages for which you do not want to receive translation offers",
+                "desc4": "Languages that should not be automatically translated"
             }
         },
         "message_selection": {
@@ -273,6 +330,17 @@
         }
     },
 
+    "formate_date": {
+        "now": "Right now",
+        "sec": "sec. ago",
+        "min": "min ago",
+        "hor": "h. ago",
+        "day": "day ago",
+        "week": "week ago",
+        "month": "m. ago",
+        "year": "year ago"
+    },
+
     "toast": {
         "error" : {
             "logout": "An error occurred while logging out of your account!",
@@ -281,7 +349,13 @@
             "confirm-email": "Error! The sent token is not working!",
             "follow": "An error occurred while subscribing to a user!",
             "unfollow": "An error occurred while unsubscribing from a user!",
-            "delete_follow": "An error occurred while deleting a subscriber!"
+            "delete_follow": "An error occurred while deleting a subscriber!",
+            "big_size_file": "The file must be no larger than 20MB!",
+            "change_pass": "An error occurred while changing the password!",
+            "change_email": "An error occurred when changing mail!",
+            "change_email2": "Your mailing address is incorrect!",
+            "forgot_pass": "There was an error searching for mail!",
+            "profile2": "Incorrect data entered!"
         },
         "warning": {
             "reg": "Perhaps in some field the data was entered incorrectly!"
@@ -291,7 +365,13 @@
             "follow": "You have successfully subscribed to a user!",
             "unfollow": "You have successfully unsubscribed from a user!",
             "copy": "Successfully copied!",
-            "delete_follow": "You have successfully removed a user from subscriptions!"
+            "delete_follow": "You have successfully removed a user from subscriptions!",
+            "add-bookmark-post": "You have successfully added the post to your bookmarks!",
+            "change_pass": "You have successfully changed your password!",
+            "change_email": "You have successfully changed your mail!",
+            "change_email2": "A notification has been sent to your email!",
+            "forgot_pass": "An email has been sent to your inbox!",
+            "profile2": "You have successfully changed your profile data!"
         }
     }
 }

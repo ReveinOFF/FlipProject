@@ -23,7 +23,7 @@ export const Entrances = () => {
   const { isLoading, data } = useQuery("getEntrances", getEntrances);
 
   useEffect(() => {
-    document.title = "Входи в обліковий запис";
+    document.title = t("main.settings.entrances.title");
   }, []);
 
   useEffect(() => {
@@ -53,11 +53,13 @@ export const Entrances = () => {
           />
         </svg>
 
-        <div>Входи в обліковий запис</div>
+        <div>{t("main.settings.entrances.title")}</div>
       </div>
 
       <div className={styles.entrances}>
-        <div className={styles.header}>Ваші активні сеанси входу</div>
+        <div className={styles.header}>
+          {t("main.settings.entrances.header")}
+        </div>
 
         {entrances?.map((item, index) => (
           <div className={styles.container} key={index}>
@@ -96,7 +98,9 @@ export const Entrances = () => {
               }}
             >
               <div className={styles.info}>
-                <div className={styles.left_active}>Зараз у мережі</div>
+                <div className={styles.left_active}>
+                  {t("main.settings.entrances.is_online")}
+                </div>
                 <div className={styles.right}>
                   / {item.device} - {item.browser}
                 </div>

@@ -13,20 +13,20 @@ namespace FlipBack.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ReelsController : ControllerBase
+    public class FliperController : ControllerBase
     {
         private readonly DataBase _context;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
-        public ReelsController(DataBase context, IMapper mapper, IWebHostEnvironment env)
+        public FliperController(DataBase context, IMapper mapper, IWebHostEnvironment env)
         {
             _context = context;
             _mapper = mapper;
             _env = env;
         }
 
-        [HttpGet("get-reels")]
-        public async Task<IActionResult> GetReels()
+        [HttpGet("get-fliper")]
+        public async Task<IActionResult> GetFliper()
         {
             var reels = await _context.Reels
                 .Include(i => i.File)
@@ -48,13 +48,13 @@ namespace FlipBack.Controllers
             if (reels == null)
                 return BadRequest("The reels was not found!");
 
-            var mappost = _mapper.Map<List<GetReelsDTO>>(reels);
+            var mappost = _mapper.Map<GetReelsDTO>(reels);
 
             return Ok(mappost);
         }
 
-        [HttpGet("get-reels/{id}")]
-        public async Task<IActionResult> GetReelsById(string id)
+        [HttpGet("get-fliper/{id}")]
+        public async Task<IActionResult> GetFliperById(string id)
         {
             var reels = await _context.Reels
                 .Where(i => i.Id == id)
@@ -79,8 +79,8 @@ namespace FlipBack.Controllers
             return Ok(mappost);
         }
 
-        [HttpPost("add-reels")]
-        public async Task<IActionResult> AddReels([FromForm] ReelsDTO reelsDTO)
+        [HttpPost("add-fliper")]
+        public async Task<IActionResult> AddFliper([FromForm] ReelsDTO reelsDTO)
         {
             string UserId = User.FindFirst("UserId")?.Value;
 
@@ -100,8 +100,8 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete-reels/{id}")]
-        public async Task<IActionResult> DeleteReels(string id)
+        [HttpDelete("delete-fliper/{id}")]
+        public async Task<IActionResult> DeleteFliper(string id)
         {
             var reels = await _context.Reels.Where(x => x.Id == id).FirstOrDefaultAsync();
             var reelsSave = await _context.UserReels.Where(x => x.ReelsId == id).ToListAsync();
@@ -127,8 +127,8 @@ namespace FlipBack.Controllers
             return Ok();
         }
 
-        [HttpPut("change-reels")]
-        public async Task<IActionResult> ChangeReels(ReelsChangeDTO changeDTO)
+        [HttpPut("change-fliper")]
+        public async Task<IActionResult> ChangeFliper(ReelsChangeDTO changeDTO)
         {
             var reels = await _context.Reels.Where(x => x.Id == changeDTO.Id).FirstOrDefaultAsync();
 

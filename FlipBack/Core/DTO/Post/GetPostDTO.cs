@@ -9,10 +9,15 @@
 
         public int CommentaryCount { get; set; }
         public int AnswerCount { get; set; }
-        public int ReactionCount { get; set; }
+
+        public string UserImage { get; set; }
+        public string Name { get; set; }
+        public string UserId { get; set; }
+
+        public bool IsFollowed { get; set; }
 
         public ICollection<string> File { get; set; }
         public ICollection<PostGetCommentaryDTO> Commentary { get; set; }
-        public ICollection<PostGetAnswerDTO> Answer { get; set; }
+        public ICollection<string> Reactions { get; set; }
     }
 }

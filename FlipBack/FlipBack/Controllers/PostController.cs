@@ -27,10 +27,12 @@ namespace FlipBack.Controllers
         }
 
         [HttpGet("get-posts")]
-        public async Task<IActionResult> GetPosts()
+        public async Task<IActionResult> GetPosts([FromQuery] int page)
         {
             var posts = await _context.Post
                 .Include(i => i.Files)
+                .Include(i => i.User)
+                .ThenInclude(i => i.Followings)
 
                 .Include(i => i.Commentary)
                 .ThenInclude(t => t.User)
@@ -44,10 +46,13 @@ namespace FlipBack.Controllers
 
                 .OrderByDescending(o => o.DatePosted)
 
+                .Skip((page - 1) * 10)
+                .Take(10)
+
                 .ToListAsync();
 
             if (posts == null)
-                return BadRequest("The post was not found!");
+                return NotFound("The post was not found!");
 
             var mappost = _mapper.Map<List<GetPostDTO>>(posts);
 
@@ -60,6 +65,7 @@ namespace FlipBack.Controllers
             var post = await _context.Post
                 .Where(i => i.Id == id)
                 .Include(i => i.Files)
+                .Include(i => i.User)
 
                 .Include(i => i.Commentary)
                 .ThenInclude(t => t.User)
@@ -196,7 +202,7 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("add-commentary")]
-        public async Task<IActionResult> AddCommentary(PostCommentaryDTO commentaryDTO)
+        public async Task<IActionResult> AddCommentary([FromBody] PostCommentaryDTO commentaryDTO)
         {
             var map = _mapper.Map<PostCommentary>(commentaryDTO);
             map.DateCreate = DateTime.UtcNow;
@@ -242,6 +248,40 @@ namespace FlipBack.Controllers
                 return BadRequest("This answer was not found!");
 
             _context.PostAnswer.Remove(answer);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("add-views")]
+        public async Task<IActionResult> AddViews([FromBody] string id)
+        {
+            var post = await _context.Post.FirstOrDefaultAsync(f => f.Id == id);
+
+            if (post == null)
+                return BadRequest("This post was not found!");
+
+            post.Views += 1;
+
+            _context.Post.Update(post);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("add-bookmarks")]
+        public async Task<IActionResult> AddBookmarks([FromBody] string postId)
+        {
+            string userId = User.FindFirst("UserId")?.Value;
+
+            var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
+
+            if (savedPost != null)
+                return BadRequest("A user has already saved this post!");
+
+            UserPost userPost = new UserPost { PostId = postId, UserId = userId };
+
+            await _context.UserPost.AddAsync(userPost);
             await _context.SaveChangesAsync();
 
             return Ok();
