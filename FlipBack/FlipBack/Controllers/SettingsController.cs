@@ -39,8 +39,8 @@ namespace FlipBack.Controllers
             _jwtService = jwtService;
         }
 
-        [HttpPost("add-image-user/{userId}")]
-        public async Task<IActionResult> AddImageUser(string userId, IFormFile file)
+        [HttpPost("add-image-user")]
+        public async Task<IActionResult> AddImageUser([FromForm] string userId, [FromForm] IFormFile file)
         {
             var user = await _userManager.FindByIdAsync(userId);
 

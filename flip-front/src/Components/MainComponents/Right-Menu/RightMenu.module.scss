@@ -11,19 +11,16 @@
   .show_search {
     transform: scaleY(1);
     opacity: 1;
-
-    transition: all 0.5s ease-out;
   }
 
   .not_show_search {
     transform: scaleY(0);
     opacity: 0;
-
-    transition: all 0.5s ease-out;
   }
 
   .user_search {
     position: absolute;
+    margin-top: 20px;
 
     background: #f8f8f8;
     border-radius: 9px;
@@ -32,8 +29,8 @@
 
     transform-origin: top;
 
-    width: 394px;
     height: 725px;
+    width: 100%;
 
     transition: all 0.5s ease-out;
 
@@ -85,6 +82,8 @@
   }
 
   .top_menu {
+    box-sizing: border-box;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -156,7 +155,6 @@
     background: #f8f8f8;
 
     height: 668px;
-    width: 394px;
 
     border-radius: 15px;
 

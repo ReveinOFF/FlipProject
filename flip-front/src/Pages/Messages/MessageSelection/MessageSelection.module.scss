@@ -8,14 +8,17 @@
 
     svg {
       position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 6px;
 
-      margin-left: 6px;
-      margin-top: 9px;
+      margin: auto;
     }
 
     input {
-      width: 100vh;
       height: 40px;
+      width: 100vh;
+      box-sizing: border-box;
 
       border: 0;
 

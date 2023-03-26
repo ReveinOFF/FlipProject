@@ -1,6 +1,4 @@
 .header {
-  width: 100vh;
-
   display: flex;
   align-items: center;
 
@@ -57,7 +55,6 @@
 }
 
 .posts {
-  width: 100vh;
   .post {
     display: flex;
 
@@ -141,6 +138,7 @@
         .left,
         .right {
           display: flex;
+          align-items: center;
         }
 
         .left {
@@ -519,6 +517,8 @@
 
           border: 0;
 
+          box-sizing: border-box;
+
           background: #ebebeb;
           border-top-left-radius: 24.7648px;
           border-bottom-left-radius: 24.7648px;
@@ -568,7 +568,7 @@
 
         svg {
           cursor: pointer;
-          width: 50px;
+          width: 30px;
 
           background: #ebebeb;
 

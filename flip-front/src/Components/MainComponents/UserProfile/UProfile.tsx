@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { ToastActionTypes } from "../../Toast/store/type";
 import { FliperModal } from "../FliperModal/FliperModal";
 import { PostModal } from "../PostModal/PostModal";
+import { PostCreater } from "../PostCreater/PostCreater";
 
 export const UProfile = (props) => {
   const { profile } = props;
@@ -13,6 +14,7 @@ export const UProfile = (props) => {
   const [selector, setSelector] = useState(1);
   const [showFliper, setShowFliper] = useState<boolean>(false);
   const [showPost, setShowPost] = useState<boolean>(false);
+  const [showCreater, setShowCreater] = useState(false);
 
   const dispatch = useDispatch();
   const [t] = useTranslation("translation");
@@ -26,6 +28,8 @@ export const UProfile = (props) => {
       <FliperModal show={showFliper} onClick={() => setShowFliper(false)} />
 
       <PostModal show={showPost} onClick={() => setShowPost(false)} />
+
+      <PostCreater show={showCreater} onClick={() => setShowCreater(false)} />
 
       <div className={styles.my_profile_inf}>
         <div className={styles.information}>

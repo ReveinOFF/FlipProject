@@ -9,8 +9,6 @@
 
   margin-top: 40px;
 
-  width: 100vh;
-
   .information {
     display: flex;
     flex-direction: column;
@@ -261,6 +259,8 @@
 }
 
 .profile_data {
+  width: 100vh;
+
   .not_find {
     display: flex;
     flex-direction: column;
