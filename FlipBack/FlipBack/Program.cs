@@ -19,6 +19,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Twilio.Clients;
 using FlipBack.Services;
+using FlipBack.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using FlipBack.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,10 +31,12 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
 });
-//builder.Services.AddTransient<DataBase>()
-//    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
+builder.Services.AddSignalR();
+
 builder.Services.AddTransient<DataBase>()
-    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("localDb")));
+    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
+//builder.Services.AddTransient<DataBase>()
+//    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("localDb")));
 builder.Services.AddIdentity<User, Role>(options =>
 {
     // Password settings.
@@ -95,6 +100,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOpti
 builder.Services.Configure<MailSettingsDTO>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<TwilioVerifySettings>(builder.Configuration.GetSection("Twilio"));
 
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IValidatorRepository, ValidatorRepository>();
 builder.Services.AddScoped(typeof(ICaptchaValidator), typeof(CaptchaValidator));
@@ -109,6 +115,7 @@ var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configu
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(cfg =>
 {
@@ -123,14 +130,30 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ClockSkew = TimeSpan.Zero
     };
+    cfg.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/hubs/notification")))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 var app = builder.Build();
 
 app.UseCors(x => x
-    .AllowAnyOrigin()
+    .WithOrigins("http://localhost:3000", "http://solido.tk", "https://solido.tk")
     .AllowAnyMethod()
-    .AllowAnyHeader());
+    .AllowAnyHeader()
+    .AllowCredentials());
 
 if (app.Environment.IsDevelopment())
 {
@@ -144,6 +167,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/hubs/chat");
+app.MapHub<NotificationHub>("/hubs/notification");
 
 app.SeedDB();
 

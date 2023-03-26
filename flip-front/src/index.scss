@@ -1,3 +1,5 @@
+@import "public/Assets/Fonts/InterFont.scss";
+
 body {
   margin: 0;
 
@@ -22,9 +24,18 @@ body {
   }
 }
 
-* {
-  box-sizing: border-box;
+button,
+input {
+  outline: none;
+  user-select: none;
+}
 
+a {
+  user-select: none;
+  text-decoration: none;
+}
+
+* {
   font-family: Inter;
 }
 

@@ -1,4 +1,5 @@
-﻿using Core.Entity.MessageEntitys;
+﻿using Core.Entity.History;
+using Core.Entity.MessageEntitys;
 using Core.Entity.PostEntitys;
 using Core.Entity.ReelsEntity;
 using Core.Helpers;
@@ -20,8 +21,9 @@ namespace Core.Entity.UserEntitys
         public string UserImage { get; set; }
         public string UserImagePath { get; set; }
         [Required]
-        [MinLength(5), MaxLength(15)]
+        [MaxLength(15)]
         public string Name { get; set; }
+        [MaxLength(50)]
         public string Description { get; set; }
         [Required]
         [JsonConverter(typeof(DateOnlyConverter))]
@@ -34,7 +36,7 @@ namespace Core.Entity.UserEntitys
 
 
         /* Messages */
-        public virtual ICollection<MessageBoxUser> MessageBoxs { get; set; }
+        public virtual ICollection<MessageBox> MessageBoxs { get; set; }
         public virtual ICollection<Message> Message { get; set; }
 
         /* Post */
@@ -56,5 +58,15 @@ namespace Core.Entity.UserEntitys
         public virtual ICollection<UserRole> UserRoles { get; set; }
         public virtual ICollection<Follow> Followers { get; set; }
         public virtual ICollection<Follow> Followings { get; set; }
+        public virtual ICollection<User> Blocked { get; set; }
+        public virtual ICollection<UsersAuthentications> Authentications { get; set; }
+
+        /* History */
+        public virtual ICollection<History.History> Histories { get; set; }
+        public virtual ICollection<HistoryReaction> HistoryReactions { get; set; }
+
+        /* Notification */
+        public virtual ICollection<Notification.Notification> SendNotifications { get; set; }
+        public virtual ICollection<Notification.Notification> ReceivedNotifications { get; set; }
     }
 }

@@ -31,6 +31,7 @@ namespace Core.Service
             List<Claim> claims = new List<Claim>()
             {
                 new Claim("UserId", user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim("UserName", user.UserName)
             };
 
@@ -51,16 +52,16 @@ namespace Core.Service
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        public async Task<TokenDTO> RefreshTokens(string refreshToken)
+        public async Task<TokenDataDTO> RefreshTokens(string refreshToken)
         {
-            var userRefreshToken = _userManager.Users.SingleOrDefaultAsync(x => x.RefreshTokens.Any(t => t.Token == refreshToken)).Result;
+            var userRefreshToken = await _userManager.Users.Include((x) => x.RefreshTokens).Where(x => x.RefreshTokens.Any(t => t.Token == refreshToken)).FirstOrDefaultAsync();
 
             if (userRefreshToken == null)
             {
                 return null;
             }
 
-            var refToken = userRefreshToken.RefreshTokens.Single(x => x.Token == refreshToken);
+            var refToken = userRefreshToken.RefreshTokens.Where(x => x.Token == refreshToken).FirstOrDefault();
 
             if (DateTime.UtcNow > refToken.Expires)
                 return null;
@@ -68,35 +69,11 @@ namespace Core.Service
             var newJwtToken = CreateToken(userRefreshToken);
             var newRefreshToken = GenerateRefreshToken();
 
-            userRefreshToken.RefreshTokens.Add(newRefreshToken);
-            await _userManager.UpdateAsync(userRefreshToken);
+            newRefreshToken.UserId = userRefreshToken.Id;
 
-            return new TokenDTO
+            return new TokenDataDTO
             {
-                Token = newJwtToken,
-                RefreshToken = newRefreshToken.Token
-            };
-        }
-
-        public async Task<TokenDTO> RenewTokens(string refreshToken)
-        {
-            var userRefreshToken = _userManager.Users.SingleOrDefaultAsync(x => x.RefreshTokens.Any(t => t.Token == refreshToken)).Result;
-
-            if (userRefreshToken == null)
-            {
-                return null;
-            }
-
-            var refToken = userRefreshToken.RefreshTokens.Single(x => x.Token == refreshToken);
-
-            var newJwtToken = CreateToken(userRefreshToken);
-            var newRefreshToken = GenerateRefreshToken();
-
-            userRefreshToken.RefreshTokens.Add(newRefreshToken);
-            await _userManager.UpdateAsync(userRefreshToken);
-
-            return new TokenDTO
-            {
+                TokensData = newRefreshToken,
                 Token = newJwtToken,
                 RefreshToken = newRefreshToken.Token
             };
@@ -112,7 +89,7 @@ namespace Core.Service
                 return new RefreshToken 
                 { 
                     Token = Convert.ToBase64String(refToken),
-                    Expires = DateTime.UtcNow.AddDays(7)
+                    Expires = DateTime.UtcNow.AddDays(30)
                 };
             }
         }

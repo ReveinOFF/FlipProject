@@ -39,6 +39,78 @@ namespace FlipBack.Controllers
             _captchaValidator = captchaValidator;
         }
 
+        [HttpGet("check-email/{email}")]
+        public async Task<IActionResult> CheckEmail(string email) 
+        {
+            var findUser = await _userManager.FindByEmailAsync(email);
+
+            if (findUser != null && findUser.EmailConfirmed)
+                return BadRequest("This email is already exists");
+
+            return Ok();
+        }
+
+        [HttpGet("check-phone/{phone}")]
+        public async Task<IActionResult> CheckPhone(string phone)
+        {
+            var findUser = await _userManager.Users.Where(x => phone == x.PhoneNumber).FirstOrDefaultAsync();
+
+            if (findUser != null && findUser.EmailConfirmed)
+                return BadRequest("This phone is already exists");
+
+            return Ok();
+        }
+
+        [HttpGet("check-login/{login}")]
+        public async Task<IActionResult> CheckLogin(string login)
+        {
+            var findUser = await _userManager.FindByNameAsync(login);
+
+            if (findUser != null && findUser.EmailConfirmed)
+                return BadRequest("This login is already exists");
+
+            return Ok();
+        }
+
+        [HttpGet("check-name/{name}")]
+        public async Task<IActionResult> CheckName(string name)
+        {
+            var findUser = await _userManager.Users.Where(x => x.Name == name).FirstOrDefaultAsync();
+
+            if (findUser != null && findUser.EmailConfirmed)
+                return BadRequest("This login is already exists");
+
+            return Ok();
+        }
+
+        [HttpPost("add-authentication")]
+        public async Task<IActionResult> AddAuthentication([FromBody] AddAuthDTO auth)
+        {
+            var user = await _userManager.Users.Include(i => i.Authentications).FirstOrDefaultAsync(x => x.Id == auth.UserId);
+
+            if (user == null) 
+                return NotFound("User not found!");
+
+            if (user.Authentications.Any(a => a.IpAddress == auth.IpAddress))
+                return Ok();
+
+            await _context.Authentications.AddAsync(new UsersAuthentications
+            {
+                IpAddress = auth.IpAddress,
+                Browser = auth.Browser,
+                Device = auth.Device,
+                City = auth.City,
+                Country = auth.Country,
+                LastOnline = DateTime.UtcNow,
+                UserId = auth.UserId,
+                Latitude = auth.Latitude,
+                Longitude = auth.Longitude
+            });
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+ 
         [HttpPost("registration")]
         public async Task<IActionResult> Register([FromForm] RegisterDTO register)
         {
@@ -57,7 +129,7 @@ namespace FlipBack.Controllers
                         return BadRequest("Email already exists!");
                     else
                     {
-                        StaticFiles.DeleteImageAsync(user.UserImagePath);
+                        StaticFiles.DeleteFileAsync(user.UserImagePath);
                         await _userManager.DeleteAsync(findEmail);
                     }
                 }
@@ -71,7 +143,7 @@ namespace FlipBack.Controllers
                 user.IsPrivateUser = false;
 
                 string fileDestDir = Path.Combine("Resources", "UserImages", user.Id);
-                var createImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, register.UserImage);
+                var createImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, register.UserImage, 209, 209);
                 user.UserImage = createImage.FileName;
                 user.UserImagePath = createImage.FilePath;
 
@@ -86,19 +158,18 @@ namespace FlipBack.Controllers
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(token);
                 var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
-                var confirmationLink = $"http://localhost:3000/email-confirm?token={codeEncoded}&email={user.Email}";
+
+                string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "ConfirmEmail.html"));
+                Body = Body.Replace("#url#", $"https://solido.tk/email-confirm?token={codeEncoded}&email={user.Email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
-                    Body = $"Hello {user.Email}. Confirmation email link {confirmationLink}",
+                    Body = Body,
                     To = user.Email,
                     Subject = "Confirmation email"
                 };
 
-                var resultSend = await _mailService.SendEmailAsync(mailData);
-
-                if (!resultSend)
-                    return BadRequest("Error in sending the message!");
+                await _mailService.SendEmailAsync(mailData);
             }
             catch (Exception ex)
             {
@@ -122,9 +193,11 @@ namespace FlipBack.Controllers
             if (!result.Succeeded)
                 return BadRequest("There is a problem with password confirmation!");
 
+            string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "ConfirmEmailTHX.html"));
+
             MailDataDTO mailData = new MailDataDTO()
             {
-                Body = $"Hello {user.Email}. Email confirmed!",
+                Body = Body,
                 To = user.Email,
                 Subject = "Confirmation email"
             };
@@ -188,7 +261,7 @@ namespace FlipBack.Controllers
         }
 
         [HttpPost("recover-password")]
-        public async Task<IActionResult> RecoverPassword(string email)
+        public async Task<IActionResult> RecoverPassword([FromBody] string email)
         {
             try
             {
@@ -197,20 +270,21 @@ namespace FlipBack.Controllers
                 if (user == null)
                     return BadRequest("Email not found!");
 
-                var token = _userManager.GeneratePasswordResetTokenAsync(user);
-                var confirmationLink = $"http://uniwox.com/recoverpassword?token={token}";
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                byte[] tokenGeneratedBytes = Encoding.UTF8.GetBytes(token);
+                var codeEncoded = WebEncoders.Base64UrlEncode(tokenGeneratedBytes);
+
+                string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPassword.html"));
+                Body = Body.Replace("#url#", $"https://solido.tk/change-password?token={codeEncoded}&email={email}");
 
                 MailDataDTO mailData = new MailDataDTO()
                 {
-                    Body = $"Hello {user.Email}. If you have forgotten your password, follow this link {confirmationLink}",
+                    Body = Body,
                     To = user.Email,
                     Subject = "Recover Password"
                 };
 
-                var resultSend = await _mailService.SendEmailAsync(mailData);
-
-                if (!resultSend)
-                    return BadRequest("Error in sending the message!");
+                await _mailService.SendEmailAsync(mailData);
             }
             catch (Exception ex) 
             {
@@ -227,90 +301,35 @@ namespace FlipBack.Controllers
             if (user == null)
                 return BadRequest("Email not found!");
 
-            var result = await _userManager.ResetPasswordAsync(user, confirmPass.Token, confirmPass.NewPassword);
+            var codeDecodedBytes = WebEncoders.Base64UrlDecode(confirmPass.Token);
+            var codeDecoded = Encoding.UTF8.GetString(codeDecodedBytes);
 
-            if (!result.Succeeded)
-                return BadRequest("There is a problem resetting the password!");
+            await _userManager.ResetPasswordAsync(user, codeDecoded, confirmPass.NewPassword);
+
+            string Body = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "EmailHTML", "RecoverPasswordTHX.html"));
 
             MailDataDTO mailData = new MailDataDTO()
             {
-                Body = $"Hello {user.Email}. Your password has been reset!",
+                Body = Body,
                 To = user.Email,
                 Subject = "Reset Password"
             };
 
-            var resultSend = await _mailService.SendEmailAsync(mailData);
-
-            if (!resultSend)
-                return BadRequest("Error in sending the message!");
-
-            return Ok();
-        }
-
-        [HttpPost("change-email")]
-        public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDTO emailDTO)
-        {
-            var user = await _userManager.FindByEmailAsync(emailDTO.OldEmail);
-            if (user == null)
-                return BadRequest("Email not found!");
-
-            var findUser = await _userManager.FindByEmailAsync(emailDTO.NewEmail);
-            if (findUser != null)
-                return BadRequest("Email already exists!");
-
-            var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailDTO.NewEmail);
-            var confirmationLink = $"http://uniwox.com/changemail?token={token}";
-
-            MailDataDTO mailData = new MailDataDTO()
-            {
-                Body = $"Hello {emailDTO.OldEmail}. If you have change your email, follow this link {confirmationLink}",
-                To = emailDTO.OldEmail,
-                Subject = "Change Email"
-            };
-
-            var resultSend = await _mailService.SendEmailAsync(mailData);
-
-            if (!resultSend)
-                return BadRequest("Error in sending the message!");
-
-            return Ok();
-        }
-
-        [HttpPost("confirm-change-email")]
-        public async Task<IActionResult> ConfirmChangeEmail([FromBody] ConfChangeEmailDTO emailDTO)
-        {
-            var user = await _userManager.FindByEmailAsync(emailDTO.OldEmail);
-            if (user == null)
-                return BadRequest("Email not found!");
-
-            var changeEmail = await _userManager.ChangeEmailAsync(user, emailDTO.NewEmail, emailDTO.Token);
-
-            if (!changeEmail.Succeeded)
-                return BadRequest("Error in changing the email!");
+            await _mailService.SendEmailAsync(mailData);
 
             return Ok();
         }
 
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshTokens(string refreshToken)
+        public async Task<IActionResult> RefreshTokens([FromBody] string refreshToken)
         {
             var tokens = await _jwtService.RefreshTokens(refreshToken);
 
             if (tokens == null)
-                return Unauthorized("Invalid Refresh Token!");
+                return BadRequest("Invalid Refresh Token!");
 
-            await RevokeToken(refreshToken);
-
-            return Ok(tokens);
-        }
-
-        [HttpPost("renew-token")]
-        public async Task<IActionResult> RenewTokens(string refreshToken)
-        {
-            var tokens = await _jwtService.RenewTokens(refreshToken);
-
-            if (tokens == null)
-                return ValidationProblem("Invalid Renew Token!");
+            await _context.RefreshTokens.AddAsync(tokens.TokensData);
+            await _context.SaveChangesAsync();
 
             await RevokeToken(refreshToken);
 
@@ -324,14 +343,14 @@ namespace FlipBack.Controllers
             var user = await _userManager.Users.Include(x => x.RefreshTokens).SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
 
             if (user == null)
-                return BadRequest("Token is required!");
+                return BadRequest("Token not found!");
 
             var refToken = user.RefreshTokens.Single(x => x.Token == refreshToken);
 
             if (DateTime.UtcNow > refToken.Expires)
                 return BadRequest("The Refresh Token has expired!");
 
-            _context.RefreshTokens.Remove(refToken);
+            _context.Entry(refToken).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
 
             return Ok();

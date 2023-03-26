@@ -17,10 +17,55 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.12")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Core.Entity.History.History", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PathName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Histories");
+                });
+
+            modelBuilder.Entity("Core.Entity.History.HistoryReaction", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("HistoryId")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "HistoryId");
+
+                    b.HasIndex("HistoryId");
+
+                    b.ToTable("HistoryReactions");
+                });
 
             modelBuilder.Entity("Core.Entity.MessageEntitys.Message", b =>
                 {
@@ -39,10 +84,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("MessageText")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SenderName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
@@ -64,33 +105,12 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("LastSendMessage")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Image")
-                        .IsUnique();
-
                     b.ToTable("MessageBox");
-                });
-
-            modelBuilder.Entity("Core.Entity.MessageEntitys.MessageBoxUser", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("MessageBoxId")
-                        .HasColumnType("text");
-
-                    b.HasKey("UserId", "MessageBoxId");
-
-                    b.HasIndex("MessageBoxId");
-
-                    b.ToTable("MessageBoxUsers");
                 });
 
             modelBuilder.Entity("Core.Entity.MessageEntitys.MessageFiles", b =>
@@ -115,6 +135,36 @@ namespace Infrastructure.Migrations
                     b.HasIndex("MessageId");
 
                     b.ToTable("MessageFiles");
+                });
+
+            modelBuilder.Entity("Core.Entity.Notification.Notification", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LikeUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RecipientId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("Core.Entity.PostEntitys.Post", b =>
@@ -277,6 +327,9 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<string>("FileId")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsBlocked")
                         .HasColumnType("boolean");
 
@@ -374,7 +427,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReelsId");
+                    b.HasIndex("ReelsId")
+                        .IsUnique();
 
                     b.ToTable("ReelsFiles");
                 });
@@ -406,7 +460,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ReelsId");
 
-                    b.ToTable("ReelsPost");
+                    b.ToTable("UserReels");
                 });
 
             modelBuilder.Entity("Core.Entity.UserEntitys.Follow", b =>
@@ -491,7 +545,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -540,6 +595,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
                     b.Property<string>("UserImage")
                         .HasColumnType("text");
 
@@ -568,6 +626,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
 
+                    b.HasIndex("UserId");
+
                     b.HasIndex("UserImage")
                         .IsUnique();
 
@@ -590,6 +650,61 @@ namespace Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Core.Entity.UserEntitys.UsersAuthentications", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Browser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("City")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Device")
+                        .HasColumnType("text");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LastOnline")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Authentications");
+                });
+
+            modelBuilder.Entity("MessageBoxUser", b =>
+                {
+                    b.Property<string>("MessageBoxsId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("text");
+
+                    b.HasKey("MessageBoxsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("MessageBoxUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -683,6 +798,34 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Core.Entity.History.History", b =>
+                {
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("Histories")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entity.History.HistoryReaction", b =>
+                {
+                    b.HasOne("Core.Entity.History.History", "History")
+                        .WithMany("Reactions")
+                        .HasForeignKey("HistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("HistoryReactions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("History");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Core.Entity.MessageEntitys.Message", b =>
                 {
                     b.HasOne("Core.Entity.MessageEntitys.MessageBox", "MessageBox")
@@ -702,25 +845,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Core.Entity.MessageEntitys.MessageBoxUser", b =>
-                {
-                    b.HasOne("Core.Entity.MessageEntitys.MessageBox", "MessageBox")
-                        .WithMany("Users")
-                        .HasForeignKey("MessageBoxId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Entity.UserEntitys.User", "User")
-                        .WithMany("MessageBoxs")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MessageBox");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Core.Entity.MessageEntitys.MessageFiles", b =>
                 {
                     b.HasOne("Core.Entity.MessageEntitys.Message", "Message")
@@ -728,6 +852,21 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("MessageId");
 
                     b.Navigation("Message");
+                });
+
+            modelBuilder.Entity("Core.Entity.Notification.Notification", b =>
+                {
+                    b.HasOne("Core.Entity.UserEntitys.User", "Recipient")
+                        .WithMany("ReceivedNotifications")
+                        .HasForeignKey("RecipientId");
+
+                    b.HasOne("Core.Entity.UserEntitys.User", "Sender")
+                        .WithMany("SendNotifications")
+                        .HasForeignKey("SenderId");
+
+                    b.Navigation("Recipient");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("Core.Entity.PostEntitys.Post", b =>
@@ -862,8 +1001,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entity.ReelsEntity.ReelsFiles", b =>
                 {
                     b.HasOne("Core.Entity.ReelsEntity.Reels", "Reels")
-                        .WithMany("Files")
-                        .HasForeignKey("ReelsId");
+                        .WithOne("File")
+                        .HasForeignKey("Core.Entity.ReelsEntity.ReelsFiles", "ReelsId");
 
                     b.Navigation("Reels");
                 });
@@ -934,6 +1073,13 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Core.Entity.UserEntitys.User", b =>
+                {
+                    b.HasOne("Core.Entity.UserEntitys.User", null)
+                        .WithMany("Blocked")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Core.Entity.UserEntitys.UserRole", b =>
                 {
                     b.HasOne("Core.Entity.UserEntitys.Role", "Role")
@@ -951,6 +1097,30 @@ namespace Infrastructure.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entity.UserEntitys.UsersAuthentications", b =>
+                {
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("Authentications")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MessageBoxUser", b =>
+                {
+                    b.HasOne("Core.Entity.MessageEntitys.MessageBox", null)
+                        .WithMany()
+                        .HasForeignKey("MessageBoxsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entity.UserEntitys.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -989,6 +1159,11 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Core.Entity.History.History", b =>
+                {
+                    b.Navigation("Reactions");
+                });
+
             modelBuilder.Entity("Core.Entity.MessageEntitys.Message", b =>
                 {
                     b.Navigation("Files");
@@ -997,8 +1172,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entity.MessageEntitys.MessageBox", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Core.Entity.PostEntitys.Post", b =>
@@ -1021,7 +1194,7 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("Commentary");
 
-                    b.Navigation("Files");
+                    b.Navigation("File");
 
                     b.Navigation("Reactions");
 
@@ -1040,6 +1213,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Entity.UserEntitys.User", b =>
                 {
+                    b.Navigation("Authentications");
+
+                    b.Navigation("Blocked");
+
                     b.Navigation("CreatedPosts");
 
                     b.Navigation("CreatedReels");
@@ -1048,15 +1225,19 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Followings");
 
-                    b.Navigation("Message");
+                    b.Navigation("Histories");
 
-                    b.Navigation("MessageBoxs");
+                    b.Navigation("HistoryReactions");
+
+                    b.Navigation("Message");
 
                     b.Navigation("PostAnswer");
 
                     b.Navigation("PostCommentary");
 
                     b.Navigation("PostReaction");
+
+                    b.Navigation("ReceivedNotifications");
 
                     b.Navigation("ReelsAnswer");
 
@@ -1069,6 +1250,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("SavedPosts");
 
                     b.Navigation("SavedReels");
+
+                    b.Navigation("SendNotifications");
 
                     b.Navigation("UserRoles");
                 });

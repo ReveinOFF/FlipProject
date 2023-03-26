@@ -1,9 +1,13 @@
-﻿namespace Core.Entity.ReelsEntity
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Core.Entity.ReelsEntity
 {
     public class Reels : BasePR
     {
-        /* Added files */
-        public virtual ICollection<ReelsFiles> Files { get; set; }
+        /* Added file */
+        [ForeignKey("ReelsFiles")]
+        public string FileId { get; set; }
+        public virtual ReelsFiles File { get; set; }
 
         /* All users who saved their reels */
         public virtual ICollection<UserReels> Saveds { get; set; }

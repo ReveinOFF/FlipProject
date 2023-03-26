@@ -2,32 +2,85 @@ import styles from "./UProfile.module.scss";
 import { CreatedPost } from "../../../Interface/Profile";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { ToastActionTypes } from "../../Toast/store/type";
+import { FliperModal } from "../FliperModal/FliperModal";
+import { PostModal } from "../PostModal/PostModal";
+import { PostCreater } from "../PostCreater/PostCreater";
 
 export const UProfile = (props) => {
   const { profile } = props;
 
   const [selector, setSelector] = useState(1);
+  const [showFliper, setShowFliper] = useState<boolean>(false);
+  const [showPost, setShowPost] = useState<boolean>(false);
+  const [showCreater, setShowCreater] = useState(false);
 
+  const dispatch = useDispatch();
   const [t] = useTranslation("translation");
 
   useEffect(() => {
-    document.title = `${profile.name} - Flip`;
+    document.title = profile.name;
   }, []);
 
   return (
     <>
+      <FliperModal show={showFliper} onClick={() => setShowFliper(false)} />
+
+      <PostModal show={showPost} onClick={() => setShowPost(false)} />
+
+      <PostCreater show={showCreater} onClick={() => setShowCreater(false)} />
+
       <div className={styles.my_profile_inf}>
         <div className={styles.information}>
           <div className={styles.inf_profile}>
             <div className={styles.names_profile}>
               <div className={styles.name}>{profile.name}</div>
+              {profile.isVerified && (
+                <svg
+                  className={styles.verify}
+                  width="30"
+                  height="31"
+                  viewBox="0 0 30 31"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M29.3343 13.1146L27.2942 10.7444C26.9042 10.2944 26.5892 9.45432 26.5892 8.85428V6.30413C26.5892 4.71403 25.2841 3.40895 23.694 3.40895H21.1438C20.5588 3.40895 19.7037 3.09394 19.2537 2.70391L16.8836 0.66379C15.8485 -0.221263 14.1534 -0.221263 13.1033 0.66379L10.7481 2.71891C10.2981 3.09394 9.44307 3.40895 8.85803 3.40895H6.26288C4.67278 3.40895 3.3677 4.71403 3.3677 6.30413V8.86928C3.3677 9.45432 3.05268 10.2944 2.67766 10.7444L0.652539 13.1296C-0.217513 14.1646 -0.217513 15.8447 0.652539 16.8798L2.67766 19.2649C3.05268 19.715 3.3677 20.555 3.3677 21.14V23.7052C3.3677 25.2953 4.67278 26.6004 6.26288 26.6004H8.85803C9.44307 26.6004 10.2981 26.9154 10.7481 27.3054L13.1183 29.3455C14.1534 30.2306 15.8485 30.2306 16.8986 29.3455L19.2687 27.3054C19.7187 26.9154 20.5588 26.6004 21.1588 26.6004H23.709C25.2991 26.6004 26.6042 25.2953 26.6042 23.7052V21.155C26.6042 20.57 26.9192 19.715 27.3092 19.2649L29.3493 16.8948C30.2194 15.8597 30.2194 14.1496 29.3343 13.1146ZM21.2338 12.1695L13.9884 19.4149C13.7784 19.6249 13.4934 19.745 13.1934 19.745C12.8933 19.745 12.6083 19.6249 12.3983 19.4149L8.76803 15.7847C8.333 15.3497 8.333 14.6296 8.76803 14.1946C9.20305 13.7596 9.9231 13.7596 10.3581 14.1946L13.1934 17.0298L19.6437 10.5794C20.0788 10.1444 20.7988 10.1444 21.2338 10.5794C21.6689 11.0144 21.6689 11.7345 21.2338 12.1695Z"
+                    fill="url(#paint0_linear_2663_18460)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_2663_18460"
+                      x1="-5.81839"
+                      y1="27.0084"
+                      x2="30.5243"
+                      y2="26.2068"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="#48D824" />
+                      <stop offset="1" stopColor="#10D0EA" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              )}
               <div className={styles.username}>
                 <div>(@{profile.userName})</div>
                 <svg
-                  onClick={() => {
-                    navigator.clipboard.writeText(profile.userName);
-                    alert("Скопировано");
-                  }}
+                  className={styles.copy_btn}
+                  onClick={() =>
+                    navigator["clipboard"]
+                      .writeText(profile.userName)
+                      .then(() => {
+                        dispatch({
+                          type: ToastActionTypes.SHOW,
+                          payload: {
+                            message: t("toast.success.copy"),
+                            type: "success",
+                          },
+                        });
+                      })
+                  }
                   width="19"
                   height="22"
                   viewBox="0 0 19 22"
@@ -49,6 +102,7 @@ export const UProfile = (props) => {
           </div>
           <div className={styles.profile_btn}>
             <svg
+              onClick={() => setShowCreater(true)}
               width="26"
               height="26"
               viewBox="0 0 26 26"
@@ -140,20 +194,264 @@ export const UProfile = (props) => {
             {t("main.u_profile.saved")}
           </div>
         </div>
-        <div className={styles.profile_data_imgs}>
-          {profile.createdPost && selector === 1 && (
-            <>
-              {profile.createdPost.map((item: CreatedPost) => (
+
+        {profile.createdPost.length === 0 && selector === 1 && (
+          <div className={styles.not_find}>
+            <div className={styles.nf_question}>?</div>
+
+            <svg
+              width="165"
+              height="165"
+              viewBox="0 0 165 165"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="82.3532"
+                cy="82.3532"
+                r="79.8826"
+                stroke="#2F2F2F"
+                strokeOpacity="0.5"
+                strokeWidth="4.94119"
+              />
+              <circle
+                cx="110.353"
+                cy="52.7058"
+                r="13.1765"
+                fill="#2F2F2F"
+                fillOpacity="0.5"
+              />
+              <circle
+                cx="51.0603"
+                cy="52.7058"
+                r="13.1765"
+                fill="#2F2F2F"
+                fillOpacity="0.5"
+              />
+              <path
+                d="M64 119H96.5"
+                stroke="#8D8D8D"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+            </svg>
+
+            <div className={styles.nf_text}>{t("main.u_profile.nf_post")}</div>
+          </div>
+        )}
+
+        {profile.createdPost.length === 0 && selector === 2 && (
+          <div className={styles.not_find}>
+            <div className={styles.nf_question}>?</div>
+
+            <svg
+              width="165"
+              height="165"
+              viewBox="0 0 165 165"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="82.3532"
+                cy="82.3532"
+                r="79.8826"
+                stroke="#2F2F2F"
+                strokeOpacity="0.5"
+                strokeWidth="4.94119"
+              />
+              <circle
+                cx="110.353"
+                cy="52.7058"
+                r="13.1765"
+                fill="#2F2F2F"
+                fillOpacity="0.5"
+              />
+              <circle
+                cx="51.0603"
+                cy="52.7058"
+                r="13.1765"
+                fill="#2F2F2F"
+                fillOpacity="0.5"
+              />
+              <path
+                d="M64 119H96.5"
+                stroke="#8D8D8D"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+            </svg>
+
+            <div className={styles.nf_text}>
+              {t("main.u_profile.nf_fliper")}
+            </div>
+          </div>
+        )}
+
+        {profile.createdPost.length === 0 && selector === 3 && (
+          <div className={styles.not_find}>
+            <div className={styles.nf_question}>?</div>
+
+            <svg
+              width="165"
+              height="165"
+              viewBox="0 0 165 165"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="82.3532"
+                cy="82.3532"
+                r="79.8826"
+                stroke="#2F2F2F"
+                strokeOpacity="0.5"
+                strokeWidth="4.94119"
+              />
+              <circle
+                cx="110.353"
+                cy="52.7058"
+                r="13.1765"
+                fill="#2F2F2F"
+                fillOpacity="0.5"
+              />
+              <circle
+                cx="51.0603"
+                cy="52.7058"
+                r="13.1765"
+                fill="#2F2F2F"
+                fillOpacity="0.5"
+              />
+              <path
+                d="M64 119H96.5"
+                stroke="#8D8D8D"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+            </svg>
+
+            <div className={styles.nf_text}>
+              {t("main.u_profile.nf_save_pf")}
+            </div>
+          </div>
+        )}
+
+        {profile.createdPost.length > 0 && selector === 1 && (
+          <div className={styles.profile_data_imgs}>
+            {profile.createdPost.map((item: CreatedPost) => (
+              <img
+                onClick={() => setShowPost(true)}
+                key={item.id}
+                src={`${process.env.REACT_APP_BASE_RESOURCES}PostFiles/${item.id}/${item.file[0]}`}
+                alt=""
+              />
+            ))}
+          </div>
+        )}
+
+        {profile.createdReels.length > 0 && selector === 2 && (
+          <div className={styles.profile_data_imgs}>
+            {profile.createdReels.map((item: CreatedPost) => (
+              <div
+                className={styles.flipers}
+                key={item.id}
+                onClick={() => setShowFliper(true)}
+              >
                 <img
-                  className={styles.profile_data_img}
-                  key={item.id}
-                  src={`http://localhost:5170/resources/postfiles/default/${item.file[0]}`}
+                  src={`${process.env.REACT_APP_BASE_RESOURCES}ReelsFiles/${item.id}/${item.file[0]}`}
                   alt=""
                 />
-              ))}
-            </>
-          )}
-        </div>
+
+                <svg
+                  width="96"
+                  height="96"
+                  viewBox="0 0 96 96"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="13.4395"
+                    y="14.3999"
+                    width="69.12"
+                    height="69.12"
+                    rx="34.56"
+                    fill="#F8F8F8"
+                    fillOpacity="0.9"
+                  />
+                  <path
+                    d="M42.2312 67.9639C40.4712 67.9639 38.7912 67.5239 37.3112 66.6839C33.8712 64.6839 31.9512 60.7639 31.9512 55.6439V42.2439C31.9512 37.1239 33.8312 33.2039 37.2712 31.2039C40.7112 29.2039 45.0712 29.5239 49.5112 32.0839L61.1112 38.7639C65.5512 41.3239 67.9912 44.9239 67.9912 48.9239C67.9912 52.8839 65.5512 56.5239 61.1112 59.0839L49.5112 65.7639C47.0312 67.2439 44.5112 67.9639 42.2312 67.9639ZM42.2312 35.8839C41.5112 35.8839 40.8312 36.0439 40.3112 36.3639C38.7912 37.2439 37.9512 39.3639 37.9512 42.2439V55.6439C37.9512 58.4839 38.7912 60.6439 40.3112 61.4839C41.7912 62.3639 44.0712 62.0039 46.5512 60.6039L58.1512 53.9239C60.6312 52.4839 62.0312 50.6839 62.0312 48.9639C62.0312 47.2439 60.5912 45.4439 58.1512 44.0039L46.5512 37.3239C44.9512 36.3639 43.4712 35.8839 42.2312 35.8839Z"
+                    fill="url(#paint0_linear_1200_6772)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_1200_6772"
+                      x1="24.9614"
+                      y1="64.1579"
+                      x2="68.6232"
+                      y2="63.2457"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="#48D824" />
+                      <stop offset="1" stopColor="#10D0EA" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* {profile.createdReels.length > 0 && selector === 3 && (
+          <div className={styles.profile_data_imgs}>
+            {profile.createdReels.map((item: CreatedPost) => (
+              <div
+                className={styles.flipers}
+                key={item.id}
+                onClick={() => setShowFliper(true)}
+              >
+                <img
+                  src={`${process.env.REACT_APP_BASE_RESOURCES}${
+                    "ReelsFiles" || "PostFiles"
+                  }/${item.id}/${item.file[0]}`}
+                  alt=""
+                />
+
+                <svg
+                  width="96"
+                  height="96"
+                  viewBox="0 0 96 96"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="13.4395"
+                    y="14.3999"
+                    width="69.12"
+                    height="69.12"
+                    rx="34.56"
+                    fill="#F8F8F8"
+                    fillOpacity="0.9"
+                  />
+                  <path
+                    d="M42.2312 67.9639C40.4712 67.9639 38.7912 67.5239 37.3112 66.6839C33.8712 64.6839 31.9512 60.7639 31.9512 55.6439V42.2439C31.9512 37.1239 33.8312 33.2039 37.2712 31.2039C40.7112 29.2039 45.0712 29.5239 49.5112 32.0839L61.1112 38.7639C65.5512 41.3239 67.9912 44.9239 67.9912 48.9239C67.9912 52.8839 65.5512 56.5239 61.1112 59.0839L49.5112 65.7639C47.0312 67.2439 44.5112 67.9639 42.2312 67.9639ZM42.2312 35.8839C41.5112 35.8839 40.8312 36.0439 40.3112 36.3639C38.7912 37.2439 37.9512 39.3639 37.9512 42.2439V55.6439C37.9512 58.4839 38.7912 60.6439 40.3112 61.4839C41.7912 62.3639 44.0712 62.0039 46.5512 60.6039L58.1512 53.9239C60.6312 52.4839 62.0312 50.6839 62.0312 48.9639C62.0312 47.2439 60.5912 45.4439 58.1512 44.0039L46.5512 37.3239C44.9512 36.3639 43.4712 35.8839 42.2312 35.8839Z"
+                    fill="url(#paint0_linear_1200_6772)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_1200_6772"
+                      x1="24.9614"
+                      y1="64.1579"
+                      x2="68.6232"
+                      y2="63.2457"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="#48D824" />
+                      <stop offset="1" stopColor="#10D0EA" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+            ))}
+          </div>
+        )} */}
       </div>
     </>
   );

@@ -10,8 +10,6 @@
   margin-top: 40px;
   margin-bottom: 45px;
 
-  width: 100vh;
-
   .information {
     display: flex;
     justify-content: space-between;
@@ -23,11 +21,11 @@
 
       .names_profile {
         display: flex;
+        align-items: center;
+
         margin-bottom: 15px;
 
         .name {
-          margin-right: 30px;
-
           font-style: normal;
           font-weight: 300;
           font-size: 36px;
@@ -39,9 +37,15 @@
           color: #0b0303;
         }
 
+        .verify {
+          margin-left: 12px;
+        }
+
         .username {
           display: flex;
           align-items: center;
+
+          margin-left: 30px;
 
           div {
             margin-right: 5px;
@@ -57,7 +61,7 @@
             color: #0b0303;
           }
 
-          svg {
+          .copy_btn {
             cursor: pointer;
           }
         }
@@ -143,6 +147,45 @@
 }
 
 .my_profile_data {
+  width: 100vh;
+
+  .not_find {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 100%;
+
+    .nf_question {
+      margin-top: 50px;
+
+      font-style: normal;
+      font-weight: 300;
+      font-size: 90px;
+      line-height: 150%;
+
+      letter-spacing: -0.011em;
+
+      color: #8d8d8d;
+    }
+
+    svg {
+      margin-bottom: 40px;
+    }
+
+    .nf_text {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 150%;
+
+      letter-spacing: -0.011em;
+
+      color: rgba(47, 47, 47, 0.5);
+    }
+  }
+
   .selection {
     display: flex;
     justify-content: space-evenly;
@@ -170,21 +213,54 @@
 
   .profile_data_imgs {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: 27.5px;
 
     width: 100vh;
 
-    .profile_data_img {
-      height: 301px;
-      width: 301px;
+    img {
+      width: 300px;
+      height: 300px;
+
+      object-fit: fill;
 
       margin-bottom: 29px;
+
+      cursor: pointer;
 
       background: #d9d9d9;
       background-position: center;
       background-size: 311px;
       border-radius: 15px;
+    }
+
+    .flipers {
+      height: 301px;
+      width: 100%;
+
+      cursor: pointer;
+
+      position: relative;
+
+      img {
+        margin-bottom: 29px;
+
+        object-fit: fill;
+
+        background: #d9d9d9;
+        background-position: center;
+        background-size: 311px;
+        border-radius: 15px;
+      }
+
+      svg {
+        position: absolute;
+
+        z-index: 1;
+
+        left: 35%;
+        top: 35%;
+      }
     }
   }
 }

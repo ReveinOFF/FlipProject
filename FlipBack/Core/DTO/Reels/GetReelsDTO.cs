@@ -10,9 +10,9 @@
         public int CommentaryCount { get; set; }
         public int AnswerCount { get; set; }
         public int ReactionCount { get; set; }
+        public string File { get; set; }
 
         public ICollection<ReelsGetCommentaryDTO> Commentary { get; set; }
         public ICollection<ReelsGetAnswerDTO> Answer { get; set; }
-        public ICollection<string> Files { get; set; }
     }
 }

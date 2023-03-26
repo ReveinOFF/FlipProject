@@ -1,1 +1,379 @@
-{}
+{
+    "auht": {
+        "selection": {
+            "title_page": "Welcome",
+            "description": "Fast, reliable social network for everyone",
+            "signin": "Sign in",
+            "signup": "Register"
+        },
+        "signin": {
+            "title_page": "Login",
+            "yup": {
+                "name": "Login is a required field",
+                "password": "Password is a required field",
+                "error": "Data entered incorrectly"
+            },
+            "header": "Login",
+            "login_ph": "Mail or nickname",
+            "password_ph": "Password",
+            "btn_login": "Sign in",
+            "btn_rec_psw": "Forgot your password?",
+            "or": "or",
+            "btn_reg": "Register",
+            "btn_cancel": "Cancel"
+        },
+        "signup": {
+            "reg_p1": {
+                "title_page": "Register | Stage one",
+                "yup": {
+                    "name": {
+                        "min": "The name must contain at least 5 characters!",
+                        "max": "Ім'я повинно містити не більше 15 символів!",
+                        "req": "The name should contain no more than 15 characters!",
+                        "exist": "This name is already taken!"
+                    },
+                    "phone": {
+                        "bad": "The phone number is wrong!",
+                        "exist": "This room is already taken!",
+                        "max_min": "Invalid number length!"
+                    },
+                    "date_birth": "You must be at least 18 years old!"
+                },
+                "name_ph": "Name",
+                "phone_ph": "Phone",
+                "date_ph": "Date of birth",
+                "btn_next": "Next",
+                "btn_cancel": "Cancel"
+            },
+            "reg_p2": {
+                "title_page": "Register | Stage two",
+                "yup": {
+                    "username": {
+                        "min": "Login must contain at least 5 characters!",
+                        "max": "Login must contain no more than 15 characters!",
+                        "mat": "Login is incorrect!",
+                        "req": "Name is a required field!",
+                        "exist": "This login is already taken!"
+                    },
+                    "email": {
+                        "mat": "The mail is entered incorrectly!",
+                        "req": "Mail is a required field!",
+                        "exist": "This mailbox is already busy!"
+                    },
+                    "password": {
+                        "min": "The password must contain at least 8 characters!",
+                        "max": "The password must contain no more than 15 characters!",
+                        "req": "Password is a required field!"
+                    },
+                    "confirm_pass": {
+                        "one": "The verified password does not match the password!",
+                        "req": "Password confirmation is a required field!"
+                    },
+                    "error": "Data entered incorrectly"
+                },
+                "file": "Change the photo",
+                "nickname_ph": "Nickname",
+                "email_ph": "Email",
+                "password_ph": "Password",
+                "confirm_pass_ph": "Repeat the password",
+                "btn_next": "Next",
+                "btn_back": "Return"
+            },
+            "confirm": {
+                "title_page": "Register | Confirm email",
+                "header": "Confirmation",
+                "description1": "To your email:",
+                "description2": "a confirmation code will be sent to you!",
+                "btn": "Change email address"
+            }
+        },
+        "recoverPass" : {
+            "title": "Password recovery",
+            "sendEmail": {
+                "yup": {
+                    "email": "Your mailing address is incorrect!",
+                    "req": "Mail is a required field!",
+                    "error": "Mail not found!"
+                },
+                "header": "Password recovery",
+                "description": "A password recovery message will be sent to your email",
+                "email": "Email",
+                "btn": "Next",
+                "miniBtn": "Cancel"
+            },
+            "emailFound": {
+                "header": "Mail found",
+                "description": "Check your mail to change your password",
+                "btn": "Return to the login page"
+            },
+            "changePass": {
+                "title": "Change your password",
+                "yup": {
+                    "password": {
+                        "min": "The password must contain at least 8 characters!",
+                        "max": "The password must contain no more than 15 characters!",
+                        "req": "Password is a required field!"
+                    },
+                    "confirmPassword": {
+                        "one": "The verified password does not match the password!",
+                        "req": "Password confirmation is a required field!"
+                    }
+                },
+                "header": "Change your password",
+                "password": "Password",
+                "confirmPass": "Repeat the password",
+                "btn": "Confirm",
+                "miniBtn": "Cancel"
+            }
+        }
+    },
+
+    "main": {
+        "left_menu": {
+            "post": "posts",
+            "foll_ers": "subscribers",
+            "foll_ing": "subscriptions",
+            "main": "Home",
+            "messages": "Message",
+            "profile": "Profile",
+            "settings": "Settings"
+        },
+        "right_menu": {
+            "search_ph": "Search",
+            "notification": "Notifications",
+            "header1": "This month",
+            "header2": "This week",
+            "foll_ed": "starts to follow you.",
+            "is_foll_ed": "Following",
+            "like_post": "liked your photo.",
+            "like_history": "liked your story.",
+            "like_fliper": "liked your fliper.",
+            "follow": "Follow"
+        },
+        "s_profile": {
+            "foll_ers": "SUBSCRIBERS:",
+            "foll_ing": "SUBSCRIPTIONS:",
+            "post": "POSTS:",
+            "is_follow": "Following",
+            "is_not_follow": "Follow",
+            "notif_btn": "Message",
+            "post2": "posts",
+            "nf_post": "No Posts",
+            "nf_fliper": "No Fliper",
+            "nf_save_pf": "No Saved Posts/Fliper",
+            "private_header": "This is a closed account",
+            "private_description": "Follow a user to see their posts and flipers"
+        },
+        "u_profile": {
+            "post": "posts",
+            "saved": "saved",
+            "nf_post": "No Posts",
+            "nf_fliper": "No Fliper",
+            "nf_save_pf": "No Saved Posts/Fliper"
+        },
+        "fliper": {
+            "btn_follow": "Follow",
+            "nf_text": "Fliper not found"
+        },
+        "main": {
+            "title_page": "Home",
+            "following": "Followed",
+            "follow": "Follow",
+            "show_more": "Show more...",
+            "like": "preferences",
+            "answ": "reply",
+            "input": "Add a comment",
+            "post_nf": "There are no posts"
+        },
+        "settings": {
+            "title_page": "Settings",
+            "change_email": {
+                "title": "Change email",
+                "back": "Change email",
+                "email": "New email",
+                "cancel": "Cancel changes",
+                "btn" : "Change email"
+            },
+            "forgot_pass": {
+                "title": "Password recovery",
+                "back": "Change password",
+                "header": "Forgot your password?",
+                "description": "Enter your email address and you will receive a link to change your account password.",
+                "btn": "Send a message"
+            },
+            "main": {
+                "search": "Search",
+                "edit_profile": "Edit profile",
+                "change_email": "Змінити пошту",
+                "change_pass": "Change password",
+                "lng": "Language",
+                "advertising": "Advertising",
+                "theme": "Change of topic",
+                "joined": "Log in to your account",
+                "info": "Site information",
+                "help": "Help",
+                "logout": "Exit the account"
+            },
+            "change_pass": {
+                "title": "Change password",
+                "back": "Change password",
+                "old_pass": "Old password",
+                "new_pass": "New password",
+                "conf_new_pass": "New password",
+                "forgot_pass": "Forgot your password?",
+                "btn": "Change password"
+            },
+            "change_profile": {
+                "title": "Edit your profile",
+                "desc1": "Help people find your account by using a name they know you by: full name, nickname.",
+                "desc2": "In most cases, you can change your username back within another 14 days.",
+                "span": "Read more",
+                "back": "Edit profile",
+                "name": "Name",
+                "login": "User name",
+                "date": "Date of birth",
+                "description": "Biography",
+                "phone": "Phone number",
+                "cancel": "Cancel changes",
+                "save": "Save"
+            },
+            "advertising": {
+                "title": "Advertising",
+                "header": "Important information",
+                "cont_top": "This setting will not change the number of ads you see in Flip.",
+                "cont_bottom": "If you turn this setting off, we will still show you Instagram ads, but they may be less relevant to you.",
+                "cont_top2": "This setting lets you control the use of certain data.",
+                "cont_bottom2": "This setting controls whether Flip can show you personalized ads based on data from partners about your activities. If you turn it off, the ads you see may continue to be based on your activities on",
+                "cont_top3": "Where this setting applies",
+                "cont_bottom3": "This setting affects the ads you see on this Instagram account. If you have other accounts, you can change this setting on them as well.",
+                "header2": "Actions with advertising",
+                "description": "View ads in the feed"
+            },
+            "conf_forg_pass": {
+                "title": "Change your password",
+                "new_pass": "New password",
+                "conf_new_pass": "Password confirmation",
+                "btn": "Confirm"
+            },
+            "conf_change_email": "Mail confirmation",
+            "entrances": {
+                "title": "Log in to your account",
+                "header": "Your active login sessions",
+                "is_online": "Now online"
+            },
+            "help": {
+                "title": "Help",
+                "description": "Help with privacy and security",
+                "description2": "Support requests",
+                "description3": "Report a problem",
+                "description4": "Help center"
+            },
+            "information": {
+                "title": "Site information",
+                "header": "Information.",
+                "desc": "Privacy policy",
+                "desc2": "Terms of use",
+                "desc3": "Flip update"
+            },
+            "language": {
+                "title": "Change of language",
+                "back": "Language",
+                "header": "Flip language",
+                "desc": "Language for buttons, titles, and other Flip text elements for this account",
+                "header2": "Posts by friends and pages",
+                "desc2": "Language into which posts should be translated",
+                "desc3": "Languages for which you do not want to receive translation offers",
+                "desc4": "Languages that should not be automatically translated"
+            }
+        },
+        "message_selection": {
+            "title_page": "Message",
+            "search_ph": "Search"
+        },
+        "message_room": {
+            "write": "He writes...",
+            "time": "This afternoon",
+            "showed": "revised",
+            "text_area": "Send a message..."
+        },
+        "history": {
+            "btn_msg_send": "Reply to user"
+        },
+        "pnf": "Page not found",
+        "pnf_back": "Return",
+        "fliper_menu": {
+            "btn1": "Go to the publication",
+            "btn2": "Share",
+            "btn3": "Copy link",
+            "btn4": "Complain"
+        },
+        "lazy_loading": "Download...",
+        "followers": {
+            "header": "Subscribers",
+            "delete_user": "Delete",
+            "subscribe": "Follow",
+            "unsubscribe": "Following",
+            "confirm": {
+                "header1": "Delete a subscriber",
+                "header2": "Unsubscribe from",
+                "p": "The user will not know that you have removed them from the list",
+                "btn": "Cancel your subscription"
+            }
+        },
+        "following": {
+            "header": "Subscriptions",
+            "delete_user": "Subscriptions",
+            "subscribe": "Follow",
+            "unsubscribe": "Following",
+            "confirm": {
+                "header": "Unsubscribe from",
+                "btn": "Відмінити підписку"
+            }
+        }
+    },
+
+    "formate_date": {
+        "now": "Right now",
+        "sec": "sec. ago",
+        "min": "min ago",
+        "hor": "h. ago",
+        "day": "day ago",
+        "week": "week ago",
+        "month": "m. ago",
+        "year": "year ago"
+    },
+
+    "toast": {
+        "error" : {
+            "logout": "An error occurred while logging out of your account!",
+            "profile": "User upload failed!",
+            "auth": "Your account information could not be uploaded!",
+            "confirm-email": "Error! The sent token is not working!",
+            "follow": "An error occurred while subscribing to a user!",
+            "unfollow": "An error occurred while unsubscribing from a user!",
+            "delete_follow": "An error occurred while deleting a subscriber!",
+            "big_size_file": "The file must be no larger than 20MB!",
+            "change_pass": "An error occurred while changing the password!",
+            "change_email": "An error occurred when changing mail!",
+            "change_email2": "Your mailing address is incorrect!",
+            "forgot_pass": "There was an error searching for mail!",
+            "profile2": "Incorrect data entered!"
+        },
+        "warning": {
+            "reg": "Perhaps in some field the data was entered incorrectly!"
+        },
+        "success": {
+            "confirm-email": "Thank you for registering!",
+            "follow": "You have successfully subscribed to a user!",
+            "unfollow": "You have successfully unsubscribed from a user!",
+            "copy": "Successfully copied!",
+            "delete_follow": "You have successfully removed a user from subscriptions!",
+            "add-bookmark-post": "You have successfully added the post to your bookmarks!",
+            "change_pass": "You have successfully changed your password!",
+            "change_email": "You have successfully changed your mail!",
+            "change_email2": "A notification has been sent to your email!",
+            "forgot_pass": "An email has been sent to your inbox!",
+            "profile2": "You have successfully changed your profile data!"
+        }
+    }
+}

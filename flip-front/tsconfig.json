@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["react-i18next", "i18next"],
     "target": "es5",
     "noImplicitAny": false,
     "lib": [

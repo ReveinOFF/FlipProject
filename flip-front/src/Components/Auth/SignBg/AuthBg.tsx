@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
-import i18n from "../../../Assets/i18n/i18n";
+import i18n from "../../i18n/i18n";
 import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import "./AuthBgStyle.scss";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export const AuthBg = () => {
   const [mode, setMode] = useState<string>("light");
@@ -13,34 +14,27 @@ export const AuthBg = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const lng = localStorage.getItem("lng");
+
+    if (lng === "ua") setTrans("UA");
+    else setTrans("EN");
+  }, []);
+
+  useEffect(() => {
     if (theme === "light") setMode("light");
     else setMode("dark");
   }, [theme]);
 
-  useEffect(() => {
-    const lng = localStorage.getItem("lng");
-
-    if (lng === "ua") {
-      i18n.changeLanguage("ua");
-      localStorage.setItem("lng", "ua");
-      setTrans("UA");
-    } else {
-      i18n.changeLanguage("en");
-      localStorage.setItem("lng", "en");
-      setTrans("EN");
-    }
-  }, []);
-
   const changeLanguageOnClick = () => {
-    const lng = localStorage.getItem("lng");
+    const lng = i18n.language;
 
     if (lng === "ua") {
-      i18n.changeLanguage("en");
       localStorage.setItem("lng", "en");
+      i18n.changeLanguage("en");
       setTrans("EN");
     } else {
-      i18n.changeLanguage("ua");
       localStorage.setItem("lng", "ua");
+      i18n.changeLanguage("ua");
       setTrans("UA");
     }
   };
@@ -151,8 +145,8 @@ export const AuthBg = () => {
               <path
                 d="M6.51494 6.23987C5.26284 7.59096 4.50467 9.32596 4.36366 11.1629C4.22264 12.9998 4.70708 14.8306 5.73823 16.3577C6.76937 17.8848 8.28661 19.0185 10.0433 19.5744C11.8 20.1304 13.6929 20.0759 15.4143 19.4199C10.0437 14.4493 9.8451 9.32084 14.8135 3.9527C13.3542 3.52316 11.8041 3.50968 10.3379 3.91379C8.87168 4.3179 7.54762 5.12352 6.51494 6.23987Z"
                 stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
@@ -160,15 +154,78 @@ export const AuthBg = () => {
         </div>
       </div>
       <div className="bg-auth">
-        <div className="block-img bi1"></div>
-        <div className="block-img bi2"></div>
-        <div className="block-img bi3"></div>
-        <div className="block-img bi4"></div>
-        <div className="block-img bi5"></div>
-        <div className="block-img bi6"></div>
-        <div className="block-img bi7"></div>
-        <div className="block-img bi8"></div>
-        <div className="block-img bi9"></div>
+        <div className={`block-img bi1`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi1.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi2`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi2.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi3`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi3.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi4`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi4.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi5`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi5.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi6`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi6.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi7`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi7.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi8`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi8.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className={`block-img bi9`}>
+          <div></div>
+          <LazyLoadImage
+            src={process.env.PUBLIC_URL + `/Assets/Img/Auth/bi9.jpg`}
+            alt=""
+            loading="lazy"
+          />
+        </div>
 
         <div className="super-small-ball" />
 

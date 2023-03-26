@@ -3,6 +3,8 @@ export interface IUser {
   userImage: string;
   name: string;
   userName: string;
+  email: string;
+  phone: string;
   description: string;
   dateOfBirth: Date;
   isVerified: boolean;
@@ -12,6 +14,22 @@ export interface IUser {
   followings: number;
 
   createdPost: CreatedPost[];
+}
+
+export interface GetUsers {
+  id: string;
+  userImage: string;
+  name: string;
+  userName: string;
+  isVerified: boolean;
+}
+
+export interface GetFollow {
+  id: string;
+  userImage: string;
+  name: string;
+  isVerified: boolean;
+  isFollowed: boolean;
 }
 
 export interface CreatedPost {

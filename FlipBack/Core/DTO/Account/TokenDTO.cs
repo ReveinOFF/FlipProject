@@ -1,4 +1,6 @@
-﻿namespace Core.DTO.Account
+﻿using Core.Entity.UserEntitys;
+
+namespace Core.DTO.Account
 {
     public class TokenDTO
     {

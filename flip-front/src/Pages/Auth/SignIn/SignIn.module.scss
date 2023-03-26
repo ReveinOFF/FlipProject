@@ -1,3 +1,11 @@
+.header_l {
+  color: #2f2f2f;
+}
+
+.header_d {
+  color: #f8f8f8;
+}
+
 .log_header {
   width: 86px;
   height: 48px;
@@ -8,8 +16,6 @@
   line-height: 48px;
 
   margin-bottom: 60px;
-
-  color: #2f2f2f;
 }
 
 .log_form {
@@ -57,13 +63,19 @@
   margin-top: 37px;
   margin-bottom: 35px;
 
+  .or_l {
+    color: #575757;
+  }
+
+  .or_d {
+    color: #f8f8f8;
+  }
+
   div {
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
     line-height: 19px;
-
-    color: #575757;
   }
 }
 

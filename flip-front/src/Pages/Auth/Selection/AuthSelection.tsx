@@ -75,18 +75,24 @@ export const AuthSelection = () => {
           />
         </svg>
       )}
-      <div className={styles.description}>
+      <div className={mode === "light" ? styles.description : styles.dark_desc}>
         {t("auht.selection.description")}
       </div>
-      <div className={`${styles.form_btn} dflex-column`}>
+      <div
+        className={`${styles.form_btn} dflex-column ${
+          mode === "dark" ? styles.dark : styles.light
+        }`}
+      >
         <button
-          className={`${styles.btn} ${styles.btn_login} ${mode}-login`}
+          className={`${styles.btn} ${styles.btn_login}`}
           onClick={() => navigate("/signin")}
         >
           {t("auht.selection.signin")}
         </button>
         <button
-          className={`${styles.btn} ${styles.btn_reg} ${mode}-reg`}
+          className={`${styles.btn} ${styles.btn_reg} ${
+            mode === "light" ? styles.light_reg : styles.dark_reg
+          }`}
           onClick={() => navigate("/signup")}
         >
           {t("auht.selection.signup")}

@@ -33,10 +33,10 @@ namespace FlipBack.Controllers
         [HttpGet("get-user-auth")]
         public async Task<IActionResult> GetUserAuth()
         {
-            string username = User.FindFirst("UserName")?.Value;
+            string userId = User.FindFirst("UserId")?.Value;
 
             var user = await _userManager.Users
-                    .Where(x => x.UserName == username)
+                    .Where(x => x.Id == userId)
                     .Include(x => x.Followers)
                     .Include(x => x.Followings)
                     .Include(x => x.CreatedPosts)
@@ -89,19 +89,19 @@ namespace FlipBack.Controllers
             return Ok(getUser);
         }
 
-        [HttpGet("get-users")]
-        public async Task<IActionResult> GetUsers()
+        [HttpGet("search-users/{name}")]
+        public async Task<IActionResult> SearchUsers(string name)
         {
+            string userId = User.FindFirst("UserId")?.Value;
+
             var user = await _userManager.Users
-                .Include(x => x.Followers)
-                .ThenInclude(x => x.Follower)
-                .OrderByDescending(x => x.Followers.Count)
+                .Where(x => x.Name.ToLower().Contains(name.ToLower()) || x.UserName.ToLower().Contains(name.ToLower()))
                 .ToListAsync();
 
-            if (user == null)
-                return BadRequest("User not found!");
+            if (user == null) 
+                return Ok();
 
-            var getUser = _mapper.Map<List<GetUsersDTO>>(user);
+            var getUser = _mapper.Map<List<GetUsersDTO>>(user.Where(x => x.Id != userId).ToList());
 
             return Ok(getUser);
         }
@@ -110,8 +110,8 @@ namespace FlipBack.Controllers
         public async Task<IActionResult> FollowUser([FromBody] FollowDTO followDTO)
         {
             var follow = await _context.Follows
-                    .FirstOrDefaultAsync(u => u.FollowerId == followDTO.UserId &&
-                                              u.FollowingId == followDTO.FollowId);
+                    .FirstOrDefaultAsync(u => u.FollowerId == followDTO.FollowId &&
+                                              u.FollowingId == followDTO.UserId);
 
             if (follow != null)
                 return BadRequest("You already followed this user!");
@@ -165,137 +165,52 @@ namespace FlipBack.Controllers
             return Ok(true);
         }
 
-        [HttpGet("get-followers/{id}")]
-        public async Task<IActionResult> GetFollowers(string id)
+        [HttpGet("get-followers/{id}/check/{userId}")]
+        public async Task<IActionResult> GetFollowers(string id, string userId)
         {
-            var user = await _context.Users
-                .Include(x => x.Followers)
-                .ThenInclude(y => y.Follower)
-                .OrderByDescending(o => o.Followers.Count)
-                .FirstOrDefaultAsync(u => u.Id == id);
+            var myUserFollowers = await _context.Follows
+                .Include(i => i.Follower)
+                .ThenInclude(t => t.Followers)
+                .Include(i => i.Following)
+                .ThenInclude(t => t.Followings)
+                .Where(x => x.FollowerId == id)
+                .ToListAsync();
 
-            if (user == null)
+            if (myUserFollowers == null)
                 return BadRequest("The user was not found!");
 
-            var userFollowers = user.Followers.Where(u => u.FollowingId == id).Select(x => x.Follower);
+            var userFollowers = myUserFollowers.Select(s => s.Follower).ToList();
 
-            var follow = _mapper.Map<List<GetUsersDTO>>(userFollowers);
+            var follow = _mapper.Map<List<GetFollowsDTO>>(userFollowers);
+
+            follow.ForEach(x => x.IsFollowed = userFollowers.Select(s => s.Followers.Any(a => a.FollowingId == userId && a.FollowerId == x.Id)).FirstOrDefault());
 
             return Ok(follow);
         }
 
-        [HttpGet("get-following/{id}")]
-        public async Task<IActionResult> GetFollowing(string id)
+        [HttpGet("get-following/{id}/check/{userId}")]
+        public async Task<IActionResult> GetFollowing(string id, string userId)
         {
-            var user = await _context.Users
-                .Include(x => x.Followings)
-                .ThenInclude(y => y.Following)
-                .FirstOrDefaultAsync(u => u.Id == id);
+            var myUserFollowing = await _userManager.Users
+                .Where(x => x.Id == id)
+                .Include(i => i.Followers)
+                .ThenInclude(t => t.Follower)
+                .ThenInclude(t => t.Followers)
+                .Include(i => i.Followings)
+                .ThenInclude(t => t.Following)
+                .ThenInclude(t => t.Followings)
+                .FirstOrDefaultAsync();
 
-            if (user == null)
+            if (myUserFollowing == null)
                 return BadRequest("The user was not found!");
 
-            var userFollowers = user.Followings.Where(u => u.FollowingId == id).Select(x => x.Following);
+            var userFollowing = myUserFollowing.Followings.Select(s => s.Following).ToList();
 
-            var follow = _mapper.Map<List<GetUsersDTO>>(userFollowers);
+            var follow = _mapper.Map<List<GetFollowsDTO>>(userFollowing);
+
+            follow.ForEach(x => x.IsFollowed = userFollowing.Select(s => s.Followers.Any(a => a.FollowingId == userId && a.FollowerId == x.Id)).FirstOrDefault());
 
             return Ok(follow);
-        }
-
-        [HttpPost("add-image-user/{userId}")]
-        public async Task<IActionResult> AddImageUser(string userId, IFormFile file)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null)
-                return BadRequest("User not found!");
-
-            if (user.UserImagePath != null)
-            {
-                bool deleteFile = StaticFiles.DeleteImageAsync(user.UserImagePath);
-                if (!deleteFile)
-                    return BadRequest("Image not found!");
-            }
-
-            string fileDestDir = Path.Combine("Resources", "UserImages", user.Id);
-
-            var newImage = await StaticFiles.CreateImageAsync(_env, fileDestDir, file);
-
-            if (newImage.FilePath == null)
-                return BadRequest("The link to the file was not created!");
-
-            if (newImage.FileName == null)
-                return BadRequest("The name to the file was not created!");
-
-            user.UserImage = newImage.FileName;
-            user.UserImagePath = newImage.FilePath;
-
-            var result = await _userManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-                return BadRequest("Error in changing user image!");
-
-            return Ok();
-        }
-
-        [HttpDelete("delete-image-user/{userId}")]
-        public async Task<IActionResult> DeleteImageUser(string userId)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null)
-                return BadRequest("User not found!");
-
-            bool deleteFile = StaticFiles.DeleteImageAsync(user.UserImagePath);
-            if (!deleteFile)
-                return BadRequest("Image not found!");
-
-            user.UserImage = null;
-            user.UserImagePath = null;
-
-            var result = await _userManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-                return BadRequest("Error when deleting a user's image!");
-
-            return Ok();
-        }
-
-        [HttpPut("change-user")]
-        public async Task<IActionResult> ChangeUser([FromBody] ChangeUserDTO changeUser)
-        {
-            var user = await _userManager.FindByIdAsync(changeUser.Id);
-
-            if (user == null)
-                return BadRequest("User not found!");
-
-            user.Name = changeUser.Name;
-            user.Description = changeUser.Description;
-            user.DateOfBirth = changeUser.DateOfBirth;
-            user.IsPrivateUser = changeUser.IsPrivateUser;
-
-            var result = await _userManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-                return BadRequest("Error in changing user data!");
-
-            return Ok();
-        }
-
-        [HttpPut("change-password")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePassword)
-        {
-            var user = await _userManager.FindByIdAsync(changePassword.Id);
-
-            if (user == null)
-                return BadRequest("User not found!");
-
-            var result = await _userManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
-
-            if (!result.Succeeded)
-                return BadRequest("Error in changing password!");
-
-            return Ok();
         }
 
         [HttpGet("get-bookmarks-post")]
@@ -312,24 +227,6 @@ namespace FlipBack.Controllers
                 return BadRequest("Saved post not found!");
 
             return Ok(post);
-        }
-
-        [HttpPost("add-bookmarks-post")]
-        public async Task<IActionResult> AddBookmarksPost(string postId, string reelsId)
-        {
-            string userId = User.FindFirst("UserId")?.Value;
-
-            var savedPost = await _context.UserPost.Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
-
-            if (savedPost != null)
-                return BadRequest("A user has already saved this post!");
-
-            UserPost userPost = new UserPost { PostId = postId, UserId = userId };
-
-            await _context.UserPost.AddAsync(userPost);
-            await _context.SaveChangesAsync();
-
-            return Ok();
         }
 
         [HttpDelete("remove-bookmarks-post/{postId}")]

@@ -1,4 +1,6 @@
-﻿using Core.Entity.MessageEntitys;
+﻿using Core.Entity.History;
+using Core.Entity.MessageEntitys;
+using Core.Entity.Notification;
 using Core.Entity.PostEntitys;
 using Core.Entity.ReelsEntity;
 using Core.Entity.UserEntitys;
@@ -93,17 +95,31 @@ namespace Infrastructure.Data
                     .HasForeignKey(z => z.ReelsId);
             });
 
-            modelBuilder.Entity<MessageBoxUser>(reaction =>
+            /* Setting up history reactions */
+            modelBuilder.Entity<HistoryReaction>(reaction =>
             {
-                reaction.HasKey(x => new { x.UserId, x.MessageBoxId });
+                reaction.HasKey(x => new { x.UserId, x.HistoryId });
 
                 reaction.HasOne(x => x.User)
-                    .WithMany(y => y.MessageBoxs)
+                    .WithMany(y => y.HistoryReactions)
                     .HasForeignKey(z => z.UserId);
 
-                reaction.HasOne(x => x.MessageBox)
-                    .WithMany(y => y.Users)
-                    .HasForeignKey(z => z.MessageBoxId);
+                reaction.HasOne(x => x.History)
+                    .WithMany(y => y.Reactions)
+                    .HasForeignKey(z => z.HistoryId);
+            });
+
+            /* Setting up notification */
+            modelBuilder.Entity<Notification>(reaction =>
+            {
+                reaction.HasOne(x => x.Sender)
+                    .WithMany(y => y.SendNotifications)
+                    .HasForeignKey(z => z.SenderId);
+
+                reaction.HasOne(x => x.Recipient)
+                    .WithMany(y => y.ReceivedNotifications)
+                    .HasForeignKey(z => z.RecipientId);
+
             });
         }
 
@@ -126,11 +142,18 @@ namespace Infrastructure.Data
         /* User */
         public virtual DbSet<Follow> Follows { get; set; }
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+        public virtual DbSet<UsersAuthentications> Authentications { get; set; }
 
         /* Message */
         public virtual DbSet<Message> Message { get; set; }
         public virtual DbSet<MessageFiles> MessageFiles { get; set; }
         public virtual DbSet<MessageBox> MessageBox { get; set; }
-        public virtual DbSet<MessageBoxUser> MessageBoxUsers { get; set; }
+
+        /* History */
+        public virtual DbSet<History> Histories { get; set; }
+        public virtual DbSet<HistoryReaction> HistoryReactions { get; set; }
+
+        /* Notification */
+        public virtual DbSet<Notification> Notification { get; set; }
     }
 }

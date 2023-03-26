@@ -1,0 +1,64 @@
+.lazy_loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(234, 234, 234, 0.6);
+  backdrop-filter: blur(5px);
+
+  cursor: wait;
+
+  z-index: 100;
+
+  .eyes {
+    margin-bottom: 21.36px;
+  }
+
+  .mouth {
+    transform-origin: 70px -35px;
+
+    margin-bottom: 48px;
+
+    animation: 1.5s linear infinite rotate;
+  }
+
+  div {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 150%;
+
+    text-align: center;
+    letter-spacing: -0.011em;
+
+    color: #000000;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  20% {
+    transform: rotate(80deg);
+  }
+  40% {
+    transform: rotate(80deg);
+  }
+  70% {
+    transform: rotate(280deg);
+  }
+  90% {
+    transform: rotate(280deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

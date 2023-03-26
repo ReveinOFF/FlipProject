@@ -7,15 +7,12 @@ namespace Core.Entity.MessageEntitys
     public class Message : BaseEntity
     {
         /* Information */
-        [Required]
-        public string SenderName { get; set; }
         [MinLength(1)]
         public string MessageText { get; set; }
         [Required]
         public DateTime DateSender { get; set; }
         [Required]
         public bool IsEdited { get; set; }
-        public bool IsChanged { get; set; }
 
         /* Sender */
         [Required]

@@ -11,9 +11,12 @@ import App from "./Main/NotAuth/App";
 import { AuthUser } from "./Components/Auth/store/actions";
 import jwtDecode from "jwt-decode";
 import { JwtDecoder } from "./Interface/JwtDecoder";
-import "./Assets/i18n/i18n";
+import "./Components/i18n/i18n";
 import { Suspense } from "react";
-import axios from "axios";
+import { QueryClient, QueryClientProvider } from "react-query";
+import Toast from "./Components/Toast/Toast";
+import { I18nextProvider } from "react-i18next";
+import i18n from "./Components/i18n/i18n";
 
 const ldMode = localStorage.getItem("LightDarkMode");
 const token = localStorage.getItem("token");
@@ -25,50 +28,51 @@ const root = ReactDOM.createRoot(
 
 if (!ldMode) localStorage.setItem("LightDarkMode", "light");
 
-if (!lng) {
-  axios.get("https://ipapi.co/json/").then((response) => {
-    let data = response.data;
-
-    if (data.country_name === "Ukraine") localStorage.setItem("lng", "ua");
-    else if (data.country_name === "Russian") localStorage.setItem("lng", "ru");
-    else localStorage.setItem("lng", "en");
-  });
-}
+if (!lng) localStorage.setItem("lng", navigator.language.split("-")[0]);
 
 ThemeActions(store.dispatch);
 
+const client = new QueryClient();
+
 const NotUser = () => {
   root.render(
-    <Provider store={store}>
-      <Suspense fallback={<div>...</div>}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </Suspense>
-    </Provider>
+    <Suspense fallback="">
+      <I18nextProvider i18n={i18n}>
+        <Provider store={store}>
+          <BrowserRouter>
+            <QueryClientProvider client={client}>
+              <App />
+              <Toast />
+            </QueryClientProvider>
+          </BrowserRouter>
+        </Provider>
+      </I18nextProvider>
+    </Suspense>
   );
 };
 
 if (token) {
-  var user;
-  AuthUser(token as string, store.dispatch).then((value) => {
-    user = value;
-  });
+  AuthUser(token as string, store.dispatch);
   const excToken = jwtDecode<JwtDecoder>(token);
   const date = new Date().getTime();
 
   setTimeout(() => {
-    if (excToken.exp < date && user) {
+    if (excToken.exp < date) {
       root.render(
-        <Provider store={store}>
-          <Suspense fallback={<div>...</div>}>
-            <BrowserRouter>
-              <div className="root_main">
-                <AuthApp />
-              </div>
-            </BrowserRouter>
-          </Suspense>
-        </Provider>
+        <Suspense fallback="">
+          <I18nextProvider i18n={i18n}>
+            <Provider store={store}>
+              <BrowserRouter>
+                <QueryClientProvider client={client}>
+                  <div className="root_main">
+                    <AuthApp />
+                  </div>
+                  <Toast />
+                </QueryClientProvider>
+              </BrowserRouter>
+            </Provider>
+          </I18nextProvider>
+        </Suspense>
       );
     } else {
       NotUser();
