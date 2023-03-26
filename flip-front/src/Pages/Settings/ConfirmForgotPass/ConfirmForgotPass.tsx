@@ -30,7 +30,7 @@ export const ConfirmForgotPass = () => {
 
   const PostConfirm = async () => {
     const res = await axios.post(
-      "settings/recover-password",
+      "settings/confirm-recover",
       {
         email: myUser?.email,
         newPassword: newPassword,

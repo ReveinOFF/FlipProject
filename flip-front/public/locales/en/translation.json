@@ -182,7 +182,8 @@
             "show_more": "Show more...",
             "like": "preferences",
             "answ": "reply",
-            "input": "Add a comment"
+            "input": "Add a comment",
+            "post_nf": "There are no posts"
         },
         "settings": {
             "title_page": "Settings",
@@ -194,6 +195,7 @@
                 "btn" : "Change email"
             },
             "forgot_pass": {
+                "title": "Password recovery",
                 "back": "Change password",
                 "header": "Forgot your password?",
                 "description": "Enter your email address and you will receive a link to change your account password.",

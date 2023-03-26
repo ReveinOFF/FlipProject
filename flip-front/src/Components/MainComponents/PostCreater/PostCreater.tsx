@@ -102,8 +102,8 @@ export const PostCreater = ({ show, onClick }) => {
                       />
                     ) : (
                       <svg
-                        width="209"
-                        height="209"
+                        width="67"
+                        height="67"
                         viewBox="0 0 209 209"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -249,6 +249,21 @@ export const PostCreater = ({ show, onClick }) => {
             </div>
           ) : (
             <div className={styles.container}>
+              <svg
+                onClick={onClick}
+                className={styles.close}
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 3L21 21M3 21L21 3"
+                  stroke="#2F2F2F"
+                  strokeWidth="2"
+                />
+              </svg>
               <div className={styles.header}>Новий пост</div>
               <div className={styles.block_upload}>
                 <div className={styles.icons}>

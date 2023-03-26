@@ -235,7 +235,7 @@ export const LeftMenu = () => {
             <div>{t("main.left_menu.main")}</div>
           </NavLink>
 
-          <NavLink to="/fliper" className={styles.btn}>
+          {/* <NavLink to="/fliper" className={styles.btn}>
             <svg
               width="30"
               height="30"
@@ -278,7 +278,7 @@ export const LeftMenu = () => {
             </svg>
 
             <div>Fliper</div>
-          </NavLink>
+          </NavLink> */}
 
           <NavLink to="/messages" className={styles.btn}>
             <svg

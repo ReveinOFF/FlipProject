@@ -102,6 +102,7 @@ export const UProfile = (props) => {
           </div>
           <div className={styles.profile_btn}>
             <svg
+              onClick={() => setShowCreater(true)}
               width="26"
               height="26"
               viewBox="0 0 26 26"

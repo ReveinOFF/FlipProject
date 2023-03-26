@@ -47,7 +47,7 @@ export const ForgotPassword = () => {
   });
 
   useEffect(() => {
-    document.title = "Відновлення пароля";
+    document.title = t("main.settings.forgot_pass.title");
   }, []);
 
   if (isLoading) return <LazyLoading />;
