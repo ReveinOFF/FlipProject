@@ -240,7 +240,7 @@ export const UProfile = (props) => {
           </div>
         )}
 
-        {profile.createdPost.length === 0 && selector === 2 && (
+        {profile.createdReels.length === 0 && selector === 2 && (
           <div className={styles.not_find}>
             <div className={styles.nf_question}>?</div>
 
@@ -287,7 +287,7 @@ export const UProfile = (props) => {
           </div>
         )}
 
-        {profile.createdPost.length === 0 && selector === 3 && (
+        {profile.createdReels.length === 0 && selector === 3 && (
           <div className={styles.not_find}>
             <div className={styles.nf_question}>?</div>
 

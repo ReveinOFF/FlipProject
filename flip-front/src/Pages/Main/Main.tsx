@@ -110,15 +110,6 @@ export const Main = () => {
     }
   }, [dataPost]);
 
-  // useEffect(() => {
-  //   if (textAreaRef.current) {
-  //     if (textAreaRef.current.scrollHeight > 122) return;
-  //     textAreaRef.current.style.height = "0px";
-  //     const scrollHeight = textAreaRef.current.scrollHeight;
-  //     textAreaRef.current.style.height = scrollHeight + "px";
-  //   }
-  // }, [currentValue]);
-
   const closeHistory = () => {
     setShow(false);
   };
@@ -219,6 +210,46 @@ export const Main = () => {
         const newValueState = [...prevState];
         const idx = newValueState[index].reactions.indexOf(myUser?.id);
         newValueState[index].reactions.splice(idx, 1);
+        return newValueState;
+      });
+    }
+  };
+
+  const LikeComm = async (commId, index, commIndex) => {
+    const res = await axios.post(
+      "post/add-reaction-comm",
+      {
+        userId: myUser?.id,
+        commId: commId,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (res.status === 200) {
+      setData((prevState) => {
+        const newValueState = [...prevState];
+        newValueState[index].commentary[commIndex].reactions.push(myUser?.id);
+        return newValueState;
+      });
+    }
+  };
+
+  const UnLikeComm = async (commId, index, commIndex) => {
+    const res = await axios.delete(
+      `post/remove/${myUser?.id}/reaction-comm/${commId}`
+    );
+
+    if (res.status === 200) {
+      setData((prevState) => {
+        const newValueState = [...prevState];
+        const idx = newValueState[index].commentary[
+          commIndex
+        ].reactions.indexOf(myUser?.id);
+        newValueState[index].commentary[commIndex].reactions.splice(idx, 1);
         return newValueState;
       });
     }
@@ -940,7 +971,7 @@ export const Main = () => {
               </div>
 
               <div className={styles.commentarys}>
-                {item.commentary?.map((comment) => (
+                {item.commentary?.map((comment, commIndex) => (
                   <div className={styles.commentary} key={comment.id}>
                     <div className={styles.profile_comm}>
                       <div className={styles.image_comm}>
@@ -1008,18 +1039,87 @@ export const Main = () => {
                           );
                         })}
                       </div>
-                      <svg
-                        width="25"
-                        height="25"
-                        viewBox="0 0 25 25"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12.8232 22.064C12.5132 22.064 12.2132 22.024 11.9632 21.934C8.14324 20.624 2.07324 15.974 2.07324 9.10397C2.07324 5.60397 4.90324 2.76397 8.38324 2.76397C10.0732 2.76397 11.6532 3.42397 12.8232 4.60397C13.4041 4.01783 14.0958 3.55325 14.8582 3.23734C15.6205 2.92142 16.4381 2.7605 17.2632 2.76397C20.7432 2.76397 23.5732 5.61397 23.5732 9.10397C23.5732 15.984 17.5032 20.624 13.6832 21.934C13.4332 22.024 13.1332 22.064 12.8232 22.064ZM8.38324 4.26397C5.73324 4.26397 3.57324 6.43397 3.57324 9.10397C3.57324 15.934 10.1432 19.734 12.4532 20.524C12.6332 20.584 13.0232 20.584 13.2032 20.524C15.5032 19.734 22.0832 15.944 22.0832 9.10397C22.0832 6.43397 19.9232 4.26397 17.2732 4.26397C15.7532 4.26397 14.3432 4.97397 13.4332 6.20397C13.1532 6.58397 12.5132 6.58397 12.2332 6.20397C11.7889 5.60105 11.2088 5.11124 10.5399 4.7742C9.87105 4.43716 9.13222 4.26237 8.38324 4.26397Z"
-                          fill="#2F2F2F"
-                        />
-                      </svg>
+
+                      {comment.reactions?.find((el) => el === myUser?.id) ? (
+                        <svg
+                          onClick={() =>
+                            UnLikeComm(comment.id, index, commIndex)
+                          }
+                          width="25"
+                          height="25"
+                          viewBox="0 0 25 25"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12.8232 22.0637C12.5132 22.0637 12.2132 22.0237 11.9632 21.9337C8.14324 20.6237 2.07324 15.9737 2.07324 9.10373C2.07324 5.60373 4.90324 2.76373 8.38324 2.76373C10.0732 2.76373 11.6532 3.42373 12.8232 4.60373C13.4041 4.01759 14.0958 3.55301 14.8581 3.23709C15.6205 2.92118 16.4381 2.76026 17.2632 2.76373C20.7432 2.76373 23.5732 5.61373 23.5732 9.10373C23.5732 15.9837 17.5032 20.6237 13.6832 21.9337C13.4332 22.0237 13.1332 22.0637 12.8232 22.0637ZM8.38324 4.26373C5.73324 4.26373 3.57324 6.43373 3.57324 9.10373C3.57324 15.9337 10.1432 19.7337 12.4532 20.5237C12.6332 20.5837 13.0232 20.5837 13.2032 20.5237C15.5032 19.7337 22.0832 15.9437 22.0832 9.10373C22.0832 6.43373 19.9232 4.26373 17.2732 4.26373C15.7532 4.26373 14.3432 4.97373 13.4332 6.20373C13.1532 6.58373 12.5132 6.58373 12.2332 6.20373C11.7889 5.6008 11.2088 5.111 10.5399 4.77396C9.87105 4.43692 9.13222 4.26213 8.38324 4.26373Z"
+                            fill="#FF0000"
+                          />
+                          <ellipse
+                            cx="8.17777"
+                            cy="8.15371"
+                            rx="5.03226"
+                            ry="4.64516"
+                            fill="#FF0000"
+                          />
+                          <ellipse
+                            cx="8.17777"
+                            cy="10.4765"
+                            rx="5.03226"
+                            ry="4.64516"
+                            fill="#FF0000"
+                          />
+                          <ellipse
+                            cx="15.92"
+                            cy="8.15371"
+                            rx="5.03226"
+                            ry="4.64516"
+                            fill="#FF0000"
+                          />
+                          <ellipse
+                            cx="18.2422"
+                            cy="9.315"
+                            rx="5.03226"
+                            ry="5.80645"
+                            fill="#FF0000"
+                          />
+                          <ellipse
+                            cx="12.8233"
+                            cy="14.7344"
+                            rx="5.03226"
+                            ry="5.80645"
+                            fill="#FF0000"
+                          />
+                          <ellipse
+                            cx="15.92"
+                            cy="13.9603"
+                            rx="5.03226"
+                            ry="5.80645"
+                            fill="#FF0000"
+                          />
+                          <ellipse
+                            cx="10.1137"
+                            cy="12.799"
+                            rx="5.41935"
+                            ry="6.19355"
+                            fill="#FF0000"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          onClick={() => LikeComm(comment.id, index, commIndex)}
+                          width="25"
+                          height="25"
+                          viewBox="0 0 25 25"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12.8232 22.064C12.5132 22.064 12.2132 22.024 11.9632 21.934C8.14324 20.624 2.07324 15.974 2.07324 9.10397C2.07324 5.60397 4.90324 2.76397 8.38324 2.76397C10.0732 2.76397 11.6532 3.42397 12.8232 4.60397C13.4041 4.01783 14.0958 3.55325 14.8582 3.23734C15.6205 2.92142 16.4381 2.7605 17.2632 2.76397C20.7432 2.76397 23.5732 5.61397 23.5732 9.10397C23.5732 15.984 17.5032 20.624 13.6832 21.934C13.4332 22.024 13.1332 22.064 12.8232 22.064ZM8.38324 4.26397C5.73324 4.26397 3.57324 6.43397 3.57324 9.10397C3.57324 15.934 10.1432 19.734 12.4532 20.524C12.6332 20.584 13.0232 20.584 13.2032 20.524C15.5032 19.734 22.0832 15.944 22.0832 9.10397C22.0832 6.43397 19.9232 4.26397 17.2732 4.26397C15.7532 4.26397 14.3432 4.97397 13.4332 6.20397C13.1532 6.58397 12.5132 6.58397 12.2332 6.20397C11.7889 5.60105 11.2088 5.11124 10.5399 4.7742C9.87105 4.43716 9.13222 4.26237 8.38324 4.26397Z"
+                            fill="#2F2F2F"
+                          />
+                        </svg>
+                      )}
                     </div>
 
                     <div className={styles.info_comm}>
@@ -1027,8 +1127,7 @@ export const Main = () => {
                         {formatDate(new Date(comment.dateCreate))}
                       </div>
                       <div className={styles.count_like}>
-                        1 {t("main.main.like")}
-                        {/* {`${comment.likeCount} ${t("main.main.like")}`} */}
+                        {`${comment.reactions.length} ${t("main.main.like")}`}
                       </div>
                       <div className={styles.answer_comm}>
                         {t("main.main.answ")}
@@ -1140,8 +1239,8 @@ export const Main = () => {
                       return newEmojiShow;
                     });
                   }}
-                  width="40"
-                  height="40"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"

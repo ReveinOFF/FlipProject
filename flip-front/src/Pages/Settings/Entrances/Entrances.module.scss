@@ -20,8 +20,6 @@
 }
 
 .entrances {
-  box-sizing: border-box;
-
   background: rgba(248, 248, 248, 0.8);
   border-radius: 15px;
 
@@ -45,7 +43,7 @@
   .container {
     border-bottom: 1px solid rgba(47, 47, 47, 0.5);
 
-    width: 100vh;
+    width: 100%;
 
     padding-top: 20px;
     padding-bottom: 15px;

@@ -40,7 +40,7 @@ namespace Core.Mapper
                 .ForMember(x => x.File, y => y.MapFrom(x => x.Files.Select(s => s.FileName)))
                 .ForMember(x => x.Name, y => y.MapFrom(x => x.User.Name))
                 .ForMember(x => x.UserImage, y => y.MapFrom(x => x.User.UserImage))
-                .ForMember(x => x.Reactions, y => y.MapFrom(x => x.Reactions.SelectMany(s => s.UserId)))
+                .ForMember(x => x.Reactions, y => y.MapFrom(x => x.Reactions.Select(s => s.UserId)))
                 .ForMember(x => x.Commentary, y => y.MapFrom(x => x.Commentary.OrderBy(o => o.DateCreate)))
                 .ForMember(x => x.IsFollowed, y => y.MapFrom(x => x.User.Followings.Any(a => a.FollowerId == x.UserId)));
             CreateMap<PostDTO, Post>()
@@ -48,7 +48,8 @@ namespace Core.Mapper
             CreateMap<PostCommentaryDTO, PostCommentary>();
             CreateMap<PostCommentary, PostGetCommentaryDTO>()
                 .ForMember(x => x.Name, y => y.MapFrom(x => x.User.Name))
-                .ForMember(x => x.Image, y => y.MapFrom(x => x.User.UserImage));
+                .ForMember(x => x.Image, y => y.MapFrom(x => x.User.UserImage))
+                .ForMember(x => x.Reactions, y => y.MapFrom(x => x.ReactionCommentary.Select(s => s.UserId)));
             CreateMap<PostCommentary, PostCommentary>();
             CreateMap<PostAnswerDTO, PostAnswer>();
             CreateMap<PostAnswer, PostGetAnswerDTO>()

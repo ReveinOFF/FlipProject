@@ -11,5 +11,6 @@
         public string PostId { get; set; }
 
         public ICollection<PostGetAnswerDTO> Answer { get; set; }
+        public ICollection<string> Reactions { get; set; }
     }
 }

@@ -67,6 +67,8 @@ export const PostCreater = ({ show, onClick }) => {
   const { mutateAsync } = useMutation(addPost, {
     onSuccess: () => {
       onClick();
+
+      window.location.reload();
     },
   });
 

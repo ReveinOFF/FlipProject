@@ -23,7 +23,7 @@
 
     z-index: 99;
 
-    svg {
+    .close {
       position: absolute;
 
       top: -32px;
@@ -98,8 +98,8 @@
             margin-right: 20px;
 
             img {
-              height: 52.235294342041016px;
-              width: 52.235294342041016px;
+              height: 52px;
+              width: 52px;
 
               border-radius: 50%;
             }

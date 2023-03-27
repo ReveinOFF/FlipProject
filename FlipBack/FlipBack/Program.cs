@@ -33,10 +33,10 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 builder.Services.AddSignalR();
 
-builder.Services.AddTransient<DataBase>()
-    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
 //builder.Services.AddTransient<DataBase>()
-//    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("localDb")));
+//    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("sqlDb")));
+builder.Services.AddTransient<DataBase>()
+    .AddDbContext<DataBase>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("localDb")));
 builder.Services.AddIdentity<User, Role>(options =>
 {
     // Password settings.

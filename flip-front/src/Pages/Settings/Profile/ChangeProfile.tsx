@@ -45,11 +45,12 @@ export const ChangeProfile = () => {
     return res;
   };
 
-  const { isLoading, data, mutateAsync } = useMutation(editProfile, {
-    onSuccess: () => {
-      localStorage.setItem("token", data?.data.token);
-      localStorage.setItem("refreshToken", data?.data.refreshToken);
+  const { isLoading, mutateAsync } = useMutation(editProfile, {
+    onSuccess: (res) => {
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("refreshToken", res.data.refreshToken);
       window.location.reload();
+
       dispatch({
         type: ToastActionTypes.SHOW,
         payload: {

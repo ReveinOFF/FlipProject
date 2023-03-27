@@ -298,6 +298,21 @@ namespace Infrastructure.Migrations
                     b.ToTable("PostReaction");
                 });
 
+            modelBuilder.Entity("Core.Entity.PostEntitys.ReactionCommentary", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CommentaryId")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "CommentaryId");
+
+                    b.HasIndex("CommentaryId");
+
+                    b.ToTable("ReactionCommentaries");
+                });
+
             modelBuilder.Entity("Core.Entity.PostEntitys.UserPost", b =>
                 {
                     b.Property<string>("UserId")
@@ -938,6 +953,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Core.Entity.PostEntitys.ReactionCommentary", b =>
+                {
+                    b.HasOne("Core.Entity.PostEntitys.PostCommentary", "Commentary")
+                        .WithMany("ReactionCommentary")
+                        .HasForeignKey("CommentaryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entity.UserEntitys.User", "User")
+                        .WithMany("ReactionCommentary")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Commentary");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Core.Entity.PostEntitys.UserPost", b =>
                 {
                     b.HasOne("Core.Entity.PostEntitys.Post", "Post")
@@ -1188,6 +1222,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entity.PostEntitys.PostCommentary", b =>
                 {
                     b.Navigation("PostAnswers");
+
+                    b.Navigation("ReactionCommentary");
                 });
 
             modelBuilder.Entity("Core.Entity.ReelsEntity.Reels", b =>
@@ -1236,6 +1272,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("PostCommentary");
 
                     b.Navigation("PostReaction");
+
+                    b.Navigation("ReactionCommentary");
 
                     b.Navigation("ReceivedNotifications");
 
