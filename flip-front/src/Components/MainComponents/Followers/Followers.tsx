@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTypedSelector } from "../../../Hooks/useTypedSelector";
 import { GetFollow } from "../../../Interface/Profile";
 import { ToastActionTypes } from "../../Toast/store/type";
 import styles from "./Followers.module.scss";
@@ -17,6 +18,7 @@ export const Followers = ({
   const [t] = useTranslation("translation");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const myuser = useTypedSelector((state) => state.auth.user);
 
   const [phase, setPhase] = useState(1);
   const [follower, setFollower] = useState<GetFollow>();
@@ -147,20 +149,28 @@ export const Followers = ({
                                 {t("main.followers.delete_user")}
                               </button>
                             ) : (
-                              <button
-                                onClick={() => {
-                                  setPhase(3);
-                                  setFollower(item);
-                                }}
-                              >
-                                {t("main.followers.unsubscribe")}
-                              </button>
+                              <>
+                                {item.id !== myuser?.id && (
+                                  <button
+                                    onClick={() => {
+                                      setPhase(3);
+                                      setFollower(item);
+                                    }}
+                                  >
+                                    {t("main.followers.unsubscribe")}
+                                  </button>
+                                )}
+                              </>
                             )}
                           </>
                         ) : (
-                          <button onClick={() => subscribe(item.id)}>
-                            {t("main.followers.subscribe")}
-                          </button>
+                          <>
+                            {item.id !== myuser?.id && (
+                              <button onClick={() => subscribe(item.id)}>
+                                {t("main.followers.subscribe")}
+                              </button>
+                            )}
+                          </>
                         )}
                       </div>
                     ))}

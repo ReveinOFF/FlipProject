@@ -41,6 +41,10 @@ namespace FlipBack.Controllers
                 .ThenInclude(t => t.PostAnswers)
                 .ThenInclude(t => t.User)
 
+                .Include(i => i.Commentary)
+                .ThenInclude(t => t.ReactionCommentary)
+                .ThenInclude(t => t.User)
+
                 .Include(i => i.Reactions)
                 .ThenInclude(t => t.User)
 
@@ -222,6 +226,34 @@ namespace FlipBack.Controllers
                 return BadRequest("This commentary was not found!");
 
             _context.PostCommentary.Remove(comm);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("add-reaction-comm")]
+        public async Task<IActionResult> AddReactionComm([FromBody] CommReactionDTO reactionDTO)
+        {
+            var commreaction = await _context.ReactionCommentaries.Where(x => x.UserId.Equals(reactionDTO.UserId) && x.CommentaryId.Equals(reactionDTO.CommId)).FirstOrDefaultAsync();
+
+            if (commreaction != null)
+                return BadRequest("You've already put a reaction to this commentary!");
+
+            await _context.ReactionCommentaries.AddAsync(new ReactionCommentary { CommentaryId = reactionDTO.CommId, UserId = reactionDTO.UserId });
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("remove/{UserId}/reaction-comm/{CommId}")]
+        public async Task<IActionResult> RemoveReactionComm(string UserId, string CommId)
+        {
+            var commreaction = await _context.ReactionCommentaries.Where(x => x.UserId.Equals(UserId) && x.CommentaryId.Equals(CommId)).FirstOrDefaultAsync();
+
+            if (commreaction == null)
+                return BadRequest("Your reaction to this commentary is not there!");
+
+            _context.ReactionCommentaries.Remove(commreaction);
             await _context.SaveChangesAsync();
 
             return Ok();

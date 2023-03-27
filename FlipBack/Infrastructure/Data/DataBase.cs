@@ -121,6 +121,21 @@ namespace Infrastructure.Data
                     .HasForeignKey(z => z.RecipientId);
 
             });
+
+            /* Setting up notification */
+            modelBuilder.Entity<ReactionCommentary>(reaction =>
+            {
+                reaction.HasKey(x => new { x.UserId, x.CommentaryId });
+
+                reaction.HasOne(x => x.Commentary)
+                    .WithMany(y => y.ReactionCommentary)
+                    .HasForeignKey(z => z.CommentaryId);
+
+                reaction.HasOne(x => x.User)
+                    .WithMany(y => y.ReactionCommentary)
+                    .HasForeignKey(z => z.UserId);
+
+            });
         }
 
         /* Post */
@@ -128,6 +143,7 @@ namespace Infrastructure.Data
         public virtual DbSet<PostFiles> PostFiles { get; set; }
         public virtual DbSet<UserPost> UserPost { get; set; }
         public virtual DbSet<PostReaction> PostReaction { get; set; }
+        public virtual DbSet<ReactionCommentary> ReactionCommentaries { get; set; }
         public virtual DbSet<PostCommentary> PostCommentary { get; set; }
         public virtual DbSet<PostAnswer> PostAnswer { get; set; }
 

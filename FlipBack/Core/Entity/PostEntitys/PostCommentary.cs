@@ -10,6 +10,7 @@ namespace Core.Entity.PostEntitys
         public virtual Post Post { get; set; }
 
         /* All Answers to Comments */
+        public virtual ICollection<ReactionCommentary> ReactionCommentary { get; set; }
         public virtual ICollection<PostAnswer> PostAnswers { get; set; }
     }
 }

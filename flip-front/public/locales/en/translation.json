@@ -148,7 +148,8 @@
             "like_post": "liked your photo.",
             "like_history": "liked your story.",
             "like_fliper": "liked your fliper.",
-            "follow": "Follow"
+            "follow": "Follow",
+            "nf_save_pf": "You have no notifications"
         },
         "s_profile": {
             "foll_ers": "SUBSCRIBERS:",

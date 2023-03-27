@@ -650,6 +650,30 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ReactionCommentaries",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    CommentaryId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReactionCommentaries", x => new { x.UserId, x.CommentaryId });
+                    table.ForeignKey(
+                        name: "FK_ReactionCommentaries_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReactionCommentaries_PostCommentary_CommentaryId",
+                        column: x => x.CommentaryId,
+                        principalTable: "PostCommentary",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ReelsAnswer",
                 columns: table => new
                 {
@@ -832,6 +856,11 @@ namespace Infrastructure.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ReactionCommentaries_CommentaryId",
+                table: "ReactionCommentaries",
+                column: "CommentaryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reels_UserId",
                 table: "Reels",
                 column: "UserId");
@@ -927,6 +956,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "PostReaction");
+
+            migrationBuilder.DropTable(
+                name: "ReactionCommentaries");
 
             migrationBuilder.DropTable(
                 name: "ReelsAnswer");

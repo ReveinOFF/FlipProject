@@ -20,14 +20,12 @@ namespace FlipBack.Controllers
         private readonly DataBase _context;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        private readonly IWebHostEnvironment _env;
 
-        public UserController(DataBase context, UserManager<User> userManager, IMapper mapper, IWebHostEnvironment env)
+        public UserController(DataBase context, UserManager<User> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
             _mapper = mapper;
-            _env = env;
         }
 
         [HttpGet("get-user-auth")]

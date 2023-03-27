@@ -60,11 +60,9 @@
   align-items: center;
   justify-content: center;
 
-  height: 100%;
+  height: 80%;
 
   .nf_question {
-    margin-top: 50px;
-
     font-style: normal;
     font-weight: 300;
     font-size: 90px;
@@ -98,7 +96,7 @@
     justify-content: center;
     margin-bottom: 30px;
 
-    width: 100vh;
+    width: 100%;
 
     height: 755px;
 
@@ -405,6 +403,7 @@
 
             svg {
               margin-left: auto;
+              cursor: pointer;
             }
           }
 
@@ -608,14 +607,13 @@
 
         svg {
           cursor: pointer;
-          width: 30px;
 
           background: #ebebeb;
 
           border-top-right-radius: 24.7648px;
           border-bottom-right-radius: 24.7648px;
 
-          height: 100%;
+          height: 50px;
 
           padding-left: 11px;
           padding-right: 11px;

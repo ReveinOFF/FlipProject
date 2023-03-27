@@ -43,6 +43,7 @@ namespace Core.Entity.UserEntitys
         public virtual ICollection<Post> CreatedPosts { get; set; }
         public virtual ICollection<UserPost> SavedPosts { get; set; }
         public virtual ICollection<PostReaction> PostReaction { get; set; }
+        public virtual ICollection<ReactionCommentary> ReactionCommentary { get; set; }
         public virtual ICollection<PostCommentary> PostCommentary { get; set; }
         public virtual ICollection<PostAnswer> PostAnswer { get; set; }
 
