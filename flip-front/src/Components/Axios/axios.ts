@@ -19,12 +19,15 @@ axios.interceptors.response.use(
     if (error.response.status === 401) {
       if (
         !localStorage.getItem("refreshToken") ||
-        !localStorage.getItem("token")
+        !localStorage.getItem("token") ||
+        localStorage.getItem("refreshToken") === "undefined" ||
+        localStorage.getItem("token") === "undefined"
       ) {
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
 
         window.location.reload();
+        window.location.pathname = "/";
       }
 
       const response = await axios.post(
@@ -37,20 +40,21 @@ axios.interceptors.response.use(
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 400) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+
+        window.location.reload();
+        window.location.pathname = "/";
+
+        return axios(error.config);
+      } else {
         axios.defaults.headers[
           "Authorization"
         ] = `Bearer ${response.data.token}`;
 
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("refreshToken", response.data.refreshToken);
-
-        window.location.reload();
-
-        return axios(error.config);
-      } else if (response.status === 400) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("refreshToken");
 
         window.location.reload();
 

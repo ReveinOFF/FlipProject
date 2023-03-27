@@ -236,7 +236,7 @@ export const RightMenu = () => {
               />
             </svg>
             <input
-              type="search"
+              type="text"
               placeholder={t("main.right_menu.search_ph").toString()}
               onChange={handleSearch}
             />
@@ -383,6 +383,7 @@ export const RightMenu = () => {
                 onClick={() => {
                   navigate(item.name);
                   setSearchUser(undefined);
+                  setSearchQuery("");
                 }}
               >
                 {item.userImage ? (
